@@ -1,0 +1,61 @@
+﻿@model LearniVerseNew.Models.ApplicationModels.Student
+
+@{
+    ViewBag.Title = "MyCourses";
+}
+
+<h2>MyCourses</h2>
+
+<p>
+    @Html.ActionLink("Create New", "Create")
+</p>
+
+@if (Model != null && Model.Enrollments != null && Model.Enrollments.Any())
+{
+    <table class="table">
+        <tr>
+            <th>
+                Course Name
+            </th>
+            <th>
+                Description
+            </th>
+            <th>
+                Semester
+            </th>
+            <th>
+                Department
+            </th>
+            <th>
+                Price
+            </th>
+        </tr>
+        @foreach (var enrollment in Model.Enrollments)
+        {
+            foreach (var course in enrollment.Courses)
+            {
+                <tr>
+                    <td>
+                        @Html.DisplayFor(modelItem => course.CourseName)
+                    </td>
+                    <td>
+                        @Html.DisplayFor(modelItem => course.Description)
+                    </td>
+                    <td>
+                        @Html.DisplayFor(modelItem => course.Semester)
+                    </td>
+                    <td>
+                        @Html.DisplayFor(modelItem => course.Department)
+                    </td>
+                    <td>
+                        @Html.DisplayFor(modelItem => course.Price)
+                    </td>
+                </tr>
+            }
+        }
+    </table>
+}
+else
+{
+    <p>No courses found for this student.</p>
+}

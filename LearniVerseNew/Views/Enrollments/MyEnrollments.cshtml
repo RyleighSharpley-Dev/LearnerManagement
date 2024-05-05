@@ -1,0 +1,48 @@
+﻿@model List<LearniVerseNew.Models.ApplicationModels.Enrollment>
+
+@{
+    ViewBag.Title = "My Enrollments";
+}
+
+<h2>My Enrollments</h2>
+
+@if (Model.Count == 0)
+{
+    <p>You have no enrollments.</p>
+}
+else
+{
+<table class="table">
+    <thead>
+        <tr>
+            <th>Enrollment ID</th>
+            <th>Enrollment Date</th>
+            <th>Is Approved</th>
+        </tr>
+    </thead>
+    <tbody>
+        @foreach (var enrollment in Model)
+        {
+            <tr>
+                <td>@enrollment.EnrollmentID</td>
+                <td>@enrollment.EnrollmentDate.ToShortDateString()</td>
+                <td>@(enrollment.IsApproved ? "Yes" : "No")</td>
+                <td>
+                    @if (enrollment.IsApproved)
+                    {
+                        using (Html.BeginForm("Pay", "Enrollments", new { enrollmentId = enrollment.EnrollmentID }, FormMethod.Post))
+                        {
+                            @Html.AntiForgeryToken()
+                            <input type="submit" value="Pay" class="btn btn-success" />
+                        }
+                    }
+                    else
+                    {
+                        <span class="text-muted">Pending Approval</span>
+                    }
+                </td>
+            </tr>
+        }
+    </tbody>
+</table>
+}

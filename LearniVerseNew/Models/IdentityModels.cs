@@ -1,0 +1,90 @@
+﻿using System.Data.Entity;
+using System.Security.Claims;
+using System.Threading.Tasks;
+using LearniVerseNew.Models.ApplicationModels;
+using Microsoft.AspNet.Identity;
+using Microsoft.AspNet.Identity.EntityFramework;
+
+namespace LearniVerseNew.Models
+{
+    // You can add profile data for the user by adding more properties to your ApplicationUser class, please visit https://go.microsoft.com/fwlink/?LinkID=317594 to learn more.
+    public class ApplicationUser : IdentityUser
+    {
+        public async Task<ClaimsIdentity> GenerateUserIdentityAsync(UserManager<ApplicationUser> manager)
+        {
+            // Note the authenticationType must match the one defined in CookieAuthenticationOptions.AuthenticationType
+            var userIdentity = await manager.CreateIdentityAsync(this, DefaultAuthenticationTypes.ApplicationCookie);
+            // Add custom user claims here
+            return userIdentity;
+        }
+    }
+
+    public class ApplicationDbContext : IdentityDbContext<ApplicationUser>
+    {
+        public ApplicationDbContext()
+            : base("DefaultConnection", throwIfV1Schema: false)
+        {
+        }
+
+        public static ApplicationDbContext Create()
+        {
+            return new ApplicationDbContext();
+        }
+
+        public DbSet<Student> Students { get; set; }
+        public DbSet<Teacher> Teachers { get; set; }
+        public DbSet<Faculty> Faculties { get; set; }
+        public DbSet<Qualification> Qualifications { get; set; }
+        public DbSet<Course> Courses { get; set; }
+        public DbSet<Enrollment> Enrollments { get; set; }
+        public DbSet<Payment> Payments { get; set; }
+        public DbSet<Resource> Resources { get; set; }
+
+
+        protected override void OnModelCreating(DbModelBuilder modelBuilder)
+        {
+            modelBuilder.Entity<Course>()
+         .HasKey(c => c.CourseID);
+
+            modelBuilder.Entity<Course>()
+                .HasOptional(c => c.Teacher) // Optional relationship
+                .WithMany(t => t.Courses)    // One-to-many relationship: One teacher can teach multiple courses
+                .HasForeignKey(c => c.TeacherID); // Foreign key property
+
+            // Resource entity configuration
+            modelBuilder.Entity<Resource>()
+                .HasRequired(r => r.Course)  // Each Resource must belong to a Course
+                .WithMany(c => c.Resources) // One Course can have many Resources
+                .HasForeignKey(r => r.CourseID); // Foreign key property
+
+            // Enrollment entity configuration
+            modelBuilder.Entity<Enrollment>()
+                .HasKey(e => e.EnrollmentID);
+
+            modelBuilder.Entity<Enrollment>()
+                .HasRequired(e => e.Student)  // Each Enrollment must belong to a Student
+                .WithMany(s => s.Enrollments) // One Student can have many Enrollments
+                .HasForeignKey(e => e.StudentID); // Foreign key property
+
+            // Qualification entity configuration
+            modelBuilder.Entity<Qualification>()
+                .HasRequired(q => q.Faculty) // Each Qualification must belong to a Faculty
+                .WithMany(f => f.Qualifications) // One Faculty can have many Qualifications
+                .HasForeignKey(q => q.FacultyID); // Foreign key property
+
+            // Course-Qualification relationship configuration
+            modelBuilder.Entity<Course>()
+                .HasRequired(c => c.Qualification) // Each Course must belong to a Qualification
+                .WithMany(q => q.Courses) // One Qualification can have many Courses
+                .HasForeignKey(c => c.QualificationID); // Foreign key property
+
+            // Teacher-Faculty relationship configuration
+            modelBuilder.Entity<Teacher>()
+                .HasRequired(t => t.Faculty) // Each Teacher must belong to a Faculty
+                .WithMany(f => f.Teachers) // One Faculty can have many Teachers
+                .HasForeignKey(t => t.FacultyID); // Foreign key property
+
+            base.OnModelCreating(modelBuilder);
+        }
+    }
+}

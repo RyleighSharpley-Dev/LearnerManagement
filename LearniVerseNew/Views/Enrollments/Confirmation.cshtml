@@ -1,0 +1,42 @@
+﻿@model IEnumerable<LearniVerseNew.Models.ApplicationModels.Course>
+@{
+    ViewBag.Title = "Confirmation";
+}
+
+<h2>Confirmation</h2>
+
+<p>Please review your selected courses:</p>
+
+<table class="table">
+    <thead>
+        <tr>
+            <th>Course ID</th>
+            <th>Course Name</th>
+            <th>Description</th>
+            <th>Semester</th>
+            <th>Faculty</th>
+            <th>Price</th>
+        </tr>
+    </thead>
+    <tbody>
+        @foreach (var course in Model)
+        {
+            <tr>
+                <td>@course.CourseID</td>
+                <td>@course.CourseName</td>
+                <td>@course.Description</td>
+                <td>@course.Semester</td>
+                <td>@course.Department</td>
+                <td>@course.Price</td>
+            </tr>
+        }
+    </tbody>
+</table>
+
+@using (Html.BeginForm("Confirmation", "Enrollments", FormMethod.Post))
+{
+    @Html.AntiForgeryToken()
+
+    <button class="btn btn-primary" type="submit">Confirm Enrollment</button>
+    <a href="@Url.Action("SelectFaculty")" class="btn btn-default">Cancel</a>
+}
