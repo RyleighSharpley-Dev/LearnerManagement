@@ -21,7 +21,10 @@ namespace LearniVerseNew.Controllers
         {
             id = User.Identity.Name;
 
-            student =  db.Students.Include(s => s.Enrollments.Select(e => e.Courses)).FirstOrDefault(s => s.StudentEmail == id);
+            student =  db.Students.Include(s => s.Enrollments.Select(e => e.Courses))
+                                   .Include(f => f.Faculty)
+                                   .Include(q => q.Qualification)
+                                    .FirstOrDefault(s => s.StudentEmail == id);
 
             if (student != null)
             {

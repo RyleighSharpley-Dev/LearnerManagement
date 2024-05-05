@@ -179,7 +179,7 @@ namespace LearniVerseNew.Controllers
         {
             string studentEmail = User.Identity.Name;
             var paystackService = new PaystackHelper();
-            var initializeResponse = paystackService.InitializeTransaction(studentEmail, Convert.ToInt32(1500 * 100), "https://38de-41-144-4-126.ngrok-free.app/Enrollments/ApplicationCallBack"); //
+            var initializeResponse = paystackService.InitializeTransaction(studentEmail, Convert.ToInt32(1500 * 100), "https://10fb-41-144-68-126.ngrok-free.app/Enrollments/ApplicationCallBack"); //
 
             if (!initializeResponse.Status)
             {
@@ -240,7 +240,7 @@ namespace LearniVerseNew.Controllers
             decimal totalCost = enrollment.Courses.Sum(c => c.Price);
 
             var paystackService = new PaystackHelper();
-            var initializeResponse = paystackService.InitializeTransaction(email, Convert.ToInt32(totalCost * 100), "https://38de-41-144-4-126.ngrok-free.app/Enrollments/PaystackCallback"); // add callback url
+            var initializeResponse = paystackService.InitializeTransaction(email, Convert.ToInt32(totalCost * 100), "https://10fb-41-144-68-126.ngrok-free.app/Enrollments/PaystackCallback"); // add callback url
 
             if (!initializeResponse.Status)
             {
@@ -252,6 +252,20 @@ namespace LearniVerseNew.Controllers
 
             return Redirect(initializeResponse.Data.AuthorizationUrl);
         }
+
+        [Authorize(Roles = "User")]
+        public ActionResult EnrollmentDetails(Student student)
+        {
+            string email = User.Identity.Name;
+
+            student = db.Students.Include(s => s.Enrollments.Select(e => e.Courses))
+                                  .Include(f => f.Faculty)
+                                  .Include(q => q.Qualification)
+                                  .FirstOrDefault(s => s.StudentEmail == email);
+
+            return View(student);
+        }
+
 
         public ActionResult ApplicationCallBack(string reference)
         {

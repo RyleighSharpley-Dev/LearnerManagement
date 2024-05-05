@@ -33,20 +33,13 @@
     </tbody>
 </table>
 
-@using (Html.BeginForm("UploadNSC", "Enrollments", FormMethod.Post))
-{
-    @Html.AntiForgeryToken()
-
-    <label for="file">Upload NSC Certificate (PDF only):</label>
-    <input type="file" name="file" accept=".pdf" required />
-
-    <button type="submit">Upload</button>
-
-}
-
 @using (Html.BeginForm("Confirmation", "Enrollments", FormMethod.Post))
 {
     @Html.AntiForgeryToken()
 
-    <a href="@Url.Action("SelectFaculty")" class="btn btn-default">Cancel</a>
+    <button type="submit">Proceed to payment</button>
+
 }
+
+
+    <a href="@Url.Action("SelectFaculty")" class="btn btn-default">Cancel</a>

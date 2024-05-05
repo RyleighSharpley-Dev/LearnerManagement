@@ -1,59 +1,45 @@
 ﻿@model LearniVerseNew.Models.ApplicationModels.Student
 
 @{
-    ViewBag.Title = "MyCourses";
+    ViewBag.Title = "My Courses";
 }
 
-<h2>MyCourses</h2>
-
-<p>
-    @Html.ActionLink("Create New", "Create")
-</p>
+<h2>My Courses</h2>
 
 @if (Model != null && Model.Enrollments != null && Model.Enrollments.Any())
 {
-    <table class="table">
-        <tr>
-            <th>
-                Course Name
-            </th>
-            <th>
-                Description
-            </th>
-            <th>
-                Semester
-            </th>
-            <th>
-                Department
-            </th>
-            <th>
-                Price
-            </th>
-        </tr>
+    <div class="row mb-4">
+        <div class="col-md-12">
+            <div class="card">
+                <div class="card-body">
+                    <h5 class="card-title">Student Information</h5>
+                    <p class="card-text"><strong>Name:</strong> @Model.StudentFirstName @Model.StudentLastName</p>
+                    <p class="card-text"><strong>Qualification:</strong> @Model.Qualification.Name</p>
+                    <p class="card-text"><strong>Faculty:</strong> @Model.Faculty.FacultyName</p>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="row">
         @foreach (var enrollment in Model.Enrollments)
         {
             foreach (var course in enrollment.Courses)
             {
-                <tr>
-                    <td>
-                        @Html.DisplayFor(modelItem => course.CourseName)
-                    </td>
-                    <td>
-                        @Html.DisplayFor(modelItem => course.Description)
-                    </td>
-                    <td>
-                        @Html.DisplayFor(modelItem => course.Semester)
-                    </td>
-                    <td>
-                        @Html.DisplayFor(modelItem => course.Department)
-                    </td>
-                    <td>
-                        @Html.DisplayFor(modelItem => course.Price)
-                    </td>
-                </tr>
+                <div class="col-md-4 mb-4">
+                    <div class="card">
+                        <div class="card-body">
+                            <h5 class="card-title">@course.CourseName</h5>
+                            <p class="card-text">@course.Description</p>
+                            <p class="card-text"><strong>Semester:</strong> @course.Semester</p>
+                            <p class="card-text"><strong>Department:</strong> @course.Department</p>
+                            <a href="@Url.Action("Classroom", "Courses", new { courseId = course.CourseID })" class="btn btn-primary">Go to Classroom</a>
+                        </div>
+                    </div>
+                </div>
             }
         }
-    </table>
+    </div>
 }
 else
 {

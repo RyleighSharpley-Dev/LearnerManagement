@@ -8,12 +8,40 @@ using System.Web;
 using System.Web.Mvc;
 using LearniVerseNew.Models;
 using LearniVerseNew.Models.ApplicationModels;
+using LearniVerseNew.Models.ApplicationModels.ViewModels;
 
 namespace LearniVerseNew.Controllers
 {
     public class CoursesController : Controller
     {
         private ApplicationDbContext db = new ApplicationDbContext();
+
+        public ActionResult Classroom(string courseId)
+        {
+            // Get the student's email
+            string email = User.Identity.Name;
+
+
+            // Find the course with the provided courseId
+            var course = db.Courses.FirstOrDefault(c => c.CourseID == courseId);
+
+            if (course != null)
+            {
+                // Retrieve all the files associated with the selected course
+                var courseFiles = db.Resources.Where(f => f.CourseID == courseId).ToList();
+
+                // Populate the view model with the course and files
+                var model = new ClassroomViewModel
+                {
+                    Course = course,
+                    Resources = courseFiles
+                };
+
+                return View(model);
+            }
+
+            return View();
+        }
 
         // GET: Courses
         public ActionResult Index()

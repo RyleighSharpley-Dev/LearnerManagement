@@ -18,7 +18,7 @@ namespace LearniVerseNew.Models.Helpers
 
         public BlobHelper()
         {
-            string connectionString = ConfigurationManager.ConnectionStrings["BlobConnectionString"].ConnectionString;
+            string connectionString = ConfigurationManager.ConnectionStrings["BlobLocal"].ConnectionString; //change this in prod
             _blobServiceClient = new BlobServiceClient(connectionString);
 
         }
