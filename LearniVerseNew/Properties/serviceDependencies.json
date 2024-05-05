@@ -9,8 +9,7 @@
     },
     "storage1": {
       "type": "storage",
-      "connectionId": "BlobLocal",
-      "dynamicId": null
+      "connectionId": "BlobConnectionString"
     }
   }
 }

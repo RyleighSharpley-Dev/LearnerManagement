@@ -3,7 +3,23 @@
     ViewBag.Title = "Classroom";
 }
 
+
 <div class="container">
+
+    <div class="modal fade" id="qrCodeModal" tabindex="-1" role="dialog" aria-labelledby="qrCodeModalLabel" aria-hidden="true">
+        <div class="modal-dialog modal-dialog-centered" role="document">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title" id="qrCodeModalLabel">Download File</h5>
+                   
+                </div>
+                <div class="modal-body">
+                    <img id="qrCodeImage" class="img-thumbnail" alt="QR Code" />
+                </div>
+            </div>
+        </div>
+    </div>
+
     <div class="row">
         <div class="col-md-12">
             <h2>@Model.Course.CourseName</h2>
@@ -24,7 +40,7 @@
                             <form id="downloadForm_@file.FileName" action="@Url.Action("DownloadBlob", "Resources")" method="post">
                                 <input type="hidden" name="fileName" value="@file.FileName" />
                                 <button type="submit" class="btn btn-link">@file.FileName</button>
-                                <button type="button" class="btn btn-primary" onclick="generateQRCode('@file.FileName')">Generate QR Code</button>
+                                <button type="button" class="btn btn-primary" onclick="generateQRCode('@file.FileName')">Download with QR</button>
                             </form>
                         </li>
                     </ul>
@@ -36,7 +52,7 @@
             <div class="jumbotron">
                 <h3>Classroom</h3>
                 <hr />
-                <!-- Content related to the classroom can be added here -->
+               
             </div>
         </div>
 
@@ -44,4 +60,20 @@
     </div>
 </div>
 
+<script>
 
+function generateQRCode(blobName) {
+    $.ajax({
+        url: '@Url.Action("GetQrCode", "Resources")',
+        type: 'GET',
+        data: { blobName: blobName },
+        success: function(response) {
+            $('#qrCodeImage').attr('src', 'data:image/png;base64,' + response.QrCodeBase64);
+            $('#qrCodeModal').modal('show');
+        },
+        error: function(xhr, status, error) {
+            console.error(error);
+        }
+    });
+}
+</script>

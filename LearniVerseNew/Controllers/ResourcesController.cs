@@ -82,6 +82,15 @@ namespace LearniVerseNew.Controllers
             return View(model);
         }
 
+        public ActionResult GetQrCode(string blobName)
+        {
+            QRHelper qrHelper = new QRHelper();
+            string qrCodeBase64 = qrHelper.GenerateQRCode(blobName);
+
+            return Json(new { QrCodeBase64 = qrCodeBase64 }, JsonRequestBehavior.AllowGet);
+        }
+
+
         [HttpPost]
         public ActionResult DownloadBlob(string fileName)
         {
