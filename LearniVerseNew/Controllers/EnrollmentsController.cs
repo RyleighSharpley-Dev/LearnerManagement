@@ -159,10 +159,10 @@ namespace LearniVerseNew.Controllers
         {
             if (ModelState.IsValid)
             {
-
                 var selectedCourses = db.Courses.Where(c => viewModel.SelectedCourseIDs.Contains(c.CourseID)).ToList();
 
                 TempData["SelectedCourseIDs"] = viewModel.SelectedCourseIDs;
+                TempData["SelectedCourses"] = selectedCourses;
 
                 return View("Confirmation", selectedCourses);
             }
@@ -177,74 +177,9 @@ namespace LearniVerseNew.Controllers
         [ValidateAntiForgeryToken]
         public ActionResult Confirmation()
         {
-            EmailHelper emailer = new EmailHelper();
-
-            string selectedFaculty = TempData["SelectedFaculty"].ToString();
-            string selectedQualification = TempData["QualificationID"].ToString();
-
-            var selectedCourseIds = TempData["SelectedCourseIDs"] as IEnumerable<string>;
-            if (selectedCourseIds == null)
-            {
-                return RedirectToAction("SelectFaculty");
-            }
-
-            var courseIdsList = selectedCourseIds.ToList();
-            string studentId = User.Identity.Name;
-            var student = db.Students.FirstOrDefault(s => s.StudentEmail == studentId);
-            if (student == null)
-            {
-                return HttpNotFound();
-            }
-            // Create a new Enrollment for each selected course
-            var enrollment = new Enrollment
-            {
-                EnrollmentID = Guid.NewGuid(),
-                StudentID = student.StudentID,
-                EnrollmentDate = DateTime.Now,
-                IsApproved = false,
-                HasPaid = false,
-                Courses = new List<Course>() // Initialize the collection
-            };
-
-            foreach (var courseId in courseIdsList)
-            {
-
-                // Find the course by its ID
-                var course = db.Courses.FirstOrDefault(c => c.CourseID == courseId);
-                if (course != null)
-                {
-                    // Add the course to the Enrollment
-                    enrollment.Courses.Add(course);
-                }
-
-                // Add the enrollment to the database
-                db.Enrollments.Add(enrollment);
-            }
-
-            if (selectedFaculty != null && selectedQualification != null)
-            {
-
-                student.FacultyID = selectedFaculty;
-                student.QualificationID = selectedQualification;
-
-                var entry = db.Entry(student);
-                if (entry.State == EntityState.Detached)
-                {
-                    // If the student is not tracked, attach it to the context
-                    db.Students.Attach(student);
-                    entry.State = EntityState.Modified;
-                }
-
-            }
-
-            // Save changes to the database
-            db.SaveChanges();
-
-            // Send email notification
-            emailer.SendEmailApprovalPending(student.StudentEmail, $"{student.StudentFirstName} {student.StudentLastName}");
-
+            string studentEmail = User.Identity.Name;
             var paystackService = new PaystackHelper();
-            var initializeResponse = paystackService.InitializeTransaction(studentId, Convert.ToInt32(1500 * 100), "https://bd4f-41-144-1-56.ngrok-free.app/Enrollments/ApplicationCallBack"); //
+            var initializeResponse = paystackService.InitializeTransaction(studentEmail, Convert.ToInt32(1500 * 100), "https://10fb-41-144-68-126.ngrok-free.app/Enrollments/ApplicationCallBack"); //
 
             if (!initializeResponse.Status)
             {
@@ -252,10 +187,8 @@ namespace LearniVerseNew.Controllers
                 return View("Error");
             }
 
-            // Redirect to Paystack for payment
+           
             return Redirect(initializeResponse.Data.AuthorizationUrl);
-
-            //make the database update after the application fee is received
 
         }
 
@@ -307,7 +240,7 @@ namespace LearniVerseNew.Controllers
             decimal totalCost = enrollment.Courses.Sum(c => c.Price);
 
             var paystackService = new PaystackHelper();
-            var initializeResponse = paystackService.InitializeTransaction(email, Convert.ToInt32(totalCost * 100), "https://bd4f-41-144-1-56.ngrok-free.app/Enrollments/PaystackCallback"); // add callback url
+            var initializeResponse = paystackService.InitializeTransaction(email, Convert.ToInt32(totalCost * 100), "https://10fb-41-144-68-126.ngrok-free.app/Enrollments/PaystackCallback"); // add callback url
 
             if (!initializeResponse.Status)
             {
@@ -320,10 +253,25 @@ namespace LearniVerseNew.Controllers
             return Redirect(initializeResponse.Data.AuthorizationUrl);
         }
 
-        public ActionResult ApplicationCallBack()
+        [Authorize(Roles = "User")]
+        public ActionResult EnrollmentDetails(Student student)
         {
+            string email = User.Identity.Name;
+
+            student = db.Students.Include(s => s.Enrollments.Select(e => e.Courses))
+                                  .Include(f => f.Faculty)
+                                  .Include(q => q.Qualification)
+                                  .FirstOrDefault(s => s.StudentEmail == email);
+
+            return View(student);
+        }
+
+
+        public ActionResult ApplicationCallBack(string reference)
+        {
+            EmailHelper emailer = new EmailHelper();
             // Retrieve transaction reference from the request
-            var reference = Request.Form["reference"];
+            //var reference = Request.Form["Params[reference]"];
 
             // Use Paystack API to verify the transaction
             var paystackService = new PaystackHelper(); // Assuming PaystackHelper is your service class
@@ -332,8 +280,75 @@ namespace LearniVerseNew.Controllers
             // Check if the payment was successful
             if (verifyResponse.Status)
             {
-                // Payment was successful, redirect to EnrollmentPending
-                return RedirectToAction("EnrollmentPending");
+                var studentEmail = verifyResponse.Data.Customer.Email;
+
+                // Find the student in the database
+                var student = db.Students.FirstOrDefault(s => s.StudentEmail == studentEmail);
+
+                if (student != null)
+                {
+                    // Retrieve selected faculty, qualification, and course IDs from TempData
+                    string selectedFaculty = TempData["SelectedFaculty"].ToString();
+                    string selectedQualification = TempData["QualificationID"].ToString();
+                    var selectedCourseIds = TempData["SelectedCourseIDs"] as IEnumerable<string>;
+
+                    // Ensure all required data is available
+                    if (selectedCourseIds == null)
+                    {
+                        return RedirectToAction("SelectFaculty");
+                    }
+
+                    // Convert course IDs to a list
+                    var courseIdsList = selectedCourseIds.ToList();
+
+                    var enrollment = new Enrollment
+                    {
+                        EnrollmentID = Guid.NewGuid(),
+                        StudentID = student.StudentID,
+                        EnrollmentDate = DateTime.Now,
+                        IsApproved = false,
+                        HasPaid = false,
+                        Courses = new List<Course>()
+                    };
+
+                    // Create a new Enrollment for each selected course
+                    foreach (var courseId in courseIdsList)
+                    {
+                        var course = db.Courses
+                                    .Include(c => c.Teacher)
+                                    .Include(q => q.Qualification)
+                                    .FirstOrDefault(c => c.CourseID == courseId);
+
+                        if (course != null)
+                        {
+
+                            enrollment.Courses.Add(course);
+                            
+                        }
+                    }
+
+                    db.Enrollments.Add(enrollment);
+                    // Update student's faculty and qualification
+                    student.FacultyID = selectedFaculty;
+                    student.QualificationID = selectedQualification;
+
+                    // Save changes to the database
+                    db.SaveChanges();
+
+                    // Send email notification
+                    emailer.SendEmailApprovalPending(student.StudentEmail, $"{student.StudentFirstName} {student.StudentLastName}");
+
+                    // Redirect to EnrollmentPending
+                    return RedirectToAction("EnrollmentPending");
+                }
+                else
+                {
+
+                    ViewBag.ErrorMessage = "Student not found.";
+                    return View("Error");
+                }
+
+
             }
             else
             {
@@ -342,6 +357,7 @@ namespace LearniVerseNew.Controllers
                 return View("Error");
             }
         }
+
 
         public ActionResult PaystackCallback(string reference)
         {

@@ -1,8 +1,106 @@
 ﻿@model LearniVerseNew.Models.ApplicationModels.Student
 
 @{
-    ViewBag.Title = "Home";
+    ViewBag.Title = "Dashboard";
+}
+<div class="row">
+    <div class="col-md-4">
+        <div class="card">
+            <div class="card-body">
+                <h2 class="card-title">Welcome to Your Dashboard</h2>
+                <div class="card-text">
+                    <p>Welcome <strong>@Model.StudentFirstName @Model.StudentLastName</strong></p>
+                    <p>Your Faculty: <strong>@Model.Faculty.FacultyName</strong></p>
+                    <p>Your Qualification: <strong>@Model.Qualification.Name</strong></p>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="col-md-4">
+        <div class="card">
+            <div class="card-body">
+                <h3 class="card-title">Enrollments</h3>
+                <p class="card-text">View your current enrollments and their status.</p>
+
+                <a href="@Url.Action("MyEnrollments", "Enrollments")" class="btn btn-primary">View Enrollments</a>
+            </div>
+        </div>
+    </div>
+
+    <div class="col-md-4">
+        <div class="card">
+            <div class="card-body">
+                <h3 class="card-title">Payments</h3>
+                <p class="card-text">View your payment history and status.</p>
+                <a href="@Url.Action("Payments", "Student")" class="btn btn-primary">View Payments</a>
+            </div>
+        </div>
+    </div>
+</div>
+<br />
+@{ var currentEnrollment = Model.Enrollments.FirstOrDefault(e => e.EnrollmentDate.Year == DateTime.Now.Year);}
+
+@if (currentEnrollment != null)
+{
+    if (!currentEnrollment.HasPaid)
+    {
+        <div class="alert alert-warning" role="alert">
+            You haven't made the payment for your enrollment. Please proceed to make the payment.
+        </div>
+        using (Html.BeginForm("Pay", "Enrollments", new { enrollmentId = currentEnrollment.EnrollmentID }, FormMethod.Post))
+        {
+            @Html.AntiForgeryToken()
+            <input type="submit" value="Pay Now" class="btn btn-success" />
+        }
+    }
+
+    else
+    {
+        <h3>My Courses @currentEnrollment.EnrollmentDate.Year</h3>
+
+        <div id="courseCarousel" class="carousel slide" data-bs-ride="carousel">
+            <div class="carousel-inner">
+                @for (var i = 0; i < currentEnrollment.Courses.Count; i += 3)
+                {
+                    <div class="carousel-item @if (i == 0) { <text>active</text> }">
+                        <div class="row">
+                            @foreach (var course in currentEnrollment.Courses.Skip(i).Take(3))
+                            {
+                                <div class="col-md-4">
+                                    <div class="card">
+                                        <div class="card-body">
+                                            <h5 class="card-title">@course.CourseName</h5>
+                                            <p class="card-text">@course.Description</p>
+                                            <a href="@Url.Action("Classroom", "Courses", new { courseId = course.CourseID })" class="btn btn-primary">View Course</a>
+                                        </div>
+                                    </div>
+                                </div>
+                            }
+                        </div>
+                    </div>
+                }
+            </div>
+            <button class="carousel-control-prev" type="button" data-bs-target="#courseCarousel" data-bs-slide="prev">
+                <span class="carousel-control-prev-icon" aria-hidden="true"></span>
+                <span class="visually-hidden">Previous</span>
+            </button>
+            <button class="carousel-control-next" type="button" data-bs-target="#courseCarousel" data-bs-slide="next">
+                <span class="carousel-control-next-icon" aria-hidden="true"></span>
+                <span class="visually-hidden">Next</span>
+            </button>
+        </div>
+    }
+}
+else
+{
+    <p>No current enrollment found.</p>
 }
 
-<h2>Home</h2>
 
+@Scripts.Render("~/bundles/jquery")
+@Scripts.Render("~/bundles/jqueryval")
+@Scripts.Render("~/bundles/modernizr")
+@Scripts.Render("~/bundles/bootstrap")
+
+@Styles.Render("~/Content/css")

@@ -1,0 +1,79 @@
+﻿@model LearniVerseNew.Models.ApplicationModels.ViewModels.ClassroomViewModel
+@{
+    ViewBag.Title = "Classroom";
+}
+
+
+<div class="container">
+
+    <div class="modal fade" id="qrCodeModal" tabindex="-1" role="dialog" aria-labelledby="qrCodeModalLabel" aria-hidden="true">
+        <div class="modal-dialog modal-dialog-centered" role="document">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title" id="qrCodeModalLabel">Download File</h5>
+                   
+                </div>
+                <div class="modal-body">
+                    <img id="qrCodeImage" class="img-thumbnail" alt="QR Code" />
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="row">
+        <div class="col-md-12">
+            <h2>@Model.Course.CourseName</h2>
+            <hr />
+        </div>
+    </div>
+
+    <div class="row">
+        <div class="col-md-3 border-start border-end border-black">
+            <div class="jumbotron">
+                <h3>Materials</h3>
+                <hr />
+                @foreach (var file in Model.Resources)
+                {
+                    <h4>@file.FileDescription</h4>
+                    <ul>
+                        <li>
+                            <form id="downloadForm_@file.FileName" action="@Url.Action("DownloadBlob", "Resources")" method="post">
+                                <input type="hidden" name="fileName" value="@file.FileName" />
+                                <button type="submit" class="btn btn-link">@file.FileName</button>
+                                <button type="button" class="btn btn-primary" onclick="generateQRCode('@file.FileName')">Download with QR</button>
+                            </form>
+                        </li>
+                    </ul>
+                    <hr />
+                }
+            </div>
+        </div>
+        <div class="col-md-9">
+            <div class="jumbotron">
+                <h3>Classroom</h3>
+                <hr />
+               
+            </div>
+        </div>
+
+
+    </div>
+</div>
+
+<script>
+
+function generateQRCode(blobName) {
+    $.ajax({
+        url: '@Url.Action("GetQrCode", "Resources")',
+        type: 'GET',
+        data: { blobName: blobName },
+        success: function(response) {
+            $('#qrCodeImage').attr('src', 'data:image/png;base64,' + response.QrCodeBase64);
+            $('#qrCodeModal').modal('show');
+        },
+        error: function(xhr, status, error) {
+            console.error(error);
+        }
+    });
+}
+</script>

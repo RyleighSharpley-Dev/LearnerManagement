@@ -8,6 +8,8 @@ using System.IO;
 using System.Linq;
 using System.Threading.Tasks;
 using System.Web;
+using Azure.Storage.Sas;
+using Azure.Storage;
 
 namespace LearniVerseNew.Models.Helpers
 {
@@ -18,7 +20,7 @@ namespace LearniVerseNew.Models.Helpers
 
         public BlobHelper()
         {
-            string connectionString = ConfigurationManager.ConnectionStrings["BlobConnectionString"].ConnectionString;
+            string connectionString = ConfigurationManager.ConnectionStrings["BlobConnectionString"].ConnectionString; //change this in prod
             _blobServiceClient = new BlobServiceClient(connectionString);
 
         }
@@ -128,5 +130,41 @@ namespace LearniVerseNew.Models.Helpers
                 return false;
             }
         }
+
+        public Uri GetBlobSasUri(string blobName)
+        {
+            // Get a reference to the blob container
+            BlobContainerClient containerClient = _blobServiceClient.GetBlobContainerClient(_containerName);
+
+            // Get a reference to the blob
+            BlobClient blobClient = containerClient.GetBlobClient(blobName);
+
+            // Create the SAS token parameters
+            BlobSasBuilder sasBuilder = new BlobSasBuilder
+            {
+                BlobContainerName = _containerName,
+                BlobName = blobName,
+                Resource = "b", // "b" indicates the SAS applies to the blob resource
+                ExpiresOn = DateTimeOffset.UtcNow.AddHours(1), // Expiry time for the SAS token
+                                                               // Set permissions for the SAS token
+                StartsOn = DateTimeOffset.UtcNow.AddMinutes(-5), // Start time for the SAS token
+                Protocol = SasProtocol.Https // HTTPS should be used for security reasons
+            };
+
+            // Set permissions for the SAS token
+            sasBuilder.SetPermissions(BlobSasPermissions.Read);
+
+            // Generate the SAS token
+            string sasToken = sasBuilder.ToSasQueryParameters(new StorageSharedKeyCredential("learniversestorage", "qgf9TcU5BnZaxPSkIyFsOyBznjo1/cM+k6xjdCW1v0A7isd/BB9VibIrrEP0YR5q9EKogIwOPV+D+AStCnCHnA==")).ToString(); //change in prod
+
+            // Construct the full URI with SAS token
+            UriBuilder uriBuilder = new UriBuilder(blobClient.Uri)
+            {
+                Query = sasToken
+            };
+
+            return uriBuilder.Uri;
+        }
+
     }
 }
