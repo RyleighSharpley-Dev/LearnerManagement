@@ -28,13 +28,17 @@ else
                 <td>@enrollment.EnrollmentDate.ToShortDateString()</td>
                 <td>@(enrollment.IsApproved ? "Yes" : "No")</td>
                 <td>
-                    @if (enrollment.IsApproved)
+                    @if (enrollment.IsApproved && enrollment.HasPaid == false)
                     {
                         using (Html.BeginForm("Pay", "Enrollments", new { enrollmentId = enrollment.EnrollmentID }, FormMethod.Post))
                         {
                             @Html.AntiForgeryToken()
                             <input type="submit" value="Pay" class="btn btn-success" />
                         }
+                    }
+                    else if (enrollment.IsApproved && enrollment.HasPaid)
+                    {
+                        <span class="text-muted">Payment recieved in full</span>
                     }
                     else
                     {
