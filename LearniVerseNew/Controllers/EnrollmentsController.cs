@@ -159,10 +159,10 @@ namespace LearniVerseNew.Controllers
         {
             if (ModelState.IsValid)
             {
-
                 var selectedCourses = db.Courses.Where(c => viewModel.SelectedCourseIDs.Contains(c.CourseID)).ToList();
 
                 TempData["SelectedCourseIDs"] = viewModel.SelectedCourseIDs;
+                TempData["SelectedCourses"] = selectedCourses;
 
                 return View("Confirmation", selectedCourses);
             }
@@ -178,82 +178,6 @@ namespace LearniVerseNew.Controllers
         public ActionResult Confirmation()
         {
             string studentEmail = User.Identity.Name;
-            //EmailHelper emailer = new EmailHelper();
-            /*
-           
-
-            // Find the student in the database
-            var student = db.Students.FirstOrDefault(s => s.StudentEmail == studentEmail);
-            if (student == null)
-            {
-                return HttpNotFound();
-            }
-
-            string selectedFaculty = TempData["SelectedFaculty"].ToString();
-            string selectedQualification = TempData["QualificationID"].ToString();
-
-            var selectedCourseIds = TempData["SelectedCourseIDs"] as IEnumerable<string>;
-            if (selectedCourseIds == null)
-            {
-                return RedirectToAction("SelectFaculty");
-            }
-            */
-            /*
-            var courseIdsList = selectedCourseIds.ToList();
-            string studentId = User.Identity.Name;
-            var student = db.Students.FirstOrDefault(s => s.StudentEmail == studentId);
-            if (student == null)
-            {
-                return HttpNotFound();
-            }
-            // Create a new Enrollment for each selected course
-            var enrollment = new Enrollment
-            {
-                EnrollmentID = Guid.NewGuid(),
-                StudentID = student.StudentID,
-                EnrollmentDate = DateTime.Now,
-                IsApproved = false,
-                HasPaid = false,
-                Courses = new List<Course>() // Initialize the collection
-            };
-
-            foreach (var courseId in courseIdsList)
-            {
-
-                // Find the course by its ID
-                var course = db.Courses.FirstOrDefault(c => c.CourseID == courseId);
-                if (course != null)
-                {
-                    // Add the course to the Enrollment
-                    enrollment.Courses.Add(course);
-                }
-
-                // Add the enrollment to the database
-                db.Enrollments.Add(enrollment);
-            }
-
-            if (selectedFaculty != null && selectedQualification != null)
-            {
-
-                student.FacultyID = selectedFaculty;
-                student.QualificationID = selectedQualification;
-
-                var entry = db.Entry(student);
-                if (entry.State == EntityState.Detached)
-                {
-                    // If the student is not tracked, attach it to the context
-                    db.Students.Attach(student);
-                    entry.State = EntityState.Modified;
-                }
-
-            }
-
-            // Save changes to the database
-            db.SaveChanges();
-
-            // Send email notification
-            emailer.SendEmailApprovalPending(student.StudentEmail, $"{student.StudentFirstName} {student.StudentLastName}");
-            */
             var paystackService = new PaystackHelper();
             var initializeResponse = paystackService.InitializeTransaction(studentEmail, Convert.ToInt32(1500 * 100), "https://38de-41-144-4-126.ngrok-free.app/Enrollments/ApplicationCallBack"); //
 
@@ -263,10 +187,8 @@ namespace LearniVerseNew.Controllers
                 return View("Error");
             }
 
-            // Redirect to Paystack for payment
+           
             return Redirect(initializeResponse.Data.AuthorizationUrl);
-
-            //make the database update after the application fee is received
 
         }
 
@@ -421,9 +343,6 @@ namespace LearniVerseNew.Controllers
                 return View("Error");
             }
         }
-
-
-
 
 
         public ActionResult PaystackCallback(string reference)
