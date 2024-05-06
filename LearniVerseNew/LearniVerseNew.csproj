@@ -391,6 +391,9 @@
     <Compile Include="Models\ApplicationModels\Faculty.cs" />
     <Compile Include="Models\ApplicationModels\Payment.cs" />
     <Compile Include="Models\ApplicationModels\Qualification.cs" />
+    <Compile Include="Models\ApplicationModels\Question.cs" />
+    <Compile Include="Models\ApplicationModels\Quiz.cs" />
+    <Compile Include="Models\ApplicationModels\QuizAttempt.cs" />
     <Compile Include="Models\ApplicationModels\Resource.cs" />
     <Compile Include="Models\ApplicationModels\Student.cs" />
     <Compile Include="Models\ApplicationModels\Teacher.cs" />

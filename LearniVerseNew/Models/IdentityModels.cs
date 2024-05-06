@@ -39,6 +39,10 @@ namespace LearniVerseNew.Models
         public DbSet<Enrollment> Enrollments { get; set; }
         public DbSet<Payment> Payments { get; set; }
         public DbSet<Resource> Resources { get; set; }
+        public DbSet<Quiz> Quizzes { get; set; }
+        public DbSet<QuizAttempt> QuizAttempts { get; set; }   
+        public DbSet<Question> Questions { get; set; }   
+
 
 
         protected override void OnModelCreating(DbModelBuilder modelBuilder)

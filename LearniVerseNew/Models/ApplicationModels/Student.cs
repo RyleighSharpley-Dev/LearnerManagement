@@ -38,5 +38,7 @@ namespace LearniVerseNew.Models.ApplicationModels
         public virtual Qualification Qualification { get; set; }
 
         public ICollection<Enrollment> Enrollments { get; set; }
+
+        public virtual ICollection<QuizAttempt> QuizAttempts { get; set; }
     }
 }
