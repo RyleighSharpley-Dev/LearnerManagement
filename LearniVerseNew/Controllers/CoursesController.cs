@@ -29,12 +29,14 @@ namespace LearniVerseNew.Controllers
             {
                 // Retrieve all the files associated with the selected course
                 var courseFiles = db.Resources.Where(f => f.CourseID == courseId).ToList();
+                var quizzes = db.Quizzes.Where(q => q.CourseID == courseId).ToList();
 
                 // Populate the view model with the course and files
                 var model = new ClassroomViewModel
                 {
                     Course = course,
-                    Resources = courseFiles
+                    Resources = courseFiles,
+                    Quizzes = quizzes
                 };
 
                 return View(model);

@@ -1,0 +1,56 @@
+﻿@model LearniVerseNew.Models.ApplicationModels.Quiz
+
+@{
+    ViewBag.Title = "Quiz";
+}
+
+<h2>Take Quiz</h2>
+
+<div>
+    <h3>Quiz Details</h3>
+    <p>Quiz ID: @Model.QuizID</p>
+    <p>Description: @Model.QuizDescription</p>
+    <!-- Add more quiz details as needed -->
+</div>
+
+<div>
+    <h3>Questions</h3>
+    @using (Html.BeginForm("SubmitQuiz", "Quiz", FormMethod.Post))
+    {
+        @Html.AntiForgeryToken()
+        foreach (var question in Model.Questions)
+        {
+            <div class="card mb-3">
+                <div class="card-body">
+                    <h5 class="card-title">@question.QuestionText</h5>
+                    <input type="hidden" name="Questions[@question.QuestionID].QuestionID" value="@question.QuestionID" />
+                    <div class="form-check">
+                        <input class="form-check-input" type="radio" name="Questions[@question.QuestionID].SelectedAnswer" id="@("answer_" + question.QuestionID + "_A")" value="A">
+                        <label class="form-check-label" for="@("answer_" + question.QuestionID + "_A")">
+                            A. @question.AnswerA
+                        </label>
+                    </div>
+                    <div class="form-check">
+                        <input class="form-check-input" type="radio" name="Questions[@question.QuestionID].SelectedAnswer" id="@("answer_" + question.QuestionID + "_B")" value="B">
+                        <label class="form-check-label" for="@("answer_" + question.QuestionID + "_B")">
+                            B. @question.AnswerB
+                        </label>
+                    </div>
+                    <div class="form-check">
+                        <input class="form-check-input" type="radio" name="Questions[@question.QuestionID].SelectedAnswer" id="@("answer_" + question.QuestionID + "_C")" value="C">
+                        <label class="form-check-label" for="@("answer_" + question.QuestionID + "_C")">
+                            C. @question.AnswerC
+                        </label>
+                    </div>
+                    <div class="form-check">
+                        <input class="form-check-input" type="radio" name="Questions[@question.QuestionID].SelectedAnswer" id="@("answer_" + question.QuestionID + "_D")" value="D">
+                        <label class="form-check-label" for="@("answer_" + question.QuestionID + "_D")">
+                            D. @question.AnswerD
+                        </label>
+                    </div>
+                </div>
+            </div>
+        }
+        <input type="submit" value="Submit Quiz" class="btn btn-primary" />
+    }
+</div>

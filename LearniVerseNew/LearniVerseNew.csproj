@@ -366,6 +366,7 @@
     <Compile Include="Controllers\HomeController.cs" />
     <Compile Include="Controllers\ManageController.cs" />
     <Compile Include="Controllers\QualificationsController.cs" />
+    <Compile Include="Controllers\QuizController.cs" />
     <Compile Include="Controllers\ResourcesController.cs" />
     <Compile Include="Controllers\StudentsController.cs" />
     <Compile Include="Controllers\TeachersController.cs" />
@@ -395,6 +396,14 @@
     <Compile Include="Migrations\202405061047346_Added Relationships between course and quiz.cs" />
     <Compile Include="Migrations\202405061047346_Added Relationships between course and quiz.Designer.cs">
       <DependentUpon>202405061047346_Added Relationships between course and quiz.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Migrations\202405061107013_Changed teacher ID datatype for quiz to string.cs" />
+    <Compile Include="Migrations\202405061107013_Changed teacher ID datatype for quiz to string.Designer.cs">
+      <DependentUpon>202405061107013_Changed teacher ID datatype for quiz to string.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Migrations\202405061113042_Fixed Datatype discrepencies.cs" />
+    <Compile Include="Migrations\202405061113042_Fixed Datatype discrepencies.Designer.cs">
+      <DependentUpon>202405061113042_Fixed Datatype discrepencies.cs</DependentUpon>
     </Compile>
     <Compile Include="Migrations\Configuration.cs" />
     <Compile Include="Models\AccountViewModels.cs" />
@@ -539,6 +548,13 @@
     <Content Include="Views\Enrollments\EnrollmentDetails.cshtml" />
     <Content Include="Views\Courses\Classroom.cshtml" />
     <Content Include="Views\Resources\Upload.cshtml" />
+    <Content Include="Views\Quiz\Create.cshtml" />
+    <Content Include="Views\Quiz\Delete.cshtml" />
+    <Content Include="Views\Quiz\Details.cshtml" />
+    <Content Include="Views\Quiz\Edit.cshtml" />
+    <Content Include="Views\Quiz\Index.cshtml" />
+    <Content Include="Views\Quiz\AddQuestions.cshtml" />
+    <Content Include="Views\Quiz\Quiz.cshtml" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include="App_Data\" />
@@ -588,6 +604,12 @@
     </EmbeddedResource>
     <EmbeddedResource Include="Migrations\202405061047346_Added Relationships between course and quiz.resx">
       <DependentUpon>202405061047346_Added Relationships between course and quiz.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Migrations\202405061107013_Changed teacher ID datatype for quiz to string.resx">
+      <DependentUpon>202405061107013_Changed teacher ID datatype for quiz to string.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Migrations\202405061113042_Fixed Datatype discrepencies.resx">
+      <DependentUpon>202405061113042_Fixed Datatype discrepencies.cs</DependentUpon>
     </EmbeddedResource>
   </ItemGroup>
   <PropertyGroup>

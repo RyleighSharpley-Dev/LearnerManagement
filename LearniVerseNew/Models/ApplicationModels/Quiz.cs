@@ -20,10 +20,10 @@ namespace LearniVerseNew.Models.ApplicationModels
 
         public virtual ICollection<Question> Questions { get; set; }
 
-        public Guid TeacherID { get; set; }
+        public string TeacherID { get; set; }
         public virtual Teacher Teacher { get; set; }
 
-        public Guid CourseID { get; set; } 
+        public string CourseID { get; set; } 
         public virtual Course Course { get; set; } 
 
         public enum QuizStatus

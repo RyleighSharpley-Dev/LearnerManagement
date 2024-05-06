@@ -11,10 +11,10 @@ namespace LearniVerseNew.Models.ApplicationModels
         public DateTime AttemptDate { get; set; }
         public int MarkObtained { get; set; }
 
-        public Guid QuizID { get; set; }
+        public string QuizID { get; set; }
         public virtual Quiz Quiz { get; set; }
 
-        public Guid StudentID { get; set; }
+        public string StudentID { get; set; }
         public virtual Student Student { get; set; }
     }
 }
