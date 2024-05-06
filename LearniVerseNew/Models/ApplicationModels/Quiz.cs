@@ -23,6 +23,8 @@ namespace LearniVerseNew.Models.ApplicationModels
         public Guid TeacherID { get; set; }
         public virtual Teacher Teacher { get; set; }
 
+        public Guid CourseID { get; set; } 
+        public virtual Course Course { get; set; } 
 
         public enum QuizStatus
         {
