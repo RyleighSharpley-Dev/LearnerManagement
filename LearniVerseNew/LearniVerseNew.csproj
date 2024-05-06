@@ -384,6 +384,14 @@
     <Compile Include="Migrations\202405021653518_Payment Table Added For Real.Designer.cs">
       <DependentUpon>202405021653518_Payment Table Added For Real.cs</DependentUpon>
     </Compile>
+    <Compile Include="Migrations\202405061022554_Quiz Entities to Db.cs" />
+    <Compile Include="Migrations\202405061022554_Quiz Entities to Db.Designer.cs">
+      <DependentUpon>202405061022554_Quiz Entities to Db.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Migrations\202405061038102_Added quiz start and end times.cs" />
+    <Compile Include="Migrations\202405061038102_Added quiz start and end times.Designer.cs">
+      <DependentUpon>202405061038102_Added quiz start and end times.cs</DependentUpon>
+    </Compile>
     <Compile Include="Migrations\Configuration.cs" />
     <Compile Include="Models\AccountViewModels.cs" />
     <Compile Include="Models\ApplicationModels\Course.cs" />
@@ -567,6 +575,12 @@
     </EmbeddedResource>
     <EmbeddedResource Include="Migrations\202405021653518_Payment Table Added For Real.resx">
       <DependentUpon>202405021653518_Payment Table Added For Real.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Migrations\202405061022554_Quiz Entities to Db.resx">
+      <DependentUpon>202405061022554_Quiz Entities to Db.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Migrations\202405061038102_Added quiz start and end times.resx">
+      <DependentUpon>202405061038102_Added quiz start and end times.cs</DependentUpon>
     </EmbeddedResource>
   </ItemGroup>
   <PropertyGroup>
