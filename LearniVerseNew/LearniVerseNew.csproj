@@ -392,6 +392,10 @@
     <Compile Include="Migrations\202405061038102_Added quiz start and end times.Designer.cs">
       <DependentUpon>202405061038102_Added quiz start and end times.cs</DependentUpon>
     </Compile>
+    <Compile Include="Migrations\202405061047346_Added Relationships between course and quiz.cs" />
+    <Compile Include="Migrations\202405061047346_Added Relationships between course and quiz.Designer.cs">
+      <DependentUpon>202405061047346_Added Relationships between course and quiz.cs</DependentUpon>
+    </Compile>
     <Compile Include="Migrations\Configuration.cs" />
     <Compile Include="Models\AccountViewModels.cs" />
     <Compile Include="Models\ApplicationModels\Course.cs" />
@@ -581,6 +585,9 @@
     </EmbeddedResource>
     <EmbeddedResource Include="Migrations\202405061038102_Added quiz start and end times.resx">
       <DependentUpon>202405061038102_Added quiz start and end times.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Migrations\202405061047346_Added Relationships between course and quiz.resx">
+      <DependentUpon>202405061047346_Added Relationships between course and quiz.cs</DependentUpon>
     </EmbeddedResource>
   </ItemGroup>
   <PropertyGroup>
