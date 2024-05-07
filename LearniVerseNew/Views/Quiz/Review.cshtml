@@ -1,0 +1,26 @@
+﻿@model LearniVerseNew.Models.ApplicationModels.Quiz
+
+<h2>@Model.QuizDescription</h2>
+<hr />
+<h1>Review</h1>
+
+@foreach (var question in Model.Questions)
+{
+    <div class="question">
+        <h3>Question @question.QuestionNumber</h3>
+        <p>@question.QuestionText</p>
+        
+        <ul>
+            <li>A: @question.AnswerA</li>
+            <li>B: @question.AnswerB</li>
+            <li>C: @question.AnswerC</li>
+            <li>D: @question.AnswerD</li>
+        </ul>
+        @if (ViewBag.Answers.ContainsKey(question.QuestionID))
+        {
+            var chosenAnswer = ViewBag.Answers[question.QuestionID];
+            <p>Your Answer: @chosenAnswer</p>
+        }
+        <hr />
+    </div>
+}

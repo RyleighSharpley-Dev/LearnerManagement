@@ -8,12 +8,76 @@ using System.Web;
 using System.Web.Mvc;
 using LearniVerseNew.Models;
 using LearniVerseNew.Models.ApplicationModels;
+using LearniVerseNew.Models.ApplicationModels.ViewModels;
+using Newtonsoft.Json;
 
 namespace LearniVerseNew.Controllers
 {
     public class QuizController : Controller
     {
         private ApplicationDbContext db = new ApplicationDbContext();
+
+        public ActionResult Quiz(Guid QuizID)
+        {
+            var quiz = db.Quizzes.Include(q => q.Questions).FirstOrDefault(q => q.QuizID == QuizID);
+            var questions = quiz.Questions.ToList();
+
+            var viewModel = new QuizViewModel
+            {
+                Quiz = quiz,
+                Questions = questions,
+                SubmittedAnswers = new Dictionary<Guid, string>(),
+                CurrentQuestionIndex = 0
+            };
+
+            TempData["QuizID"] = quiz.QuizID;
+
+            return View(viewModel);
+        }
+
+        [HttpPost]
+        public ActionResult SubmitQuiz(string submittedAnswersJson)
+        {
+            try
+            {
+                var submittedAnswers = JsonConvert.DeserializeObject<Dictionary<Guid, string>>(submittedAnswersJson);
+
+                // Store the submitted answers dictionary in the session or perform other processing
+                Session["SubmittedAnswers"] = submittedAnswers;
+                var quizId = (Guid)TempData["QuizID"];
+                // Optionally, you can return a response indicating success
+                return RedirectToAction("Review", new { id = quizId });
+
+            }
+            catch (Exception ex)
+            {
+                // Handle any exceptions
+                return Json(new { success = false, message = "An error occurred while processing the quiz submission." });
+            }
+        }
+
+
+        public ActionResult Review(Guid id)
+        {
+            var quiz = db.Quizzes.Find(id);
+
+            // Retrieve submitted answers from session
+            var submittedAnswers = Session["SubmittedAnswers"] as Dictionary<Guid, string>;
+
+            ViewBag.Answers = submittedAnswers;
+            
+
+            return View(quiz);
+
+        }
+
+        public ActionResult View(Guid QuizID)
+        {
+            // Retrieve all questions for the specified quiz
+            var questions = db.Questions.Where(q => q.QuizID == QuizID).ToList();
+
+            return View(questions);
+        }
 
         public ActionResult AddQuestions(Guid QuizID)
         {
@@ -34,8 +98,8 @@ namespace LearniVerseNew.Controllers
             // Associate each question with the quiz
             foreach (var question in questions)
             {
+                question.QuestionID = Guid.NewGuid();
                 question.QuizID = QuizID;
-                // You may need additional logic to validate and save the questions
                 db.Questions.Add(question);
             }
 
@@ -44,15 +108,6 @@ namespace LearniVerseNew.Controllers
 
             // Redirect back to the quiz details page
             return RedirectToAction("Details", new { id = QuizID });
-        }
-
-        public ActionResult Quiz(Guid QuizID)
-        {
-            
-            var quiz = db.Quizzes.Include(q => q.Questions)
-                .FirstOrDefault(q => q.QuizID == QuizID);      
-
-            return View(quiz);
         }
 
 

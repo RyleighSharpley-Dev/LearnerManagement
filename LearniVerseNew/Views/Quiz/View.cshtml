@@ -1,0 +1,32 @@
+﻿@model List<LearniVerseNew.Models.ApplicationModels.Question>
+
+@{
+    ViewBag.Title = "Quiz Questions";
+}
+
+<h2>Quiz Questions</h2>
+
+@if (Model != null && Model.Any())
+{
+    <table class="table">
+        <thead>
+            <tr>
+                <th>Question</th>
+                <th>Correct Answer</th>
+            </tr>
+        </thead>
+        <tbody>
+            @foreach (var question in Model)
+            {
+                <tr>
+                    <td>@question.QuestionText</td>
+                    <td>@question.CorrectAnswer</td>
+                </tr>
+            }
+        </tbody>
+    </table>
+}
+else
+{
+    <p>No questions found for this quiz.</p>
+}

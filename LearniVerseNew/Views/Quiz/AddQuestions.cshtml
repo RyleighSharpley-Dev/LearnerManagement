@@ -11,6 +11,7 @@
     <h3>Quiz Details</h3>
     <p>Quiz ID: @Model.QuizID</p>
     <p>Description: @Model.QuizDescription</p>
+    <h4>Total Marks: <span id="totalMarks">0</span> / @Model.QuizMaxMark</h4>
     <!-- Add more quiz details as needed -->
 </div>
 
@@ -27,6 +28,31 @@
 
 @section scripts {
     <script>
+
+        function updateTotalMarks() {
+            var totalMarks = 0;
+            $(".questionWeighting").each(function () {
+                totalMarks += parseInt($(this).val());
+            });
+            $("#totalMarks").text(totalMarks);
+        }
+
+        // Event listener for question weighting change
+        $(document).on("change", ".questionWeighting", function () {
+            updateTotalMarks();
+        });
+
+        // Function to add question input fields dynamically
+        function addQuestion() {
+            var questionHtml = `
+                <!-- Your question card structure -->
+            `;
+            $("#questionContainer").append(questionHtml);
+            updateTotalMarks(); // Update total marks when adding a question
+        }
+
+
+
         // Function to add question input fields dynamically
         function addQuestion() {
             var questionHtml = `
@@ -58,6 +84,12 @@
                             <label for="correctAnswer">Correct Answer</label>
                             <input type="text" class="form-control" id="correctAnswer" name="correctAnswer" placeholder="Enter correct answer">
                         </div>
+                        <div class="form-group">
+                        <label for="questionWeighting">Question Weighting</label>
+                         <input type="number" class="form-control questionWeighting" id="questionWeighting" name="questionWeighting" placeholder="Enter question weighting">
+                        </div>
+
+
                         <button class="btn btn-danger removeQuestionBtn">Remove</button>
                     </div>
                 </div>`;

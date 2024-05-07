@@ -1,56 +1,127 @@
-﻿@model LearniVerseNew.Models.ApplicationModels.Quiz
+﻿@model LearniVerseNew.Models.ApplicationModels.ViewModels.QuizViewModel
 
 @{
     ViewBag.Title = "Quiz";
 }
 
-<h2>Take Quiz</h2>
-
-<div>
-    <h3>Quiz Details</h3>
-    <p>Quiz ID: @Model.QuizID</p>
-    <p>Description: @Model.QuizDescription</p>
-    <!-- Add more quiz details as needed -->
-</div>
-
-<div>
-    <h3>Questions</h3>
-    @using (Html.BeginForm("SubmitQuiz", "Quiz", FormMethod.Post))
-    {
-        @Html.AntiForgeryToken()
-        foreach (var question in Model.Questions)
-        {
-            <div class="card mb-3">
-                <div class="card-body">
-                    <h5 class="card-title">@question.QuestionText</h5>
-                    <input type="hidden" name="Questions[@question.QuestionID].QuestionID" value="@question.QuestionID" />
-                    <div class="form-check">
-                        <input class="form-check-input" type="radio" name="Questions[@question.QuestionID].SelectedAnswer" id="@("answer_" + question.QuestionID + "_A")" value="A">
-                        <label class="form-check-label" for="@("answer_" + question.QuestionID + "_A")">
-                            A. @question.AnswerA
-                        </label>
-                    </div>
-                    <div class="form-check">
-                        <input class="form-check-input" type="radio" name="Questions[@question.QuestionID].SelectedAnswer" id="@("answer_" + question.QuestionID + "_B")" value="B">
-                        <label class="form-check-label" for="@("answer_" + question.QuestionID + "_B")">
-                            B. @question.AnswerB
-                        </label>
-                    </div>
-                    <div class="form-check">
-                        <input class="form-check-input" type="radio" name="Questions[@question.QuestionID].SelectedAnswer" id="@("answer_" + question.QuestionID + "_C")" value="C">
-                        <label class="form-check-label" for="@("answer_" + question.QuestionID + "_C")">
-                            C. @question.AnswerC
-                        </label>
-                    </div>
-                    <div class="form-check">
-                        <input class="form-check-input" type="radio" name="Questions[@question.QuestionID].SelectedAnswer" id="@("answer_" + question.QuestionID + "_D")" value="D">
-                        <label class="form-check-label" for="@("answer_" + question.QuestionID + "_D")">
-                            D. @question.AnswerD
-                        </label>
+<div class="container ">
+    <div class="row">
+        <div class="col-md-8">
+            <h2>@Model.Quiz.QuizDescription</h2>
+            <hr />
+            @foreach (var question in Model.Questions)
+            {
+                <div class="question-container" id="question-@question.QuestionNumber" style="display: none; margin-bottom: 20px;">
+                    <h1 class="card-header mb-2">Question @question.QuestionNumber</h1>
+                    <div class="card">
+                        <div class="card-body">
+                            <h5 class="card-title">@question.QuestionText</h5>
+                            <input type="hidden" id="QuestionID" value="@question.QuestionID" />
+                            <input type="radio" name="answer" value="A" /> A: @question.AnswerA <br />
+                            <input type="radio" name="answer" value="B" /> B: @question.AnswerB <br />
+                            <input type="radio" name="answer" value="C" /> C: @question.AnswerC <br />
+                            <input type="radio" name="answer" value="D" /> D: @question.AnswerD <br />
+                        </div>
                     </div>
                 </div>
+            }
+            <div style="margin-top: 20px;">
+                <button class="btn btn-primary" id="prevButton">Previous</button>
+                <button class="btn btn-primary" id="nextButton">Next</button>
+                <button class="btn btn-primary" id="submitButton" style="display: none;">Submit</button>
             </div>
-        }
-        <input type="submit" value="Submit Quiz" class="btn btn-primary" />
-    }
+        </div>
+
+        <div class="col-md-4">
+            <h3>Quiz Progress</h3>
+            <p>Total Questions: @Model.Questions.Count</p>
+            <p>Current Question: <span id="currentQuestionIndicator">1</span> / @Model.Questions.Count</p>
+        </div>
+    </div>
 </div>
+<br/>
+@using (Html.BeginForm("SubmitQuiz", "Quiz", FormMethod.Post, new { id = "quizForm" }))
+{
+    
+    <input type="hidden" id="SubmittedAnswers" name="SubmittedAnswersJson" />
+
+    <button type="submit" class="btn btn-primary" id="submitButton">Submit</button>
+}
+<div id="quizSubmitUrl" data-url="@Url.Action("SubmitQuiz", "Quiz")"></div>
+
+
+@section Scripts {
+    @Scripts.Render("~/bundles/jqueryval")
+
+    <script>
+        $(document).ready(function () {
+            var currentQuestionNumber = 1;
+            var questions = $('.question-container');
+            var prevButton = $('#prevButton');
+            var nextButton = $('#nextButton');
+            var submitButton = $('#submitButton');
+            var currentQuestionIndicator = $('#currentQuestionIndicator');
+            var submittedAnswers = {};
+
+            showQuestion(currentQuestionNumber);
+            updateButtonVisibility(currentQuestionNumber);
+
+            prevButton.click(function () {
+                if (currentQuestionNumber > 1) {
+                    currentQuestionNumber--;
+                    showQuestion(currentQuestionNumber);
+                    updateButtonVisibility(currentQuestionNumber);
+                    updateCurrentQuestionIndicator(currentQuestionNumber);
+                }
+            });
+
+            nextButton.click(function () {
+                if (currentQuestionNumber < questions.length) {
+                    var selectedAnswer = $('input[name="answer"]:checked').val();
+                    if (selectedAnswer) {
+                        var questionID = $('#question-' + currentQuestionNumber + ' #QuestionID').val();
+                        submittedAnswers[questionID] = selectedAnswer;
+                    }
+                    currentQuestionNumber++;
+                    showQuestion(currentQuestionNumber);
+                    updateButtonVisibility(currentQuestionNumber);
+                    updateCurrentQuestionIndicator(currentQuestionNumber);
+                }
+            });
+
+            $('#submitButton').click(function () {
+                // Serialize the submittedAnswers object and assign it to the hidden input
+                var serializedAnswers = JSON.stringify(submittedAnswers);
+                $('#SubmittedAnswers').val(serializedAnswers);
+
+            });
+
+            function showQuestion(number) {
+                questions.hide();
+                $('#question-' + number).show();
+            }
+
+            function updateButtonVisibility(number) {
+                if (number === 1) {
+                    prevButton.hide();
+                } else {
+                    prevButton.show();
+                }
+
+                if (number === questions.length) {
+                    nextButton.hide();
+                    submitButton.show();
+                } else {
+                    nextButton.show();
+                    submitButton.hide();
+                }
+            }
+
+            function updateCurrentQuestionIndicator(number) {
+                currentQuestionIndicator.text(number);
+            }
+
+
+        });
+    </script>
+}
