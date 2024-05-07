@@ -28,7 +28,7 @@
             <div style="margin-top: 20px;">
                 <button class="btn btn-primary" id="prevButton">Previous</button>
                 <button class="btn btn-primary" id="nextButton">Next</button>
-                <button class="btn btn-primary" id="submitButton" style="display: none;">Submit</button>
+                
             </div>
         </div>
 
@@ -91,9 +91,13 @@
 
             $('#submitButton').click(function () {
                 // Serialize the submittedAnswers object and assign it to the hidden input
+                var selectedAnswer = $('input[name="answer"]:checked').val();
+                if (selectedAnswer) {
+                    var questionID = $('#question-' + currentQuestionNumber + ' #QuestionID').val();
+                    submittedAnswers[questionID] = selectedAnswer;
+                }
                 var serializedAnswers = JSON.stringify(submittedAnswers);
                 $('#SubmittedAnswers').val(serializedAnswers);
-
             });
 
             function showQuestion(number) {

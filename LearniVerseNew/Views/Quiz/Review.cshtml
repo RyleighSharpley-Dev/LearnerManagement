@@ -9,7 +9,7 @@
     <div class="question">
         <h3>Question @question.QuestionNumber</h3>
         <p>@question.QuestionText</p>
-        
+
         <ul>
             <li>A: @question.AnswerA</li>
             <li>B: @question.AnswerB</li>
@@ -23,4 +23,9 @@
         }
         <hr />
     </div>
+}
+
+@using (Html.BeginForm("MarkQuiz", "Quiz", FormMethod.Post, new { @class = "form-inline" }))
+{
+    <button type="submit" class="btn btn-success">Submit</button>
 }

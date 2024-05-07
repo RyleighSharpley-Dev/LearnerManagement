@@ -42,16 +42,16 @@ namespace LearniVerseNew.Controllers
             {
                 var submittedAnswers = JsonConvert.DeserializeObject<Dictionary<Guid, string>>(submittedAnswersJson);
 
-                // Store the submitted answers dictionary in the session or perform other processing
+                
                 Session["SubmittedAnswers"] = submittedAnswers;
                 var quizId = (Guid)TempData["QuizID"];
-                // Optionally, you can return a response indicating success
+                
                 return RedirectToAction("Review", new { id = quizId });
 
             }
             catch (Exception ex)
             {
-                // Handle any exceptions
+                
                 return Json(new { success = false, message = "An error occurred while processing the quiz submission." });
             }
         }
@@ -61,13 +61,57 @@ namespace LearniVerseNew.Controllers
         {
             var quiz = db.Quizzes.Find(id);
 
-            // Retrieve submitted answers from session
             var submittedAnswers = Session["SubmittedAnswers"] as Dictionary<Guid, string>;
 
             ViewBag.Answers = submittedAnswers;
             
 
             return View(quiz);
+
+        }
+
+        [HttpPost]
+        public ActionResult MarkQuiz()
+        {
+            string email = User.Identity.Name;
+            var quizId = (Guid)TempData["QuizID"];
+            var student = db.Students.FirstOrDefault(s => s.StudentEmail == email);
+            int totalScore = 0;
+
+            var quiz = db.Quizzes.Include(q=>q.Questions).
+                FirstOrDefault(r => r.QuizID == quizId);
+
+            var selectedAnswers = Session["SubmittedAnswers"] as Dictionary<Guid, string>;
+
+            foreach (var question in quiz.Questions)
+            {
+                
+                if (selectedAnswers.ContainsKey(question.QuestionID))
+                {
+                    string selectedAnswer = selectedAnswers[question.QuestionID];
+
+                   
+                    if (selectedAnswer == question.CorrectAnswer)
+                    {
+                        totalScore += question.Weighting;
+                    }
+                }
+            }
+
+            var attempt = new QuizAttempt()
+            {
+                QuizAttemptID = Guid.NewGuid(),
+                QuizID = quizId,
+                StudentID = student.StudentID,
+                AttemptDate = DateTime.Now,
+                MarkObtained = totalScore
+            };
+
+            db.QuizAttempts.Add(attempt);
+
+            db.SaveChanges();
+
+            return RedirectToAction("Home", "Students");
 
         }
 

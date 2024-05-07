@@ -31,5 +31,30 @@ namespace LearniVerseNew.Models.ApplicationModels
             Draft,
             Published
         }
+
+
+        public int MarkTest(Quiz quiz, Dictionary<Guid, string> selectedAnswers)
+        {
+            int totalScore = 0;
+
+            // Iterate over each question in the quiz
+            foreach (var question in quiz.Questions)
+            {
+                // Check if the question ID exists in the selected answers dictionary
+                if (selectedAnswers.ContainsKey(question.QuestionID))
+                {
+                    string selectedAnswer = selectedAnswers[question.QuestionID];
+
+                    // Check if the selected answer matches the correct answer
+                    if (selectedAnswer == question.CorrectAnswer)
+                    {
+                        // Add the weighting of the question to the total score
+                        totalScore += question.Weighting;
+                    }
+                }
+            }
+
+            return totalScore;
+        }
     }
 }
