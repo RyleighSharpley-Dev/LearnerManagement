@@ -57,7 +57,7 @@
                     {
                         <li>
                             <h4>@quiz.QuizDescription</h4>
-                            <form action="@Url.Action("Quiz", "Quiz")" method="get">
+                            <form action="@Url.Action("TakeQuiz", "Quiz")" method="get">
                                 <input type="hidden" name="QuizID" value="@quiz.QuizID" />
                                 <button type="submit" class="btn btn-primary">Take Quiz</button>
                             </form>

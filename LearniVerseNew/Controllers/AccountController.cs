@@ -96,6 +96,13 @@ namespace LearniVerseNew.Controllers
             switch (result)
             {
                 case SignInStatus.Success:
+
+                    var student = await UserManager.FindByEmailAsync(model.Email);
+                    if (student != null)
+                    {
+                        Session["StudentId"] = student.Id;
+                    }
+
                     return RedirectToLocal(returnUrl);
                 case SignInStatus.LockedOut:
                     return View("Lockout");

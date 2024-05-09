@@ -9,6 +9,7 @@ using System.Web.Mvc;
 using LearniVerseNew.Models;
 using LearniVerseNew.Models.ApplicationModels;
 using LearniVerseNew.Models.ApplicationModels.ViewModels;
+using Microsoft.AspNet.Identity;
 using Newtonsoft.Json;
 
 namespace LearniVerseNew.Controllers
@@ -16,6 +17,31 @@ namespace LearniVerseNew.Controllers
     public class QuizController : Controller
     {
         private ApplicationDbContext db = new ApplicationDbContext();
+
+        public ActionResult TakeQuiz(Guid QuizID)
+        {
+           
+            string studentId = Session["StudentId"]?.ToString();
+            if (string.IsNullOrEmpty(studentId))
+            {
+                return RedirectToAction("Login", "Account");
+            }
+
+            int attemptCount = db.QuizAttempts.Count(a => a.QuizID == QuizID && a.StudentID == studentId);
+
+            var quiz = db.Quizzes.Find(QuizID);
+            var currentTime = DateTime.Now;
+
+            if (currentTime.Date > quiz.QuizDate.Date || (quiz.QuizStart > currentTime.TimeOfDay && quiz.QuizEnd < currentTime.TimeOfDay))
+            {
+                ViewBag.QuizAvailabilityMessage = "The quiz is currently not available.";
+                ViewBag.CourseID = quiz.CourseID;
+                return View("QuizNotAvailable");
+            }
+
+            ViewBag.UserAttempts = attemptCount;
+            return View(quiz);
+        }
 
         public ActionResult Quiz(Guid QuizID)
         {
@@ -117,7 +143,7 @@ namespace LearniVerseNew.Controllers
 
         public ActionResult View(Guid QuizID)
         {
-            // Retrieve all questions for the specified quiz
+            
             var questions = db.Questions.Where(q => q.QuizID == QuizID).ToList();
 
             return View(questions);
@@ -125,10 +151,9 @@ namespace LearniVerseNew.Controllers
 
         public ActionResult AddQuestions(Guid QuizID)
         {
-            // Fetch the quiz based on the provided quizId
+            
             var quiz = db.Quizzes.Find(QuizID);
 
-            // Pass the quiz to the view
             return View(quiz);
         }
 

@@ -573,8 +573,9 @@
     <Content Include="Views\Quiz\AddQuestions.cshtml" />
     <Content Include="Views\Quiz\Quiz.cshtml" />
     <Content Include="Views\Quiz\ReviewAttempt.cshtml" />
-    <Content Include="Views\Quiz\View.cshtml" />
     <Content Include="Views\Quiz\Review.cshtml" />
+    <Content Include="Views\Quiz\TakeQuiz.cshtml" />
+    <Content Include="Views\Quiz\QuizNotAvailable.cshtml" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include="App_Data\" />
