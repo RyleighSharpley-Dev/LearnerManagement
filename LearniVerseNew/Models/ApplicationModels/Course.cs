@@ -40,6 +40,7 @@ namespace LearniVerseNew.Models.ApplicationModels
         public virtual Teacher Teacher { get; set; }
         public ICollection<Enrollment> Enrollments { get; set; }
         public ICollection<Resource> Resources { get; set; }
-        
+        public ICollection<Quiz> Quizzes { get; set; }
+
     }
 }

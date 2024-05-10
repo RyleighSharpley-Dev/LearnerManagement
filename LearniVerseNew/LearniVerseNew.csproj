@@ -366,6 +366,7 @@
     <Compile Include="Controllers\HomeController.cs" />
     <Compile Include="Controllers\ManageController.cs" />
     <Compile Include="Controllers\QualificationsController.cs" />
+    <Compile Include="Controllers\QuizController.cs" />
     <Compile Include="Controllers\ResourcesController.cs" />
     <Compile Include="Controllers\StudentsController.cs" />
     <Compile Include="Controllers\TeachersController.cs" />
@@ -384,6 +385,46 @@
     <Compile Include="Migrations\202405021653518_Payment Table Added For Real.Designer.cs">
       <DependentUpon>202405021653518_Payment Table Added For Real.cs</DependentUpon>
     </Compile>
+    <Compile Include="Migrations\202405061022554_Quiz Entities to Db.cs" />
+    <Compile Include="Migrations\202405061022554_Quiz Entities to Db.Designer.cs">
+      <DependentUpon>202405061022554_Quiz Entities to Db.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Migrations\202405061038102_Added quiz start and end times.cs" />
+    <Compile Include="Migrations\202405061038102_Added quiz start and end times.Designer.cs">
+      <DependentUpon>202405061038102_Added quiz start and end times.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Migrations\202405061047346_Added Relationships between course and quiz.cs" />
+    <Compile Include="Migrations\202405061047346_Added Relationships between course and quiz.Designer.cs">
+      <DependentUpon>202405061047346_Added Relationships between course and quiz.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Migrations\202405061107013_Changed teacher ID datatype for quiz to string.cs" />
+    <Compile Include="Migrations\202405061107013_Changed teacher ID datatype for quiz to string.Designer.cs">
+      <DependentUpon>202405061107013_Changed teacher ID datatype for quiz to string.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Migrations\202405061113042_Fixed Datatype discrepencies.cs" />
+    <Compile Include="Migrations\202405061113042_Fixed Datatype discrepencies.Designer.cs">
+      <DependentUpon>202405061113042_Fixed Datatype discrepencies.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Migrations\202405061253204_Added weighting to Question.cs" />
+    <Compile Include="Migrations\202405061253204_Added weighting to Question.Designer.cs">
+      <DependentUpon>202405061253204_Added weighting to Question.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Migrations\202405061618570_Changed QuizID toGUID.cs" />
+    <Compile Include="Migrations\202405061618570_Changed QuizID toGUID.Designer.cs">
+      <DependentUpon>202405061618570_Changed QuizID toGUID.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Migrations\202405070730105_Changed correct answer to string.cs" />
+    <Compile Include="Migrations\202405070730105_Changed correct answer to string.Designer.cs">
+      <DependentUpon>202405070730105_Changed correct answer to string.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Migrations\202405070929542_Added question number.cs" />
+    <Compile Include="Migrations\202405070929542_Added question number.Designer.cs">
+      <DependentUpon>202405070929542_Added question number.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Migrations\202405090956583_Added Duration to Quiz.cs" />
+    <Compile Include="Migrations\202405090956583_Added Duration to Quiz.Designer.cs">
+      <DependentUpon>202405090956583_Added Duration to Quiz.cs</DependentUpon>
+    </Compile>
     <Compile Include="Migrations\Configuration.cs" />
     <Compile Include="Models\AccountViewModels.cs" />
     <Compile Include="Models\ApplicationModels\Course.cs" />
@@ -391,6 +432,9 @@
     <Compile Include="Models\ApplicationModels\Faculty.cs" />
     <Compile Include="Models\ApplicationModels\Payment.cs" />
     <Compile Include="Models\ApplicationModels\Qualification.cs" />
+    <Compile Include="Models\ApplicationModels\Question.cs" />
+    <Compile Include="Models\ApplicationModels\Quiz.cs" />
+    <Compile Include="Models\ApplicationModels\QuizAttempt.cs" />
     <Compile Include="Models\ApplicationModels\Resource.cs" />
     <Compile Include="Models\ApplicationModels\Student.cs" />
     <Compile Include="Models\ApplicationModels\Teacher.cs" />
@@ -398,6 +442,7 @@
     <Compile Include="Models\ApplicationModels\ViewModels\ClassroomViewModel.cs" />
     <Compile Include="Models\ApplicationModels\ViewModels\CourseSelectionViewModel.cs" />
     <Compile Include="Models\ApplicationModels\ViewModels\EnrolViewModel.cs" />
+    <Compile Include="Models\ApplicationModels\ViewModels\QuizViewModel.cs" />
     <Compile Include="Models\ApplicationModels\ViewModels\RegisterTeacherViewModel.cs" />
     <Compile Include="Models\ApplicationModels\ViewModels\StudentDashboardViewModel.cs" />
     <Compile Include="Models\ApplicationModels\ViewModels\UploadViewModel.cs" />
@@ -431,6 +476,7 @@
     <Content Include="favicon.ico" />
     <Content Include="Global.asax" />
     <Content Include="Content\Site.css" />
+    <Content Include="images\Learniverse.png" />
     <Content Include="Scripts\bootstrap.bundle.js" />
     <Content Include="Scripts\bootstrap.bundle.min.js" />
     <Content Include="Scripts\bootstrap.esm.js" />
@@ -524,6 +570,17 @@
     <Content Include="Views\Enrollments\EnrollmentDetails.cshtml" />
     <Content Include="Views\Courses\Classroom.cshtml" />
     <Content Include="Views\Resources\Upload.cshtml" />
+    <Content Include="Views\Quiz\Create.cshtml" />
+    <Content Include="Views\Quiz\Delete.cshtml" />
+    <Content Include="Views\Quiz\Details.cshtml" />
+    <Content Include="Views\Quiz\Edit.cshtml" />
+    <Content Include="Views\Quiz\Index.cshtml" />
+    <Content Include="Views\Quiz\AddQuestions.cshtml" />
+    <Content Include="Views\Quiz\Quiz.cshtml" />
+    <Content Include="Views\Quiz\ReviewAttempt.cshtml" />
+    <Content Include="Views\Quiz\Review.cshtml" />
+    <Content Include="Views\Quiz\TakeQuiz.cshtml" />
+    <Content Include="Views\Quiz\QuizNotAvailable.cshtml" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include="App_Data\" />
@@ -564,6 +621,36 @@
     </EmbeddedResource>
     <EmbeddedResource Include="Migrations\202405021653518_Payment Table Added For Real.resx">
       <DependentUpon>202405021653518_Payment Table Added For Real.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Migrations\202405061022554_Quiz Entities to Db.resx">
+      <DependentUpon>202405061022554_Quiz Entities to Db.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Migrations\202405061038102_Added quiz start and end times.resx">
+      <DependentUpon>202405061038102_Added quiz start and end times.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Migrations\202405061047346_Added Relationships between course and quiz.resx">
+      <DependentUpon>202405061047346_Added Relationships between course and quiz.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Migrations\202405061107013_Changed teacher ID datatype for quiz to string.resx">
+      <DependentUpon>202405061107013_Changed teacher ID datatype for quiz to string.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Migrations\202405061113042_Fixed Datatype discrepencies.resx">
+      <DependentUpon>202405061113042_Fixed Datatype discrepencies.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Migrations\202405061253204_Added weighting to Question.resx">
+      <DependentUpon>202405061253204_Added weighting to Question.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Migrations\202405061618570_Changed QuizID toGUID.resx">
+      <DependentUpon>202405061618570_Changed QuizID toGUID.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Migrations\202405070730105_Changed correct answer to string.resx">
+      <DependentUpon>202405070730105_Changed correct answer to string.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Migrations\202405070929542_Added question number.resx">
+      <DependentUpon>202405070929542_Added question number.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Migrations\202405090956583_Added Duration to Quiz.resx">
+      <DependentUpon>202405090956583_Added Duration to Quiz.cs</DependentUpon>
     </EmbeddedResource>
   </ItemGroup>
   <PropertyGroup>

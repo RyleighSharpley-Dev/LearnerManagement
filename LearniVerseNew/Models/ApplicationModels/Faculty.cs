@@ -4,6 +4,7 @@ using System.ComponentModel.DataAnnotations.Schema;
 using System.ComponentModel.DataAnnotations;
 using System.Linq;
 using System.Web;
+using System.Text.Json.Serialization;
 
 namespace LearniVerseNew.Models.ApplicationModels
 {
@@ -21,6 +22,7 @@ namespace LearniVerseNew.Models.ApplicationModels
         [Display(Name = "Description")]
         public string Description { get; set; }
 
+        [JsonIgnore]
         public virtual ICollection<Qualification> Qualifications { get; set; }
         public virtual ICollection<Teacher> Teachers { get; set; }
     }
