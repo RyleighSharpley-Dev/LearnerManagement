@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Data;
 using System.Data.Entity;
 using System.Data.Entity.Migrations;
+using System.IO;
 using System.Linq;
 using System.Net;
 using System.Web;
@@ -11,6 +12,7 @@ using LearniVerseNew.Models;
 using LearniVerseNew.Models.ApplicationModels;
 using LearniVerseNew.Models.ApplicationModels.ViewModels;
 using LearniVerseNew.Models.Helpers;
+using Newtonsoft.Json;
 
 namespace LearniVerseNew.Controllers
 {
@@ -163,13 +165,52 @@ namespace LearniVerseNew.Controllers
                 TempData["SelectedCourseIDs"] = viewModel.SelectedCourseIDs;
                 TempData["SelectedCourses"] = selectedCourses;
 
-                return View("Confirmation", selectedCourses);
+                return View("UploadNSC");
             }
 
 
             return View(viewModel);
         }
 
+       
+        public ActionResult UploadNSC()
+        {
+            return View();
+        }
+
+        [HttpPost]
+        [ValidateAntiForgeryToken]
+        public ActionResult UploadNSC(string subjectsJson, HttpPostedFileBase NSCDocument)
+        {
+            if (NSCDocument != null && NSCDocument.ContentLength > 0)
+            {
+                // Retrieve the original filename with extension
+                string originalFileName = Path.GetFileName(NSCDocument.FileName);
+
+                // Store the file bytes in memory
+                byte[] fileBytes;
+                using (var memoryStream = new MemoryStream())
+                {
+                    NSCDocument.InputStream.CopyTo(memoryStream);
+                    fileBytes = memoryStream.ToArray();
+                }
+
+                // Store the original filename and file bytes in TempData to pass to the callback action
+                TempData["NSCDocumentFileName"] = originalFileName;
+                TempData["NSCDocumentBytes"] = fileBytes;
+            }
+
+            // Handle NSC subjects
+            if (!string.IsNullOrEmpty(subjectsJson))
+            {
+                var subjects = JsonConvert.DeserializeObject<List<NSCSubject>>(subjectsJson);
+                TempData["Subjects"] = subjects;
+            }
+
+            var selectedCourses = TempData["SelectedCourses"];
+
+            return View("Confirmation", selectedCourses);
+        }
 
         [Authorize(Roles = "User")]
         [HttpPost]

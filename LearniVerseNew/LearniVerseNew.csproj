@@ -430,6 +430,7 @@
     <Compile Include="Models\ApplicationModels\Course.cs" />
     <Compile Include="Models\ApplicationModels\Enrollment.cs" />
     <Compile Include="Models\ApplicationModels\Faculty.cs" />
+    <Compile Include="Models\ApplicationModels\NSCSubmission.cs" />
     <Compile Include="Models\ApplicationModels\Payment.cs" />
     <Compile Include="Models\ApplicationModels\Qualification.cs" />
     <Compile Include="Models\ApplicationModels\Question.cs" />
@@ -581,6 +582,7 @@
     <Content Include="Views\Quiz\Review.cshtml" />
     <Content Include="Views\Quiz\TakeQuiz.cshtml" />
     <Content Include="Views\Quiz\QuizNotAvailable.cshtml" />
+    <Content Include="Views\Enrollments\UploadNSC.cshtml" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include="App_Data\" />
