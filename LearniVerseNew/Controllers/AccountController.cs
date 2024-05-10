@@ -96,14 +96,33 @@ namespace LearniVerseNew.Controllers
             switch (result)
             {
                 case SignInStatus.Success:
-
-                    var student = await UserManager.FindByEmailAsync(model.Email);
-                    if (student != null)
+                    var user = await UserManager.FindByEmailAsync(model.Email);
+                    if (user != null)
                     {
-                        Session["StudentId"] = student.Id;
-                    }
+                        // Check the role of the user
+                        var roles = await UserManager.GetRolesAsync(user.Id);
+                        if (roles.Contains("Admin"))
+                        {
+                            return RedirectToAction("Home", "Admin");
+                        }
+                        else if (roles.Contains("Teacher"))
+                        {
+                            return RedirectToAction("Home", "Teachers");
+                        }
+                        else if (roles.Contains("User"))
+                        {
+                            return RedirectToAction("Home", "Students");
+                        }
+                        // Add more roles as needed
 
-                    return RedirectToLocal(returnUrl);
+                        // If the user doesn't have a specific role, redirect to the default URL
+                        return RedirectToLocal(returnUrl);
+                    }
+                    else
+                    {
+                        ModelState.AddModelError("", "Invalid login attempt.");
+                        return View(model);
+                    }
                 case SignInStatus.LockedOut:
                     return View("Lockout");
                 case SignInStatus.RequiresVerification:

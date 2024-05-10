@@ -421,6 +421,10 @@
     <Compile Include="Migrations\202405070929542_Added question number.Designer.cs">
       <DependentUpon>202405070929542_Added question number.cs</DependentUpon>
     </Compile>
+    <Compile Include="Migrations\202405090956583_Added Duration to Quiz.cs" />
+    <Compile Include="Migrations\202405090956583_Added Duration to Quiz.Designer.cs">
+      <DependentUpon>202405090956583_Added Duration to Quiz.cs</DependentUpon>
+    </Compile>
     <Compile Include="Migrations\Configuration.cs" />
     <Compile Include="Models\AccountViewModels.cs" />
     <Compile Include="Models\ApplicationModels\Course.cs" />
@@ -472,6 +476,7 @@
     <Content Include="favicon.ico" />
     <Content Include="Global.asax" />
     <Content Include="Content\Site.css" />
+    <Content Include="images\Learniverse.png" />
     <Content Include="Scripts\bootstrap.bundle.js" />
     <Content Include="Scripts\bootstrap.bundle.min.js" />
     <Content Include="Scripts\bootstrap.esm.js" />
@@ -643,6 +648,9 @@
     </EmbeddedResource>
     <EmbeddedResource Include="Migrations\202405070929542_Added question number.resx">
       <DependentUpon>202405070929542_Added question number.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Migrations\202405090956583_Added Duration to Quiz.resx">
+      <DependentUpon>202405090956583_Added Duration to Quiz.cs</DependentUpon>
     </EmbeddedResource>
   </ItemGroup>
   <PropertyGroup>

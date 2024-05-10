@@ -67,7 +67,6 @@ namespace LearniVerseNew.Controllers
 
             if (ModelState.IsValid)
             {
-
                 var selectedFaculty = db.Faculties.FirstOrDefault(f => f.FacultyID == viewModel.SelectedFaculty);
 
                 if (selectedFaculty != null)

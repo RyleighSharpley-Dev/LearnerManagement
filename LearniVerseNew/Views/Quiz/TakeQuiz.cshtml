@@ -24,6 +24,7 @@ else
         // Quiz has not started yet
         <p>Quiz has not started yet.</p>
         <p>Quiz opens at @Model.QuizStart.ToString("hh\\:mm")</p>
+        <p>Quiz closes at @Model.QuizEnd.ToString("hh\\:mm")</p>
     }
     else if (currentTime >= quizEndTime)
     {

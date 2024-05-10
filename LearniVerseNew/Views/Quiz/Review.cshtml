@@ -25,7 +25,40 @@
     </div>
 }
 
-@using (Html.BeginForm("MarkQuiz", "Quiz", FormMethod.Post, new { @class = "form-inline" }))
+@using (Html.BeginForm("MarkQuiz", "Quiz", FormMethod.Post, new { @class = "form-inline", id = "quizForm" }))
 {
     <button type="submit" class="btn btn-success">Submit</button>
+}
+
+
+@section Scripts {
+    @Scripts.Render("~/bundles/jquery")
+<script>
+    $(document).ready(function () {
+    var quizSubmitted = @Html.Raw(Json.Encode(Session["quizSubmitted"] != null ? Session["quizSubmitted"].ToString() : "null"));
+
+    
+    window.addEventListener('popstate', function (event) {
+        if (quizSubmitted) {
+            
+            var confirmation = confirm("Leaving this page will submit your quiz attempt. Are you sure you want to leave?");
+            if (confirmation) {
+                
+            } else {
+                
+                history.pushState(true, '');
+            }
+        }
+    });
+    });
+
+    
+    window.history.pushState({}, '');
+
+    
+    document.getElementById("quizForm").addEventListener('submit', function () {
+        quizSubmitted = true;
+        window.history.replaceState(null, null, window.location.href);
+    });
+</script>
 }

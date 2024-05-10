@@ -70,8 +70,11 @@ namespace LearniVerseNew.Controllers
 
                 
                 Session["SubmittedAnswers"] = submittedAnswers;
+
                 var quizId = (Guid)TempData["QuizID"];
-                
+
+                Session["quizSubmitted"] = true;
+
                 return RedirectToAction("Review", new { id = quizId });
 
             }
@@ -91,7 +94,6 @@ namespace LearniVerseNew.Controllers
 
             ViewBag.Answers = submittedAnswers;
             
-
             return View(quiz);
 
         }
@@ -99,6 +101,7 @@ namespace LearniVerseNew.Controllers
         [HttpPost]
         public ActionResult MarkQuiz()
         {
+            Session["quizSubmitted"] = false;
             string email = User.Identity.Name;
             var quizId = (Guid)TempData["QuizID"];
             var student = db.Students.FirstOrDefault(s => s.StudentEmail == email);

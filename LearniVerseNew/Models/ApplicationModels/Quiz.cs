@@ -16,6 +16,7 @@ namespace LearniVerseNew.Models.ApplicationModels
         public TimeSpan QuizEnd { get; set; }
         public DateTime DateCreated { get; set; }
         public int MaxAttempts { get; set; }
+        public int Duration { get; set; }
         public string Status { get; set; }
 
         public virtual ICollection<Question> Questions { get; set; }
