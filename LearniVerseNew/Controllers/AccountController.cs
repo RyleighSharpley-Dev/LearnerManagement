@@ -103,11 +103,11 @@ namespace LearniVerseNew.Controllers
                         var roles = await UserManager.GetRolesAsync(user.Id);
                         if (roles.Contains("Admin"))
                         {
-                            return RedirectToAction("Home", "Admin");
+                            return RedirectToAction("Index", "Home");
                         }
                         else if (roles.Contains("Teacher"))
                         {
-                            return RedirectToAction("Home", "Teachers");
+                            return RedirectToAction("Index", "Home");
                         }
                         else if (roles.Contains("User"))
                         {

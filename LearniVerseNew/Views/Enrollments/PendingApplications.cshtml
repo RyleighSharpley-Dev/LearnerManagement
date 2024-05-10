@@ -31,10 +31,10 @@
                     <td>@enrollment.Student.StudentFirstName @enrollment.Student.StudentLastName</td>
                     <td>@enrollment.EnrollmentDate.ToString("yyyy-MM-dd")</td>
                     <td>
-                        @using (Html.BeginForm("ApproveEnrollment", "Enrollments", new { id = enrollment.EnrollmentID }, FormMethod.Post))
+                        @using (Html.BeginForm("ReviewEnrollment", "Enrollments", new { id = enrollment.EnrollmentID }, FormMethod.Post))
                         {
                             @Html.AntiForgeryToken()
-                            <button type="submit" class="btn btn-success">Approve</button>
+                            <button type="submit" class="btn btn-success">Review</button>
                         }
                     </td>
                 </tr>

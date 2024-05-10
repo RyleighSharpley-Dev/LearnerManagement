@@ -116,6 +116,37 @@ namespace LearniVerseNew.Models.Helpers
             }
         }
 
+        public Stream DownloadBlobNSC(string studentId,string fileName)
+        {
+            string uniqueFileName = studentId+"_"+fileName;
+            try
+            {
+                var containerClient = _blobServiceClient.GetBlobContainerClient(_nscContainerName);
+                var blobClient = containerClient.GetBlobClient(uniqueFileName);
+
+                if (!blobClient.Exists())
+                {
+                    throw new FileNotFoundException("Blob not found.");
+                }
+
+                // Create a memory stream to store the blob content
+                var memoryStream = new MemoryStream();
+
+                // Download the blob content to the memory stream
+                blobClient.DownloadTo(memoryStream);
+
+                // Reset the position of the memory stream to the beginning
+                memoryStream.Seek(0, SeekOrigin.Begin);
+
+                // Return the memory stream containing the blob content
+                return memoryStream;
+            }
+            catch (RequestFailedException ex)
+            {
+                throw new Exception($"Error downloading blob: {ex.Message}");
+            }
+        }
+
         public Stream DownloadBlob(string fileName)
         {
             try

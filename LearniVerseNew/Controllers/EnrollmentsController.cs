@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Data;
 using System.Data.Entity;
 using System.Data.Entity.Migrations;
+using System.IdentityModel;
 using System.IO;
 using System.Linq;
 using System.Net;
@@ -219,7 +220,7 @@ namespace LearniVerseNew.Controllers
         {
             string studentEmail = User.Identity.Name;
             var paystackService = new PaystackHelper();
-            var initializeResponse = paystackService.InitializeTransaction(studentEmail, Convert.ToInt32(1500 * 100), "https://10fb-41-144-68-126.ngrok-free.app/Enrollments/ApplicationCallBack"); //
+            var initializeResponse = paystackService.InitializeTransaction(studentEmail, Convert.ToInt32(1500 * 100), "https://bf38-41-144-0-170.ngrok-free.app/Enrollments/ApplicationCallBack"); //
 
             if (!initializeResponse.Status)
             {
@@ -247,6 +248,25 @@ namespace LearniVerseNew.Controllers
         }
 
         [Authorize(Roles = "Admin")]
+        public ActionResult ReviewEnrollment(Guid id)
+        {
+            var enrollment = db.Enrollments.Find(id);
+            var student = db.Students.FirstOrDefault(s => s.StudentID == enrollment.StudentID);
+            var nsc = db.NSCSubmissions.Where(s => s.Student.StudentID == student.StudentID).First();
+            var subjects = db.NSCSubjects.Where(n => n.NSCSubmissionID == nsc.NSCSubmissionID).ToList();
+            ReviewApplicationViewModel viewmodel = new ReviewApplicationViewModel();
+
+                viewmodel.Student = student;
+                viewmodel.Enrollment = enrollment;
+                viewmodel.NSC = nsc;
+                viewmodel.Subjects = subjects;
+                viewmodel.average = viewmodel.CalcAverage(subjects);
+            
+
+            return View(viewmodel);
+        }
+
+        [Authorize(Roles = "Admin")]
         [HttpPost]
         [ValidateAntiForgeryToken]
         public ActionResult ApproveEnrollment(Guid id)
@@ -265,6 +285,34 @@ namespace LearniVerseNew.Controllers
             return RedirectToAction("PendingApplications");
         }
 
+        [AllowAnonymous] 
+        public ActionResult DownloadNSC(string studentId,string fileName)
+        {
+            try
+            {
+                var blobHelper = new BlobHelper(); // Initialize your BlobHelper
+                var fileStream = blobHelper.DownloadBlobNSC(studentId,fileName); // Call your BlobHelper method to download the blob content
+                string uniqueFilename = studentId + "_" + fileName;
+                if (fileStream == null)
+                {
+                    throw new FileNotFoundException("Blob not found.");
+                }
+
+                byte[] fileBytes;
+                using (var memoryStream = new MemoryStream())
+                {
+                    fileStream.CopyTo(memoryStream);
+                    fileBytes = memoryStream.ToArray();
+                }
+
+                return File(fileBytes, "application/pdf", $"{uniqueFilename}");
+            }
+            catch (RequestFailedException ex)
+            {
+                throw new Exception($"Error downloading blob: {ex.Message}");
+            }
+        }
+
         [Authorize(Roles = "User")]
         [HttpPost]
         [ValidateAntiForgeryToken]
@@ -280,7 +328,7 @@ namespace LearniVerseNew.Controllers
             decimal totalCost = enrollment.Courses.Sum(c => c.Price);
 
             var paystackService = new PaystackHelper();
-            var initializeResponse = paystackService.InitializeTransaction(email, Convert.ToInt32(totalCost * 100), "https://10fb-41-144-68-126.ngrok-free.app/Enrollments/PaystackCallback"); // add callback url
+            var initializeResponse = paystackService.InitializeTransaction(email, Convert.ToInt32(totalCost * 100), "https://bf38-41-144-0-170.ngrok-free.app/Enrollments/PaystackCallback"); // add callback url
 
             if (!initializeResponse.Status)
             {
@@ -331,11 +379,42 @@ namespace LearniVerseNew.Controllers
                     string selectedFaculty = TempData["SelectedFaculty"].ToString();
                     string selectedQualification = TempData["QualificationID"].ToString();
                     var selectedCourseIds = TempData["SelectedCourseIDs"] as IEnumerable<string>;
+                    var nscDocumentFileName = TempData["NSCDocumentFileName"].ToString();
+                    var nscDocumentBytes = TempData["NSCDocumentBytes"] as byte[];
+                    var subjects = TempData["Subjects"] as List<NSCSubject>;
+
 
                     // Ensure all required data is available
                     if (selectedCourseIds == null)
                     {
                         return RedirectToAction("SelectFaculty");
+                    }
+
+                    // Upload NSC document to Blob Storage
+                    var blobHelper = new BlobHelper();
+                    var uploadResult = blobHelper.UploadNSCBlob(student.StudentID,nscDocumentFileName, new MemoryStream(nscDocumentBytes));
+
+                    if (!uploadResult.Success)
+                    {
+                        ViewBag.ErrorMessage = uploadResult.Uri; // Handle the error accordingly
+                        return View("Error");
+                    }
+
+                    var nscSubmission = new NSCSubmission
+                    {
+                        NSCSubmissionID = Guid.NewGuid(),
+                        Student = student,
+                        DocumentName = nscDocumentFileName,
+                        DocumentURL = uploadResult.Uri, // Store the Blob URI in the database
+                        SubmissionDate = DateTime.Now,
+                        Subjects = new List<NSCSubject>()
+                        // Other NSCSubmission properties
+                    };
+
+                    foreach (var subject in subjects)
+                    {
+                        subject.NSCSubmission = nscSubmission;
+                        nscSubmission.Subjects.Add(subject);
                     }
 
                     // Convert course IDs to a list
@@ -366,6 +445,8 @@ namespace LearniVerseNew.Controllers
                             
                         }
                     }
+
+                    db.NSCSubmissions.Add(nscSubmission);
 
                     db.Enrollments.Add(enrollment);
                     // Update student's faculty and qualification
