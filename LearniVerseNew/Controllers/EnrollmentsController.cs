@@ -243,8 +243,15 @@ namespace LearniVerseNew.Controllers
         [Authorize(Roles = "Admin")]
         public ActionResult PendingApplications()
         {
-            var pendingEnrollments = db.Enrollments.Where(e => !e.IsApproved).ToList();
+            var pendingEnrollments = db.Enrollments.Where(e => !e.IsApproved && e.IsRejected == false).ToList();
             return View(pendingEnrollments);
+        }
+
+        [Authorize(Roles = "Admin")]
+        public ActionResult RejectedApplications()
+        {
+            var rejectedEnrollments = db.Enrollments.Where(e => !e.IsApproved && e.IsRejected == true).ToList();
+            return View(rejectedEnrollments);
         }
 
         [Authorize(Roles = "Admin")]
@@ -266,6 +273,7 @@ namespace LearniVerseNew.Controllers
             return View(viewmodel);
         }
 
+
         [Authorize(Roles = "Admin")]
         [HttpPost]
         [ValidateAntiForgeryToken]
@@ -278,12 +286,34 @@ namespace LearniVerseNew.Controllers
             {
                 var student = db.Students.FirstOrDefault(s => s.StudentID == enrollment.StudentID);
                 enrollment.IsApproved = true;
+                enrollment.IsRejected = false;
                 db.SaveChanges();
                 mailer.SendEmailApproved(student.StudentEmail, $"{student.StudentFirstName} {student.StudentLastName}");
                 ViewData["SuccessMessage"] = $"{enrollment.Student.StudentFirstName} {enrollment.Student.StudentLastName}'s Enrollment application has been approved.";
             }
             return RedirectToAction("PendingApplications");
         }
+
+
+        [Authorize(Roles = "Admin")]
+        [HttpPost]
+        [ValidateAntiForgeryToken]
+        public ActionResult RejectEnrollment(Guid id)
+        {
+            EmailHelper mailer = new EmailHelper();
+
+            var enrollment = db.Enrollments.Find(id);
+            if (enrollment != null)
+            {
+                var student = db.Students.FirstOrDefault(s => s.StudentID == enrollment.StudentID);
+                enrollment.IsRejected = true;
+                db.SaveChanges();
+                mailer.SendEmailRejected(student.StudentEmail, $"{student.StudentFirstName} {student.StudentLastName}");
+                ViewData["SuccessMessage"] = $"{enrollment.Student.StudentFirstName} {enrollment.Student.StudentLastName}'s Enrollment application has been rejected.";
+            }
+            return RedirectToAction("PendingApplications");
+        }
+
 
         [AllowAnonymous] 
         public ActionResult DownloadNSC(string studentId,string fileName)

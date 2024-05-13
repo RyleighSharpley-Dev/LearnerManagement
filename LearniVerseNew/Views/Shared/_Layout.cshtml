@@ -9,7 +9,7 @@
 
 </head>
 <body>
-    <nav class="navbar navbar-expand-sm navbar-toggleable-sm navbar-dark bg-dark">
+    <nav class="navbar navbar-expand-sm navbar-toggleable-sm navbar-dark bg-primary">
         <div class="container">
             @Html.ActionLink("Learniverse", "Index", "Home", new { area = "" }, new { @class = "navbar-brand" })
             <button type="button" class="navbar-toggler" data-bs-toggle="collapse" data-bs-target=".navbar-collapse" title="Toggle navigation" aria-controls="navbarSupportedContent"
@@ -47,7 +47,7 @@
                     {
                         <li class="nav-item">@Html.ActionLink("Home", "Home", "Students", new { area = "" }, new { @class = "nav-link" })</li>
                         <li class="nav-item">@Html.ActionLink("My Courses", "MyCourses", "Students", new { area = "" }, new { @class = "nav-link" })</li>
-                        <li class="nav-item">@Html.ActionLink("Enrollment", "SelectFaculty", "Enrollments", new { area = "" }, new { @class = "nav-link" })</li>
+                        <li class="nav-item">@Html.ActionLink("Apply", "SelectFaculty", "Enrollments", new { area = "" }, new { @class = "nav-link" })</li>
                         <li class="nav-item">@Html.ActionLink("My Enrollments", "MyEnrollments", "Enrollments", new { area = "" }, new { @class = "nav-link" })</li>
                     }
                 </ul>
@@ -59,7 +59,7 @@
         @RenderBody()
         <hr />
         <footer>
-            <p>&copy; @DateTime.Now.Year - My ASP.NET Application</p>
+            <p>&copy; @DateTime.Now.Year - Empress Solutions</p>
         </footer>
     </div>
 

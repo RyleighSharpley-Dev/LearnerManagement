@@ -99,6 +99,7 @@ namespace LearniVerseNew.Controllers
                     var user = await UserManager.FindByEmailAsync(model.Email);
                     if (user != null)
                     {
+                        Session["UserId"] = user.Id;
                         // Check the role of the user
                         var roles = await UserManager.GetRolesAsync(user.Id);
                         if (roles.Contains("Admin"))

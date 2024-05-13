@@ -429,6 +429,10 @@
     <Compile Include="Migrations\202405101355474_Added NSC stuff.Designer.cs">
       <DependentUpon>202405101355474_Added NSC stuff.cs</DependentUpon>
     </Compile>
+    <Compile Include="Migrations\202405130855586_Added IsRejected to enrollments.cs" />
+    <Compile Include="Migrations\202405130855586_Added IsRejected to enrollments.Designer.cs">
+      <DependentUpon>202405130855586_Added IsRejected to enrollments.cs</DependentUpon>
+    </Compile>
     <Compile Include="Migrations\Configuration.cs" />
     <Compile Include="Models\AccountViewModels.cs" />
     <Compile Include="Models\ApplicationModels\Course.cs" />
@@ -589,6 +593,7 @@
     <Content Include="Views\Quiz\QuizNotAvailable.cshtml" />
     <Content Include="Views\Enrollments\UploadNSC.cshtml" />
     <Content Include="Views\Enrollments\ReviewEnrollment.cshtml" />
+    <Content Include="Views\Enrollments\RejectedApplications.cshtml" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include="App_Data\" />
@@ -662,6 +667,9 @@
     </EmbeddedResource>
     <EmbeddedResource Include="Migrations\202405101355474_Added NSC stuff.resx">
       <DependentUpon>202405101355474_Added NSC stuff.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Migrations\202405130855586_Added IsRejected to enrollments.resx">
+      <DependentUpon>202405130855586_Added IsRejected to enrollments.cs</DependentUpon>
     </EmbeddedResource>
   </ItemGroup>
   <PropertyGroup>
