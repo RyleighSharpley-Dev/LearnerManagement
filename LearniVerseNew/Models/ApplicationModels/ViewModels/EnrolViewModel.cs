@@ -20,6 +20,6 @@ namespace LearniVerseNew.Models.ApplicationModels.ViewModels
         public List<Course> AvailableCourses { get; set; }
         public decimal TotalPrice { get; set; }
 
-        //NSC Things
+
     }
 }

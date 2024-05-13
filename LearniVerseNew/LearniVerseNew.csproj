@@ -425,11 +425,20 @@
     <Compile Include="Migrations\202405090956583_Added Duration to Quiz.Designer.cs">
       <DependentUpon>202405090956583_Added Duration to Quiz.cs</DependentUpon>
     </Compile>
+    <Compile Include="Migrations\202405101355474_Added NSC stuff.cs" />
+    <Compile Include="Migrations\202405101355474_Added NSC stuff.Designer.cs">
+      <DependentUpon>202405101355474_Added NSC stuff.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Migrations\202405130855586_Added IsRejected to enrollments.cs" />
+    <Compile Include="Migrations\202405130855586_Added IsRejected to enrollments.Designer.cs">
+      <DependentUpon>202405130855586_Added IsRejected to enrollments.cs</DependentUpon>
+    </Compile>
     <Compile Include="Migrations\Configuration.cs" />
     <Compile Include="Models\AccountViewModels.cs" />
     <Compile Include="Models\ApplicationModels\Course.cs" />
     <Compile Include="Models\ApplicationModels\Enrollment.cs" />
     <Compile Include="Models\ApplicationModels\Faculty.cs" />
+    <Compile Include="Models\ApplicationModels\NSCSubmission.cs" />
     <Compile Include="Models\ApplicationModels\Payment.cs" />
     <Compile Include="Models\ApplicationModels\Qualification.cs" />
     <Compile Include="Models\ApplicationModels\Question.cs" />
@@ -444,6 +453,7 @@
     <Compile Include="Models\ApplicationModels\ViewModels\EnrolViewModel.cs" />
     <Compile Include="Models\ApplicationModels\ViewModels\QuizViewModel.cs" />
     <Compile Include="Models\ApplicationModels\ViewModels\RegisterTeacherViewModel.cs" />
+    <Compile Include="Models\ApplicationModels\ViewModels\ReviewApplicationViewModel.cs" />
     <Compile Include="Models\ApplicationModels\ViewModels\StudentDashboardViewModel.cs" />
     <Compile Include="Models\ApplicationModels\ViewModels\UploadViewModel.cs" />
     <Compile Include="Models\Helpers\BlobHelper.cs" />
@@ -581,6 +591,9 @@
     <Content Include="Views\Quiz\Review.cshtml" />
     <Content Include="Views\Quiz\TakeQuiz.cshtml" />
     <Content Include="Views\Quiz\QuizNotAvailable.cshtml" />
+    <Content Include="Views\Enrollments\UploadNSC.cshtml" />
+    <Content Include="Views\Enrollments\ReviewEnrollment.cshtml" />
+    <Content Include="Views\Enrollments\RejectedApplications.cshtml" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include="App_Data\" />
@@ -651,6 +664,12 @@
     </EmbeddedResource>
     <EmbeddedResource Include="Migrations\202405090956583_Added Duration to Quiz.resx">
       <DependentUpon>202405090956583_Added Duration to Quiz.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Migrations\202405101355474_Added NSC stuff.resx">
+      <DependentUpon>202405101355474_Added NSC stuff.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Migrations\202405130855586_Added IsRejected to enrollments.resx">
+      <DependentUpon>202405130855586_Added IsRejected to enrollments.cs</DependentUpon>
     </EmbeddedResource>
   </ItemGroup>
   <PropertyGroup>

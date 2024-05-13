@@ -9,9 +9,9 @@
             <div class="card-body">
                 <h2 class="card-title">Welcome to Your Dashboard</h2>
                 <div class="card-text">
-                    <p>Welcome <strong>@Model.StudentFirstName @Model.StudentLastName</strong></p>
-                    <p>Your Faculty: <strong>@Model.Faculty.FacultyName</strong></p>
-                    <p>Your Qualification: <strong>@Model.Qualification.Name</strong></p>
+                    <p>Welcome <strong>@(Model?.StudentFirstName ?? "Unknown") @(Model?.StudentLastName ?? "User")</strong></p>
+                    <p>Your Faculty: <strong>@(Model?.Faculty?.FacultyName ?? "Not Specified")</strong></p>
+                    <p>Your Qualification: <strong>@(Model?.Qualification?.Name ?? "Not Specified")</strong></p>
                 </div>
             </div>
         </div>
@@ -39,7 +39,10 @@
     </div>
 </div>
 <br />
-@{ var currentEnrollment = Model.Enrollments.FirstOrDefault(e => e.EnrollmentDate.Year == DateTime.Now.Year);}
+
+@{
+    var currentEnrollment = Model?.Enrollments?.FirstOrDefault(e => e.EnrollmentDate.Year == DateTime.Now.Year);
+}
 
 @if (currentEnrollment != null)
 {
@@ -96,6 +99,7 @@ else
 {
     <p>No current enrollment found.</p>
 }
+<hr />
 
 
 @Scripts.Render("~/bundles/jquery")
@@ -104,3 +108,10 @@ else
 @Scripts.Render("~/bundles/bootstrap")
 
 @Styles.Render("~/Content/css")
+
+
+
+
+
+
+

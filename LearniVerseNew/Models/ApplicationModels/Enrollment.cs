@@ -15,6 +15,7 @@ namespace LearniVerseNew.Models.ApplicationModels
         [Display(Name = "Student ID")]
         public string StudentID { get; set; }
         public bool IsApproved { get; set; }
+        public bool IsRejected { get; set; }
         public bool HasPaid { get; set; }
 
         [Display(Name = "Enrollment Date")]

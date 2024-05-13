@@ -17,6 +17,7 @@ namespace LearniVerseNew.Models.Helpers
     {
         private readonly BlobServiceClient _blobServiceClient;
         private readonly string _containerName = "classroom-file-container";
+        private readonly string _nscContainerName = "nsc-documents";
 
         public BlobHelper()
         {
@@ -24,6 +25,7 @@ namespace LearniVerseNew.Models.Helpers
             _blobServiceClient = new BlobServiceClient(connectionString);
 
         }
+
         public async Task CreateContainerAsync()
         {
             var blobContainerClient = _blobServiceClient.GetBlobContainerClient(_containerName);
@@ -52,6 +54,44 @@ namespace LearniVerseNew.Models.Helpers
             return blobItems;
         }
 
+        public (bool Success, string Uri) UploadNSCBlob(string studentId, string originalFileName, Stream content)
+        {
+            try
+            {
+                var containerClient = _blobServiceClient.GetBlobContainerClient(_nscContainerName);
+
+                if (!containerClient.Exists())
+                {
+                    containerClient.Create();
+                }
+
+                // Generate unique blob name with student ID prefix
+                string uniqueBlobName = $"{studentId}_{originalFileName}";
+
+                // Get the blob client
+                var blobClient = containerClient.GetBlobClient(uniqueBlobName);
+
+                // Check if the blob already exists
+                if (blobClient.Exists())
+                {
+                    return (false, $"Blob '{uniqueBlobName}' already exists in container '{_nscContainerName}'.");
+                }
+
+                // Upload the blob
+                blobClient.Upload(content, true);
+
+                // Get the URI of the uploaded blob
+                var uri = blobClient.Uri.ToString();
+
+                return (true, uri);
+            }
+            catch (RequestFailedException ex)
+            {
+                return (false, $"Error uploading file: {ex.Message}");
+            }
+        }
+
+
         public (bool Success, string Uri) UploadBlob(string fileName, Stream content)
         {
             try
@@ -73,6 +113,37 @@ namespace LearniVerseNew.Models.Helpers
             catch (RequestFailedException ex)
             {
                 return (false, $"Error uploading file: {ex.Message}");
+            }
+        }
+
+        public Stream DownloadBlobNSC(string studentId,string fileName)
+        {
+            string uniqueFileName = studentId+"_"+fileName;
+            try
+            {
+                var containerClient = _blobServiceClient.GetBlobContainerClient(_nscContainerName);
+                var blobClient = containerClient.GetBlobClient(uniqueFileName);
+
+                if (!blobClient.Exists())
+                {
+                    throw new FileNotFoundException("Blob not found.");
+                }
+
+                // Create a memory stream to store the blob content
+                var memoryStream = new MemoryStream();
+
+                // Download the blob content to the memory stream
+                blobClient.DownloadTo(memoryStream);
+
+                // Reset the position of the memory stream to the beginning
+                memoryStream.Seek(0, SeekOrigin.Begin);
+
+                // Return the memory stream containing the blob content
+                return memoryStream;
+            }
+            catch (RequestFailedException ex)
+            {
+                throw new Exception($"Error downloading blob: {ex.Message}");
             }
         }
 

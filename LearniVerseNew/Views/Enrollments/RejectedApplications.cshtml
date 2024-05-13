@@ -1,7 +1,7 @@
 ﻿@model List<LearniVerseNew.Models.ApplicationModels.Enrollment>
 
 @{
-    ViewBag.Title = "Pending Enrollments";
+    ViewBag.Title = "Rejected Enrollments";
 }
 
 @if (ViewData["SuccessMessage"] != null)
@@ -12,7 +12,7 @@
     </div>
 }
 
-<h2>Pending Enrollments</h2>
+<h2>Rejected Enrollments</h2>
 
 @if (Model.Any())
 {
@@ -44,7 +44,7 @@
 }
 else
 {
-    <p>No pending enrollments found.</p>
+    <p>No rejected enrollments found.</p>
 }
 
 @section Scripts {

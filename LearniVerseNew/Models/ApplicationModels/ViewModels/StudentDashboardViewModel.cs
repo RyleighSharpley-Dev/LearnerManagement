@@ -7,11 +7,10 @@ namespace LearniVerseNew.Models.ApplicationModels.ViewModels
 {
     public class StudentDashboardViewModel
     {
-        public string UserName { get; set; }
-        public string Faculty { get; set; }
-        public string Qualification { get; set; }
-        public List<Enrollment> Enrollments { get; set; }
+        public Student Student { get; set; }
         public List<Payment> Payments { get; set; }
+        public List<Quiz> Quizzes { get; set; }
+        public List<QuizAttempt> QuizAttempts { get; set; }
         
     }
 }

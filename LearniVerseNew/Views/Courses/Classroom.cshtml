@@ -22,33 +22,14 @@
 
     <div class="row">
         <div class="col-md-12">
-            <h2>@Model.Course.CourseName</h2>
+            <h2>Classroom</h2>
+            <h4>@Model.Course.CourseName</h4>
             <hr />
         </div>
     </div>
 
     <div class="row">
-        <div class="col-md-3 border-start border-end border-black">
-            <div class="jumbotron">
-                <h3>Materials</h3>
-                <hr />
-                @foreach (var file in Model.Resources)
-                {
-                    <h4>@file.FileDescription</h4>
-                    <ul>
-                        <li>
-                            <form id="downloadForm_@file.FileName" action="@Url.Action("DownloadBlob", "Resources")" method="post">
-                                <input type="hidden" name="fileName" value="@file.FileName" />
-                                <button type="submit" class="btn btn-link">@file.FileName</button>
-                                <button type="button" class="btn btn-primary" onclick="generateQRCode('@file.FileName')">Download with QR</button>
-                            </form>
-                        </li>
-                    </ul>
-                    <hr />
-                }
-            </div>
-        </div>
-        <div class="col-md-9">
+        <div class="col-md-3">
             <div class="jumbotron">
                 <h3>Quizzes</h3>
                 <hr />
@@ -68,6 +49,27 @@
             </div>
         </div>
 
+        <div class="col-md-9 border-start border-black">
+            <div class="jumbotron ms-2">
+                <h3>Learning Material</h3>
+                <hr />
+                @foreach (var file in Model.Resources)
+                {
+                    <h4>@file.FileDescription</h4>
+                    <ul>
+                        <li>
+                            <form id="downloadForm_@file.FileName" action="@Url.Action("DownloadBlob", "Resources")" method="post">
+                                <input type="hidden" name="fileName" value="@file.FileName" />
+                                <button type="submit" class="btn btn-link">@file.FileName</button>
+                                <br />
+                                <button type="button" class="btn btn-danger btn-sm" onclick="generateQRCode('@file.FileName')">Download with QR</button>
+                            </form>
+                        </li>
+                    </ul>
+                    <hr />
+                }
+            </div>
+        </div>
 
     </div>
 </div>

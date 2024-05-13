@@ -42,7 +42,9 @@ namespace LearniVerseNew.Models
         public DbSet<Quiz> Quizzes { get; set; }
         public DbSet<QuizAttempt> QuizAttempts { get; set; }   
         public DbSet<Question> Questions { get; set; }   
-
+        public DbSet<NSCSubmission> NSCSubmissions { get; set; }   
+        public DbSet<NSCSubject> NSCSubjects { get; set; }   
+        
 
 
         protected override void OnModelCreating(DbModelBuilder modelBuilder)

@@ -9,6 +9,7 @@ using System.Web;
 using System.Web.Mvc;
 using LearniVerseNew.Models;
 using LearniVerseNew.Models.ApplicationModels;
+using LearniVerseNew.Models.ApplicationModels.ViewModels;
 
 namespace LearniVerseNew.Controllers
 {
@@ -19,15 +20,28 @@ namespace LearniVerseNew.Controllers
         [Authorize(Roles = "User")]
         public ActionResult Home(Student student, string id)
         {
-            id = User.Identity.Name;
+            id = Session["UserId"].ToString();
 
-            student =  db.Students.Include(s => s.Enrollments.Select(e => e.Courses))
-                                   .Include(f => f.Faculty)
-                                   .Include(q => q.Qualification)
-                                    .FirstOrDefault(s => s.StudentEmail == id);
+            student = db.Students.Include(s => s.Enrollments.Select(e => e.Courses))
+                                  .Include(f => f.Faculty)
+                                  .Include(q => q.Qualification)
+                                  .Include(q => q.QuizAttempts.Select(a => a.Quiz))
+                                  .FirstOrDefault(s => s.StudentID == id);
 
             if (student != null)
             {
+                // Group quiz attempts by course and calculate the highest mark for each quiz
+                var courseHighestMarks = student.QuizAttempts
+                    .GroupBy(a => a.Quiz.CourseID)
+                    .Select(group => new
+                    {
+                        CourseID = group.Key,
+                        HighestMark = group.Max(a => a.MarkObtained)
+                    })
+                    .ToList();
+
+                ViewBag.CourseHighestMarks = courseHighestMarks;
+
                 return View(student);
             }
             return RedirectToAction("Account", "Login");
