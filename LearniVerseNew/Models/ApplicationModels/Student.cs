@@ -40,5 +40,7 @@ namespace LearniVerseNew.Models.ApplicationModels
         public ICollection<Enrollment> Enrollments { get; set; }
 
         public virtual ICollection<QuizAttempt> QuizAttempts { get; set; }
+
+        public virtual ICollection<Booking> Bookings { get; set; }
     }
 }

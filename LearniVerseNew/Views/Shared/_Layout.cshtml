@@ -32,6 +32,9 @@
                         <li class="nav-item">@Html.ActionLink("Teachers", "Index", "Teachers", new { area = "" }, new { @class = "nav-link" })</li>
                         <li class="nav-item">@Html.ActionLink("Courses", "Index", "Courses", new { area = "" }, new { @class = "nav-link" })</li>
                         <li class="nav-item">@Html.ActionLink("Payments", "Payments", "Payments", new { area = "" }, new { @class = "nav-link" })</li>
+                        <li class="nav-item">@Html.ActionLink("Bookings", "Index", "Bookings", new { area = "" }, new { @class = "nav-link" })</li>
+                        <li class="nav-item">@Html.ActionLink("Rooms", "Index", "Rooms", new { area = "" }, new { @class = "nav-link" })</li>
+                        <li class="nav-item">@Html.ActionLink("TimeSlots", "Index", "TimeSlots", new { area = "" }, new { @class = "nav-link" })</li>
                     }
 
                     @if (User.IsInRole("Teacher"))
@@ -49,6 +52,7 @@
                         <li class="nav-item">@Html.ActionLink("My Courses", "MyCourses", "Students", new { area = "" }, new { @class = "nav-link" })</li>
                         <li class="nav-item">@Html.ActionLink("Apply", "SelectFaculty", "Enrollments", new { area = "" }, new { @class = "nav-link" })</li>
                         <li class="nav-item">@Html.ActionLink("My Enrollments", "MyEnrollments", "Enrollments", new { area = "" }, new { @class = "nav-link" })</li>
+                        <li class="nav-item">@Html.ActionLink("Bookings", "Create", "Bookings", new { area = "" }, new { @class = "nav-link" })</li>
                     }
                 </ul>
             </div>

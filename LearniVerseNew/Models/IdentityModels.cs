@@ -44,6 +44,9 @@ namespace LearniVerseNew.Models
         public DbSet<Question> Questions { get; set; }   
         public DbSet<NSCSubmission> NSCSubmissions { get; set; }   
         public DbSet<NSCSubject> NSCSubjects { get; set; }   
+        public DbSet<Booking> Bookings { get; set; }   
+        public DbSet<Room> Rooms { get; set; }
+        public DbSet<TimeSlot> TimeSlots { get; set; }
         
 
 

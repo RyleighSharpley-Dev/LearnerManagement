@@ -360,6 +360,7 @@
     <Compile Include="App_Start\RouteConfig.cs" />
     <Compile Include="App_Start\Startup.Auth.cs" />
     <Compile Include="Controllers\AccountController.cs" />
+    <Compile Include="Controllers\BookingsController.cs" />
     <Compile Include="Controllers\CoursesController.cs" />
     <Compile Include="Controllers\EnrollmentsController.cs" />
     <Compile Include="Controllers\FacultiesController.cs" />
@@ -368,8 +369,10 @@
     <Compile Include="Controllers\QualificationsController.cs" />
     <Compile Include="Controllers\QuizController.cs" />
     <Compile Include="Controllers\ResourcesController.cs" />
+    <Compile Include="Controllers\RoomsController.cs" />
     <Compile Include="Controllers\StudentsController.cs" />
     <Compile Include="Controllers\TeachersController.cs" />
+    <Compile Include="Controllers\TimeSlotsController.cs" />
     <Compile Include="Global.asax.cs">
       <DependentUpon>Global.asax</DependentUpon>
     </Compile>
@@ -433,8 +436,17 @@
     <Compile Include="Migrations\202405130855586_Added IsRejected to enrollments.Designer.cs">
       <DependentUpon>202405130855586_Added IsRejected to enrollments.cs</DependentUpon>
     </Compile>
+    <Compile Include="Migrations\202405131036018_Added-Booking Tables.cs" />
+    <Compile Include="Migrations\202405131036018_Added-Booking Tables.Designer.cs">
+      <DependentUpon>202405131036018_Added-Booking Tables.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Migrations\202405131054403_Added timeslot nav to booking.cs" />
+    <Compile Include="Migrations\202405131054403_Added timeslot nav to booking.Designer.cs">
+      <DependentUpon>202405131054403_Added timeslot nav to booking.cs</DependentUpon>
+    </Compile>
     <Compile Include="Migrations\Configuration.cs" />
     <Compile Include="Models\AccountViewModels.cs" />
+    <Compile Include="Models\ApplicationModels\Booking.cs" />
     <Compile Include="Models\ApplicationModels\Course.cs" />
     <Compile Include="Models\ApplicationModels\Enrollment.cs" />
     <Compile Include="Models\ApplicationModels\Faculty.cs" />
@@ -445,6 +457,7 @@
     <Compile Include="Models\ApplicationModels\Quiz.cs" />
     <Compile Include="Models\ApplicationModels\QuizAttempt.cs" />
     <Compile Include="Models\ApplicationModels\Resource.cs" />
+    <Compile Include="Models\ApplicationModels\Room.cs" />
     <Compile Include="Models\ApplicationModels\Student.cs" />
     <Compile Include="Models\ApplicationModels\Teacher.cs" />
     <Compile Include="Models\ApplicationModels\ViewModels\AdminViewModel.cs" />
@@ -594,6 +607,21 @@
     <Content Include="Views\Enrollments\UploadNSC.cshtml" />
     <Content Include="Views\Enrollments\ReviewEnrollment.cshtml" />
     <Content Include="Views\Enrollments\RejectedApplications.cshtml" />
+    <Content Include="Views\Bookings\Create.cshtml" />
+    <Content Include="Views\Bookings\Delete.cshtml" />
+    <Content Include="Views\Bookings\Details.cshtml" />
+    <Content Include="Views\Bookings\Edit.cshtml" />
+    <Content Include="Views\Bookings\Index.cshtml" />
+    <Content Include="Views\TimeSlots\Create.cshtml" />
+    <Content Include="Views\TimeSlots\Delete.cshtml" />
+    <Content Include="Views\TimeSlots\Details.cshtml" />
+    <Content Include="Views\TimeSlots\Edit.cshtml" />
+    <Content Include="Views\TimeSlots\Index.cshtml" />
+    <Content Include="Views\Rooms\Create.cshtml" />
+    <Content Include="Views\Rooms\Delete.cshtml" />
+    <Content Include="Views\Rooms\Details.cshtml" />
+    <Content Include="Views\Rooms\Edit.cshtml" />
+    <Content Include="Views\Rooms\Index.cshtml" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include="App_Data\" />
@@ -670,6 +698,12 @@
     </EmbeddedResource>
     <EmbeddedResource Include="Migrations\202405130855586_Added IsRejected to enrollments.resx">
       <DependentUpon>202405130855586_Added IsRejected to enrollments.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Migrations\202405131036018_Added-Booking Tables.resx">
+      <DependentUpon>202405131036018_Added-Booking Tables.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Migrations\202405131054403_Added timeslot nav to booking.resx">
+      <DependentUpon>202405131054403_Added timeslot nav to booking.cs</DependentUpon>
     </EmbeddedResource>
   </ItemGroup>
   <PropertyGroup>
