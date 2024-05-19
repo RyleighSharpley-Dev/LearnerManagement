@@ -4,44 +4,53 @@
     ViewBag.Title = "My Courses";
 }
 
-<h2>My Courses</h2>
+<div class="container mt-5">
+    <h2 class="text-center mb-4">My Courses</h2>
 
-@if (Model != null && Model.Enrollments != null && Model.Enrollments.Any())
-{
-    <div class="row mb-4">
-        <div class="col-md-12">
-            <div class="card">
-                <div class="card-body">
-                    <h5 class="card-title">Student Information</h5>
-                    <p class="card-text"><strong>Name:</strong> @Model.StudentFirstName @Model.StudentLastName</p>
-                    <p class="card-text"><strong>Qualification:</strong> @Model.Qualification.Name</p>
-                    <p class="card-text"><strong>Faculty:</strong> @Model.Faculty.FacultyName</p>
+    @if (Model != null && Model.Enrollments != null && Model.Enrollments.Any())
+    {
+        <div class="row mb-4">
+            <div class="col-md-12">
+                <div class="card shadow-sm">
+                    <div class="card-body">
+                        <h5 class="card-title">Student Information</h5>
+                        <p class="card-text"><strong>Name:</strong> @Model.StudentFirstName @Model.StudentLastName</p>
+                        <p class="card-text"><strong>Qualification:</strong> @Model.Qualification.Name</p>
+                        <p class="card-text"><strong>Faculty:</strong> @Model.Faculty.FacultyName</p>
+                    </div>
                 </div>
             </div>
         </div>
-    </div>
 
-    <div class="row">
-        @foreach (var enrollment in Model.Enrollments)
-        {
-            foreach (var course in enrollment.Courses)
+        <div class="row">
+            @foreach (var enrollment in Model.Enrollments)
             {
-                <div class="col-md-4 mb-4">
-                    <div class="card">
-                        <div class="card-body">
-                            <h5 class="card-title">@course.CourseName</h5>
-                            <p class="card-text">@course.Description</p>
-                            <p class="card-text"><strong>Semester:</strong> @course.Semester</p>
-                            <p class="card-text"><strong>Department:</strong> @course.Department</p>
-                            <a href="@Url.Action("Classroom", "Courses", new { courseId = course.CourseID })" class="btn btn-primary">Go to Classroom</a>
+                foreach (var course in enrollment.Courses)
+                {
+                    <div class="col-md-4 mb-4">
+                        <div class="card shadow-sm">
+                            <div class="card-body">
+                                <h5 class="card-title">@course.CourseName</h5>
+                                <p class="card-text"><strong>Semester:</strong> @course.Semester</p>
+                                <p class="card-text"><strong>Department:</strong> @course.Department</p>
+                                <p class="card-text">@course.Description</p>
+                                <a href="@Url.Action("Classroom", "Courses", new { courseId = course.CourseID })" class="btn btn-primary">Go to Classroom</a>
+                            </div>
                         </div>
                     </div>
-                </div>
+                }
             }
-        }
-    </div>
-}
-else
-{
-    <p>No courses found for this student.</p>
+        </div>
+    }
+    else
+    {
+        <div class="alert alert-warning" role="alert">
+            No courses found for this student.
+        </div>
+    }
+</div>
+
+@section Scripts {
+    @Scripts.Render("~/bundles/jquery")
+    @Scripts.Render("~/bundles/bootstrap")
 }

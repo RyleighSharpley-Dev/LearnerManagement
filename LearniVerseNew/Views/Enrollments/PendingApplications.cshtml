@@ -12,40 +12,44 @@
     </div>
 }
 
-<h2>Pending Enrollments</h2>
+<div class="container mt-5">
+    <h2>Pending Enrollments</h2>
 
-@if (Model.Any())
-{
-    <table class="table">
-        <thead>
-            <tr>
-                <th>Student Name</th>
-                <th>Enrollment Date</th>
-                <th>Action</th>
-            </tr>
-        </thead>
-        <tbody>
-            @foreach (var enrollment in Model)
-            {
-                <tr>
-                    <td>@enrollment.Student.StudentFirstName @enrollment.Student.StudentLastName</td>
-                    <td>@enrollment.EnrollmentDate.ToString("yyyy-MM-dd")</td>
-                    <td>
-                        @using (Html.BeginForm("ReviewEnrollment", "Enrollments", new { id = enrollment.EnrollmentID }, FormMethod.Post))
-                        {
-                            @Html.AntiForgeryToken()
-                            <button type="submit" class="btn btn-success">Review</button>
-                        }
-                    </td>
-                </tr>
-            }
-        </tbody>
-    </table>
-}
-else
-{
-    <p>No pending enrollments found.</p>
-}
+    @if (Model.Any())
+    {
+        <div class="table-responsive">
+            <table class="table table-bordered">
+                <thead>
+                    <tr>
+                        <th>Student Name</th>
+                        <th>Enrollment Date</th>
+                        <th>Action</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    @foreach (var enrollment in Model)
+                    {
+                        <tr>
+                            <td>@enrollment.Student.StudentFirstName @enrollment.Student.StudentLastName</td>
+                            <td>@enrollment.EnrollmentDate.ToString("yyyy-MM-dd")</td>
+                            <td>
+                                @using (Html.BeginForm("ReviewEnrollment", "Enrollments", new { id = enrollment.EnrollmentID }, FormMethod.Post))
+                                {
+                                    @Html.AntiForgeryToken()
+                                    <button type="submit" class="btn btn-success">Review</button>
+                                }
+                            </td>
+                        </tr>
+                    }
+                </tbody>
+            </table>
+        </div>
+    }
+    else
+    {
+        <p>No pending enrollments found.</p>
+    }
+</div>
 
 @section Scripts {
     @Scripts.Render("~/bundles/jqueryval")

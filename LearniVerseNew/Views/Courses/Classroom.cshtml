@@ -1,93 +1,102 @@
 ﻿@model LearniVerseNew.Models.ApplicationModels.ViewModels.ClassroomViewModel
+
 @{
     ViewBag.Title = "Classroom";
 }
 
-
-<div class="container">
-
+<div class="container mt-5">
     <div class="modal fade" id="qrCodeModal" tabindex="-1" role="dialog" aria-labelledby="qrCodeModalLabel" aria-hidden="true">
         <div class="modal-dialog modal-dialog-centered" role="document">
             <div class="modal-content">
                 <div class="modal-header">
                     <h5 class="modal-title" id="qrCodeModalLabel">Download File</h5>
-                   
+                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
                 </div>
-                <div class="modal-body">
+                <div class="modal-body text-center">
                     <img id="qrCodeImage" class="img-thumbnail" alt="QR Code" />
                 </div>
             </div>
         </div>
     </div>
 
-    <div class="row">
-        <div class="col-md-12">
+    <div class="row mb-4">
+        <div class="col-md-12 text-center">
             <h2>Classroom</h2>
-            <h4>@Model.Course.CourseName</h4>
+            <h4 class="text-muted">@Model.Course.CourseName</h4>
             <hr />
         </div>
     </div>
 
     <div class="row">
         <div class="col-md-3">
-            <div class="jumbotron">
-                <h3>Quizzes</h3>
-                <hr />
-                <ul>
-                    @foreach (var quiz in Model.Quizzes)
-                    {
-                        <li>
-                            <h4>@quiz.QuizDescription</h4>
-                            <form action="@Url.Action("TakeQuiz", "Quiz")" method="get">
-                                <input type="hidden" name="QuizID" value="@quiz.QuizID" />
-                                <button type="submit" class="btn btn-primary">Take Quiz</button>
-                            </form>
-
-                        </li>
-                    }
-                </ul>
+            <div class="card shadow-sm mb-4">
+                <div class="card-body">
+                    <h3 class="card-title">Quizzes</h3>
+                    <ul class="list-group list-group-flush">
+                        @if (!Model.Quizzes.Any())
+                        {
+                            <li class="list-group-item">No quizzes available.</li>
+                        }
+                        else
+                        {
+                            foreach (var quiz in Model.Quizzes)
+                            {
+                                <li class="list-group-item">
+                                    <h5>@quiz.QuizDescription</h5>
+                                    <form action="@Url.Action("TakeQuiz", "Quiz")" method="get">
+                                        <input type="hidden" name="QuizID" value="@quiz.QuizID" />
+                                        <button type="submit" class="btn btn-primary btn-sm">Take Quiz</button>
+                                    </form>
+                                </li>
+                            }
+                        }
+                    </ul>
+                </div>
             </div>
         </div>
 
         <div class="col-md-9 border-start border-black">
-            <div class="jumbotron ms-2">
-                <h3>Learning Material</h3>
-                <hr />
-                @foreach (var file in Model.Resources)
-                {
-                    <h4>@file.FileDescription</h4>
-                    <ul>
-                        <li>
-                            <form id="downloadForm_@file.FileName" action="@Url.Action("DownloadBlob", "Resources")" method="post">
-                                <input type="hidden" name="fileName" value="@file.FileName" />
-                                <button type="submit" class="btn btn-link">@file.FileName</button>
-                                <br />
-                                <button type="button" class="btn btn-danger btn-sm" onclick="generateQRCode('@file.FileName')">Download with QR</button>
-                            </form>
-                        </li>
-                    </ul>
-                    <hr />
-                }
+            <div class="card shadow-sm ms-2">
+                <div class="card-body">
+                    <h3 class="card-title">Learning Material</h3>
+                    @foreach (var file in Model.Resources)
+                    {
+                        <div class="mb-4">
+                            <h5>@file.FileDescription</h5>
+                            <ul class="list-unstyled">
+                                <li>
+                                    <form id="downloadForm_@file.FileName" action="@Url.Action("DownloadBlob", "Resources")" method="post">
+                                        <input type="hidden" name="fileName" value="@file.FileName" />
+                                        <button type="submit" class="btn btn-link">@file.FileName</button>
+                                    </form>
+                                    <button type="button" class="btn btn-danger btn-sm mt-2" onclick="generateQRCode('@file.FileName')">Download with QR</button>
+                                </li>
+                            </ul>
+                        </div>
+                    }
+                </div>
             </div>
         </div>
-
     </div>
 </div>
 
-<script>
-
-function generateQRCode(blobName) {
-    $.ajax({
-        url: '@Url.Action("GetQrCode", "Resources")',
-        type: 'GET',
-        data: { blobName: blobName },
-        success: function(response) {
-            $('#qrCodeImage').attr('src', 'data:image/png;base64,' + response.QrCodeBase64);
-            $('#qrCodeModal').modal('show');
-        },
-        error: function(xhr, status, error) {
-            console.error(error);
+@section Scripts {
+    <script>
+        function generateQRCode(blobName) {
+            $.ajax({
+                url: '@Url.Action("GetQrCode", "Resources")',
+                type: 'GET',
+                data: { blobName: blobName },
+                success: function(response) {
+                    $('#qrCodeImage').attr('src', 'data:image/png;base64,' + response.QrCodeBase64);
+                    $('#qrCodeModal').modal('show');
+                },
+                error: function(xhr, status, error) {
+                    console.error(error);
+                }
+            });
         }
-    });
+    </script>
+    @Scripts.Render("~/bundles/jquery")
+    @Scripts.Render("~/bundles/bootstrap")
 }
-</script>

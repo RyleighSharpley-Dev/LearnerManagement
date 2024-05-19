@@ -28,7 +28,7 @@
                     @Html.ValidationMessageFor(model => model.Subjects, "", new { @class = "text-danger" })
                 </div>
 
-                <div class="form-group mt-2">
+                <div class="form-group mt-2 mb-2">
                     <label for="Marks">Percentage achieved</label>
                     @Html.TextBoxFor(model => model.Marks, new { @class = "form-control marks-input" })
                     @Html.ValidationMessageFor(model => model.Marks, "", new { @class = "text-danger" })
@@ -40,9 +40,9 @@
 </div>
 
 <!-- Add file input for NSC document -->
-<div class="form-group mt-4">
+<div class="form-group mt-4 mb-2">
     <label for="NSCDocument">NSC Document</label>
-    <input type="file" name="NSCDocument" id="NSCDocument" class="form-control-file" accept=".pdf"> <!-- Added file input -->
+    <input type="file" name="NSCDocument" id="NSCDocument" class="form-control-file btn btn-secondary" accept=".pdf"> <!-- Added file input -->
 
 </div>
 
