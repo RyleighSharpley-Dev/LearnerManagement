@@ -4,66 +4,97 @@
     ViewBag.Title = "Index";
 }
 
-<h2>Index</h2>
+<div class="container-fluid">
+    <div class="row">
 
-<p>
-    @Html.ActionLink("Create New", "Create")
-</p>
-<table class="table">
-    <tr>
-        <th>
-            @Html.DisplayNameFor(model => model.Qualification.Name)
-        </th>
-        <th>
-            @Html.DisplayNameFor(model => model.Teacher.TeacherFirstName)
-        </th>
-        <th>
-            @Html.DisplayNameFor(model => model.CourseName)
-        </th>
-        <th>
-            @Html.DisplayNameFor(model => model.Description)
-        </th>
-        <th>
-            @Html.DisplayNameFor(model => model.Semester)
-        </th>
-        <th>
-            @Html.DisplayNameFor(model => model.Department)
-        </th>
-        <th>
-            @Html.DisplayNameFor(model => model.Price)
-        </th>
-        <th></th>
-    </tr>
+        <div class="col-md-2 border-start border-end sticky-top">
+            <h1>Filter</h1>
 
-@foreach (var item in Model) {
-    <tr>
-        <td>
-            @Html.DisplayFor(modelItem => item.Qualification.Name)
-        </td>
-        <td>
-            @Html.DisplayFor(modelItem => item.Teacher.TeacherFirstName)
-        </td>
-        <td>
-            @Html.DisplayFor(modelItem => item.CourseName)
-        </td>
-        <td>
-            @Html.DisplayFor(modelItem => item.Description)
-        </td>
-        <td>
-            @Html.DisplayFor(modelItem => item.Semester)
-        </td>
-        <td>
-            @Html.DisplayFor(modelItem => item.Department)
-        </td>
-        <td>
-            @Html.DisplayFor(modelItem => item.Price)
-        </td>
-        <td>
-            @Html.ActionLink("Edit", "Edit", new { id=item.CourseID }) |
-            @Html.ActionLink("Details", "Details", new { id=item.CourseID }) |
-            @Html.ActionLink("Delete", "Delete", new { id=item.CourseID })
-        </td>
-    </tr>
-}
+            @using (Html.BeginForm("Index", "Courses", FormMethod.Get))
+            {
+                <div class="form-group mb-2">
+                    @Html.Label("Search by Department:")
+                    @Html.DropDownList("searchDepartment", new SelectList(ViewBag.Departments, "Value", "Text"), "Select Department", new { @class = "form-control" })
+                </div>
+                <div class="form-group mb-2">
+                    @Html.Label("Search by Course Name:")
+                    @Html.TextBox("searchCourseName", null, new { @class = "form-control", placeholder = "Enter course name" })
+                </div>
+                <div class="form-group mb-2">
+                    @Html.Label("Search by Course ID:")
+                    @Html.TextBox("searchCourseCode", null, new { @class = "form-control", placeholder = "Enter course code" })
+                </div>
+                <button type="submit" class="btn btn-primary">Search</button>
+            }
+        </div>
 
-</table>
+
+        <div class="col-md-10">
+            <h1>Courses</h1>
+
+            <div>
+                <a class="btn btn-info" href="@Url.Action("Create")">Create New</a>
+            </div>
+            <hr />
+            @if (Model.Any())
+            {
+
+                <hr />
+                <table class="table">
+                    <tr>
+                        <th>
+                            @Html.DisplayNameFor(model => model.Teacher.TeacherFirstName)
+                        </th>
+                        <th>
+                            @Html.DisplayNameFor(model => model.CourseName)
+                        </th>
+                        <th>
+                            @Html.DisplayNameFor(model => model.Description)
+                        </th>
+                        <th>
+                            @Html.DisplayNameFor(model => model.Semester)
+                        </th>
+                        <th>
+                            @Html.DisplayNameFor(model => model.Department)
+                        </th>
+                        <th></th>
+                    </tr>
+
+                    @foreach (var item in Model)
+                    {
+                        <tr>
+                            <td>
+                                @Html.DisplayFor(modelItem => item.Teacher.TeacherFirstName)
+                            </td>
+                            <td>
+                                @Html.DisplayFor(modelItem => item.CourseName)
+                            </td>
+                            <td>
+                                @Html.DisplayFor(modelItem => item.Description)
+                            </td>
+                            <td>
+                                @Html.DisplayFor(modelItem => item.Semester)
+                            </td>
+                            <td>
+                                @Html.DisplayFor(modelItem => item.Department)
+                            </td>
+                            <td>
+                                @Html.ActionLink("Edit", "Edit", new { id = item.CourseID }) |
+                                @Html.ActionLink("Details", "Details", new { id = item.CourseID }) |
+                                @Html.ActionLink("Delete", "Delete", new { id = item.CourseID })
+                            </td>
+                        </tr>
+                    }
+                </table>
+            }
+            else
+            {
+                <div class="alert alert-warning alert-dismissible fade show" role="alert">
+                    No courses found for this department
+                </div>
+            }
+
+
+        </div>
+    </div>
+</div>

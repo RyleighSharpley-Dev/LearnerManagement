@@ -3,32 +3,34 @@
     ViewBag.Title = "Select Courses";
 }
 
-<h2>Select Courses</h2>
+<div class="container mt-5">
+    <h2 class="text-center mb-4">Select Courses</h2>
 
-@using (Html.BeginForm())
-{
-    @Html.AntiForgeryToken()
+    @using (Html.BeginForm())
+    {
+        @Html.AntiForgeryToken()
 
-    <div class="form-horizontal">
-        <h4>Please select courses:</h4>
-        <hr />
-        @Html.ValidationSummary(true, "", new { @class = "text-danger" })
-        <div class="form-group">
-            <div class="col-md-10">
-                @Html.ListBoxFor(model => model.SelectedCourseIDs, new SelectList(Model.AvailableCourses, "CourseID", "CourseName"), new { @class = "form-control" })
-                @Html.ValidationMessageFor(model => model.SelectedCourseIDs, "", new { @class = "text-danger" })
+        <div class="form-horizontal">
+            <h4 class="mb-3">Please select courses:</h4>
+            <hr />
+            @Html.ValidationSummary(true, "", new { @class = "alert alert-danger" })
+            <div class="form-group mb-3">
+                <div class="col-md-12">
+                    @Html.ListBoxFor(model => model.SelectedCourseIDs, new SelectList(Model.AvailableCourses, "CourseID", "CourseName"), new { @class = "form-control", size = 10 })
+                    @Html.ValidationMessageFor(model => model.SelectedCourseIDs, "", new { @class = "text-danger" })
+                </div>
+            </div>
+            <div class="form-group text-center">
+                <div class="col-md-12 mt-3">
+                    <input type="submit" value="Continue" class="btn btn-success btn-lg" />
+                    @Html.ActionLink("Cancel", "SelectFaculty", null, new { @class = "btn btn-secondary btn-lg ms-3" })
+                </div>
             </div>
         </div>
-        <div class="form-group">
-            <div class="col-md-offset-2 col-md-10 mt-2">
-                <input type="submit" value="Next" class="btn btn-success" />
-            </div>
-        </div>
-    </div>
-}
-
-<div>
-    @Html.ActionLink("Back to Qualification Selection", "SelectQualification")
+    }
 </div>
 
-
+@section Scripts {
+    @Scripts.Render("~/bundles/jquery")
+    @Scripts.Render("~/bundles/bootstrap")
+}

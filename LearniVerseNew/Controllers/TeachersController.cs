@@ -13,6 +13,7 @@ using Microsoft.AspNet.Identity.Owin;
 using Microsoft.AspNet.Identity;
 using System.Threading.Tasks;
 using LearniVerseNew.Models.ApplicationModels.ViewModels;
+using Newtonsoft.Json;
 
 namespace LearniVerseNew.Controllers
 {
@@ -58,13 +59,72 @@ namespace LearniVerseNew.Controllers
         }
 
         // GET: Teachers
-        public ActionResult Index()
+        [Authorize(Roles = "Admin")]
+        public async Task<ActionResult> Index(string searchTeacherName, string filterByFaculty)
         {
-            var teachers = db.Teachers.Include(t => t.Faculty);
-            return View(teachers.ToList());
+            var teachers = db.Teachers.AsQueryable();
+
+            // Apply filter based on search criteria
+            if (!string.IsNullOrEmpty(searchTeacherName))
+            {
+                teachers = teachers.Where(t => t.TeacherFirstName.Contains(searchTeacherName) || t.TeacherLastName.Contains(searchTeacherName));
+            }
+
+            if (!string.IsNullOrEmpty(filterByFaculty) && filterByFaculty != "All Faculties")
+            {
+                teachers = teachers.Where(t => t.Faculty.FacultyName == filterByFaculty);
+            }
+
+            // Load faculties for the dropdown list
+            ViewBag.Faculties = new SelectList(db.Faculties, "FacultyName", "FacultyName");
+
+            return View(await teachers.ToListAsync());
         }
 
-        // GET: Teachers/Details/5
+        [Authorize(Roles = "Teacher")]
+        public  ActionResult Home(Teacher teacher, string id)
+        {
+            id = Session["UserId"].ToString();
+
+            teacher = db.Teachers.Include(t => t.Courses)
+                                 .Include(x => x.Faculty)
+                                 .FirstOrDefault(s => s.TeacherID == id);
+
+            var courses = db.Courses.ToList();
+
+            var settings = new JsonSerializerSettings
+            {
+                ReferenceLoopHandling = ReferenceLoopHandling.Ignore
+            };
+
+            var jsonCourses = JsonConvert.SerializeObject(courses, settings);
+
+            if (teacher != null)
+            {
+                ViewBag.AllCourses = jsonCourses;
+                return View(teacher);
+            }
+            return RedirectToAction("Account", "Login");
+        }
+
+        [Authorize(Roles = "Teacher")]
+        public async Task<ActionResult> MyCourses(string id)
+        {
+            id = User.Identity.Name;
+
+            // Retrieve the student from the database
+            var teacher = await db.Teachers.FirstOrDefaultAsync(t => t.TeacherEmail == id);
+
+            if (teacher != null)
+            {
+                // If the student is found, return the view with the student and their enrolled courses
+                return View(teacher);
+            }
+
+            return View("Error");
+
+        }
+
         public ActionResult Details(string id)
         {
             if (id == null)

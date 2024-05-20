@@ -11,5 +11,8 @@ namespace LearniVerseNew.Models.ApplicationModels.ViewModels
         public int CourseCount { get; set; }
         public int TeacherCount { get; set; }
         public decimal Revenue { get; set; }
+        public List<Payment> Payments { get; set; }
+        public string JsonPayments { get; set; }
+
     }
 }

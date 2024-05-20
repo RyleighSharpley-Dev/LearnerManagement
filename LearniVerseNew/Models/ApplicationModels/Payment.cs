@@ -33,6 +33,7 @@ namespace LearniVerseNew.Models.ApplicationModels
         public DateTime PaymentDate { get; set; }
 
         // Navigation properties
+
         public virtual Student Student { get; set; }
         public virtual Enrollment Enrollment { get; set; }
 

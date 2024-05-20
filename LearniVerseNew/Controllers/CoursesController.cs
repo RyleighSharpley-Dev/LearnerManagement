@@ -4,6 +4,7 @@ using System.Data;
 using System.Data.Entity;
 using System.Linq;
 using System.Net;
+using System.Threading.Tasks;
 using System.Web;
 using System.Web.Mvc;
 using LearniVerseNew.Models;
@@ -53,10 +54,33 @@ namespace LearniVerseNew.Controllers
         }
 
         // GET: Courses
-        public ActionResult Index()
+        [Authorize(Roles = "Admin")]
+        public async Task<ActionResult> Index(string searchDepartment, string searchCourseName, string searchCourseCode)
         {
-            var courses = db.Courses.Include(c => c.Qualification).Include(c => c.Teacher);
-            return View(courses.ToList());
+            var courses = db.Courses.Include(c => c.Teacher);
+            var departments = courses.Select(c => c.Department).Distinct().ToList();
+            ViewBag.Departments = departments.Select(d => new SelectListItem { Text = d, Value = d });
+
+            // Apply filters based on search criteria
+            if (!string.IsNullOrEmpty(searchDepartment))
+            {
+                string searchDeptLower = searchDepartment.ToLower();
+                courses = courses.Where(c => c.Department.ToLower().Contains(searchDeptLower));
+            }
+
+            if (!string.IsNullOrEmpty(searchCourseName))
+            {
+                string searchCourseNameLower = searchCourseName.ToLower();
+                courses = courses.Where(c => c.CourseName.ToLower().Contains(searchCourseNameLower));
+            }
+
+            if (!string.IsNullOrEmpty(searchCourseCode))
+            {
+                string searchCourseCodeLower = searchCourseCode.ToLower();
+                courses = courses.Where(c => c.CourseID.ToLower().Contains(searchCourseCodeLower));
+            }
+
+            return View(await courses.ToListAsync());
         }
 
         // GET: Courses/Details/5
