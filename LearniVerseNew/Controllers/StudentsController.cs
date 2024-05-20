@@ -66,10 +66,18 @@ namespace LearniVerseNew.Controllers
         }
 
         // GET: Students
-        public ActionResult Index()
+        [Authorize(Roles = "Admin")]
+        public async Task<ActionResult> Index(string searchName)
         {
-            var students = db.Students.Include(s => s.Faculty).Include(s => s.Qualification);
-            return View(students.ToList());
+            IQueryable<Student> students = db.Students;
+
+            if (!string.IsNullOrEmpty(searchName))
+            {
+                students = students.Where(s => s.StudentFirstName.Contains(searchName) || s.StudentLastName.Contains(searchName));
+            }
+
+
+            return View(await students.ToListAsync());
         }
 
         // GET: Students/Details/5

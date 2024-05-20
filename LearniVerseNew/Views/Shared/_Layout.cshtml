@@ -21,8 +21,6 @@
                     @if (!User.Identity.IsAuthenticated)
                     {
                         <li class="nav-item">@Html.ActionLink("Home", "Index", "Home", new { area = "" }, new { @class = "nav-link" })</li>
-                        <li class="nav-item">@Html.ActionLink("About", "About", "Home", new { area = "" }, new { @class = "nav-link" })</li>
-                        <li class="nav-item">@Html.ActionLink("Contact", "Contact", "Home", new { area = "" }, new { @class = "nav-link" })</li>
                     }
 
                     @if (User.IsInRole("Admin"))
@@ -31,7 +29,7 @@
                         <li class="nav-item">@Html.ActionLink("Students", "Index", "Students", new { area = "" }, new { @class = "nav-link" })</li>
                         <li class="nav-item">@Html.ActionLink("Teachers", "Index", "Teachers", new { area = "" }, new { @class = "nav-link" })</li>
                         <li class="nav-item">@Html.ActionLink("Courses", "Index", "Courses", new { area = "" }, new { @class = "nav-link" })</li>
-                        <li class="nav-item">@Html.ActionLink("Payments", "Index", "Payments", new { area = "" }, new { @class = "nav-link" })</li>
+                        <li class="nav-item">@Html.ActionLink("Payments", "Payments", "Payments", new { area = "" }, new { @class = "nav-link" })</li>
                         <li class="nav-item">@Html.ActionLink("Bookings", "Index", "Bookings", new { area = "" }, new { @class = "nav-link" })</li>
                         <li class="nav-item">@Html.ActionLink("Rooms", "Index", "Rooms", new { area = "" }, new { @class = "nav-link" })</li>
                         <li class="nav-item">@Html.ActionLink("TimeSlots", "Index", "TimeSlots", new { area = "" }, new { @class = "nav-link" })</li>

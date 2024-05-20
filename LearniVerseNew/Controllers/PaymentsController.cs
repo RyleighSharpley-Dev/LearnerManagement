@@ -22,6 +22,26 @@ namespace LearniVerseNew.Controllers
             return View(payments.ToList());
         }
 
+        [Authorize(Roles = "Admin")]
+        public ActionResult Payments(int? selectedMonth, string searchStudent, int? selectedYear)
+        {
+            IQueryable<Payment> payments = db.Payments.Include("Enrollment").Include("Student");
+
+            if (selectedMonth.HasValue)
+            {
+                payments = payments.Where(p => p.PaymentDate.Month == selectedMonth);
+            }
+            if (!string.IsNullOrEmpty(searchStudent))
+            {
+                payments = payments.Where(p => p.Student.StudentFirstName.Contains(searchStudent));
+            }
+            if (selectedYear.HasValue)
+            {
+                payments = payments.Where(p => p.PaymentDate.Year == selectedYear);
+            }
+            return View(payments.ToList());
+        }
+
         public ActionResult MyPayments(string studentId)
         {
             studentId = Session["UserId"].ToString();
