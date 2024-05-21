@@ -46,6 +46,12 @@
                     @if (User.IsInRole("User"))
                     {
                         <li class="nav-item">@Html.ActionLink("Home", "Home", "Students", new { area = "" }, new { @class = "nav-link" })</li>
+                        if (Session["UserId"] != null)
+                        {
+                            <li class="nav-item">
+                                <a class="nav-link" href="@Url.Action("CreateSession", "StudySessions", new { studentId = Session["UserId"].ToString() });">Study Center</a>
+                            </li>
+                        }
                         <li class="nav-item">@Html.ActionLink("My Courses", "MyCourses", "Students", new { area = "" }, new { @class = "nav-link" })</li>
                         <li class="nav-item">@Html.ActionLink("Apply", "SelectFaculty", "Enrollments", new { area = "" }, new { @class = "nav-link" })</li>
                         <li class="nav-item">@Html.ActionLink("My Enrollments", "MyEnrollments", "Enrollments", new { area = "" }, new { @class = "nav-link" })</li>

@@ -10,6 +10,7 @@ using System.Web.Mvc;
 using LearniVerseNew.Models;
 using LearniVerseNew.Models.ApplicationModels;
 using LearniVerseNew.Models.ApplicationModels.ViewModels;
+using Newtonsoft.Json;
 
 namespace LearniVerseNew.Controllers
 {
@@ -26,10 +27,16 @@ namespace LearniVerseNew.Controllers
                                   .Include(f => f.Faculty)
                                   .Include(q => q.Qualification)
                                   .Include(q => q.QuizAttempts.Select(a => a.Quiz))
+                                  .Include(sc => sc.StudySessions)
                                   .FirstOrDefault(s => s.StudentID == id);
 
             if (student != null)
             {
+                var settings = new JsonSerializerSettings
+                {
+                    ReferenceLoopHandling = ReferenceLoopHandling.Ignore
+                };
+
                 // Group quiz attempts by course and calculate the highest mark for each quiz
                 var courseHighestMarks = student.QuizAttempts
                     .GroupBy(a => a.Quiz.CourseID)
@@ -40,7 +47,15 @@ namespace LearniVerseNew.Controllers
                     })
                     .ToList();
 
+                // Create new lists to store flattened TaskItems
+                var studySessionTaskItems = new List<TaskItem>();
+                foreach (var session in student.StudySessions)
+                {
+                    studySessionTaskItems.AddRange(session.TaskItems);
+                }
+
                 ViewBag.CourseHighestMarks = courseHighestMarks;
+                ViewBag.StudySessionTaskItems = Newtonsoft.Json.JsonConvert.SerializeObject(studySessionTaskItems, settings);
 
                 return View(student);
             }

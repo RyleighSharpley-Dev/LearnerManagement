@@ -5,6 +5,7 @@ using LearniVerseNew.Models.ApplicationModels;
 using Microsoft.AspNet.Identity;
 using Microsoft.AspNet.Identity.EntityFramework;
 
+
 namespace LearniVerseNew.Models
 {
     // You can add profile data for the user by adding more properties to your ApplicationUser class, please visit https://go.microsoft.com/fwlink/?LinkID=317594 to learn more.
@@ -47,6 +48,9 @@ namespace LearniVerseNew.Models
         public DbSet<Booking> Bookings { get; set; }   
         public DbSet<Room> Rooms { get; set; }
         public DbSet<TimeSlot> TimeSlots { get; set; }
+        public DbSet<StudySession> StudySessions { get; set; }
+        public DbSet<TaskItem> TaskItems { get; set; }
+        
         
 
 
@@ -92,6 +96,11 @@ namespace LearniVerseNew.Models
                 .HasRequired(t => t.Faculty) // Each Teacher must belong to a Faculty
                 .WithMany(f => f.Teachers) // One Faculty can have many Teachers
                 .HasForeignKey(t => t.FacultyID); // Foreign key property
+
+            modelBuilder.Entity<StudySession>()
+               .HasRequired(s => s.Student) // StudySession requires a Student
+               .WithMany(s => s.StudySessions) // Student can have many StudySessions
+               .HasForeignKey(s => s.StudentID); // Foreign key constraint
 
             base.OnModelCreating(modelBuilder);
         }

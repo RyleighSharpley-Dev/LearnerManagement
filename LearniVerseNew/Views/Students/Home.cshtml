@@ -98,7 +98,20 @@
     {
         <p>No current enrollment found.</p>
     }
+
+
+    <div class="col-md-12 mb-4">
+        <div class="card shadow-sm">
+            <div class="card-body text-center">
+                <h3 class="card-title">Study Sessions and Tasks Completed</h3>
+                <!-- Canvas for the chart -->
+                <canvas id="completionChart" width="400" height="200"></canvas>
+            </div>
+        </div>
+    </div>
 </div>
+
+
 
 @Scripts.Render("~/bundles/jquery")
 @Scripts.Render("~/bundles/jqueryval")
@@ -106,8 +119,45 @@
 @Scripts.Render("~/bundles/modernizr")
 @Styles.Render("~/Content/css")
 
+<script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/3.7.0/chart.min.js"></script>
 <script>
     $(document).ready(function () {
         $('#courseCarousel').carousel();
+    });
+
+
+    $(document).ready(function () {
+        // Gather data for the chart (replace with actual data retrieval logic)
+       var studySessionsCompleted = @Html.Raw(Json.Encode(Model.StudySessions.Count));
+       var tasksCompleted = @Html.Raw(Json.Encode(ViewBag.StudySessionTaskItems));
+
+        // Render the chart
+        var ctx = document.getElementById('completionChart').getContext('2d');
+        var myChart = new Chart(ctx, {
+            type: 'bar',
+            data: {
+                labels: ['Study Sessions', 'Tasks'],
+                datasets: [{
+                    label: 'Completed',
+                    data: [studySessionsCompleted, tasksCompleted],
+                    backgroundColor: [
+                        'rgba(255, 99, 132, 0.2)',
+                        'rgba(54, 162, 235, 0.2)',
+                    ],
+                    borderColor: [
+                        'rgba(255, 99, 132, 1)',
+                        'rgba(54, 162, 235, 1)',
+                    ],
+                    borderWidth: 1
+                }]
+            },
+            options: {
+                scales: {
+                    y: {
+                        beginAtZero: true
+                    }
+                }
+            }
+        });
     });
 </script>

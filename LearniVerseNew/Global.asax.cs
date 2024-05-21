@@ -30,7 +30,7 @@ namespace LearniVerseNew
             var userManager = new UserManager<ApplicationUser>(new UserStore<ApplicationUser>(context));
 
             // Create roles if they don't exist
-            var roles = new[] { "Admin", "User", "Teacher" }; // Add more roles if needed
+            var roles = new[] { "Admin", "User", "Teacher" }; 
             foreach (var role in roles)
             {
                 if (!roleManager.RoleExists(role))
