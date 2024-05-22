@@ -1,0 +1,22 @@
+﻿@model LearniVerseNew.Models.ApplicationModels.ViewModels.ProgressCenterViewModel
+
+@{
+    ViewBag.Title = "Progress Center";
+}
+
+<div class="container mt-5">
+    <h2>Progress Center</h2>
+    <form action="@Url.Action("ViewProgress", "Students")" method="post" class="form-inline">
+        <div class="form-group">
+            <label for="SelectedCourseId">Select a Course: </label>
+            <select id="SelectedCourseId" name="SelectedCourseId" class="form-control ml-2">
+                <option value="">-- Select Course --</option>
+                @foreach (var course in Model.Courses)
+                {
+                    <option value="@course.CourseID">@course.CourseName</option>
+                }
+            </select>
+        </div>
+        <button type="submit" class="btn btn-primary ml-2">View Progress</button>
+    </form>
+</div>

@@ -475,8 +475,11 @@
     <Compile Include="Models\ApplicationModels\Teacher.cs" />
     <Compile Include="Models\ApplicationModels\ViewModels\AdminViewModel.cs" />
     <Compile Include="Models\ApplicationModels\ViewModels\ClassroomViewModel.cs" />
+    <Compile Include="Models\ApplicationModels\ViewModels\CourseQuizAttempts.cs" />
     <Compile Include="Models\ApplicationModels\ViewModels\CourseSelectionViewModel.cs" />
     <Compile Include="Models\ApplicationModels\ViewModels\EnrolViewModel.cs" />
+    <Compile Include="Models\ApplicationModels\ViewModels\ProgressCenterViewModel.cs" />
+    <Compile Include="Models\ApplicationModels\ViewModels\ProgressViewModel.cs" />
     <Compile Include="Models\ApplicationModels\ViewModels\QuizViewModel.cs" />
     <Compile Include="Models\ApplicationModels\ViewModels\RegisterTeacherViewModel.cs" />
     <Compile Include="Models\ApplicationModels\ViewModels\ReviewApplicationViewModel.cs" />
@@ -658,6 +661,9 @@
     <Content Include="Views\TaskItems\Edit.cshtml" />
     <Content Include="Views\TaskItems\Index.cshtml" />
     <Content Include="Views\StudySessions\StudySession.cshtml" />
+    <Content Include="Views\Students\ProgressCenter.cshtml" />
+    <Content Include="Views\Students\QuizProgress.cshtml" />
+    <Content Include="Views\Students\ProgressReport.cshtml" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include="App_Data\" />

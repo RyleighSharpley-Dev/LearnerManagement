@@ -27,7 +27,7 @@
             </div>
         </div>
 
-        <div class="col-md-6 mb-4">
+        <div class="col-md-4 mb-4">
             <div class="card shadow-sm">
                 <div class="card-body text-center">
                     <i class="fas fa-list-alt fa-3x mb-3 text-primary"></i>
@@ -38,13 +38,24 @@
             </div>
         </div>
 
-        <div class="col-md-6 mb-4">
+        <div class="col-md-4 mb-4">
             <div class="card shadow-sm">
                 <div class="card-body text-center">
                     <i class="fas fa-credit-card fa-3x mb-3 text-danger"></i>
                     <h3 class="card-title">Payments</h3>
                     <p class="card-text">View your payment history and status.</p>
                     <a href="@Url.Action("MyPayments", "Payments")" class="btn btn-primary">View Payments</a>
+                </div>
+            </div>
+        </div>
+
+        <div class="col-md-4 mb-4">
+            <div class="card shadow-sm">
+                <div class="card-body text-center">
+                    <i class="fas fa-chart-line fa-3x mb-3 text-success"></i>
+                    <h3 class="card-title">Progress Center</h3>
+                    <p class="card-text">Track your progress across different courses.</p>
+                    <a href="@Url.Action("ProgressCenter", "Students")" class="btn btn-primary">View Progress</a>
                 </div>
             </div>
         </div>

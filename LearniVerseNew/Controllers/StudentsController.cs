@@ -11,6 +11,7 @@ using System.Windows.Forms.Design;
 using LearniVerseNew.Models;
 using LearniVerseNew.Models.ApplicationModels;
 using LearniVerseNew.Models.ApplicationModels.ViewModels;
+using Microsoft.AspNet.Identity;
 using Newtonsoft.Json;
 
 namespace LearniVerseNew.Controllers
@@ -131,6 +132,86 @@ namespace LearniVerseNew.Controllers
                 // Handle the case where the student ID is not available in the session
                 return HttpNotFound(); // Or return an appropriate status code
             }
+        }
+
+        public ActionResult ProgressCenter()
+        {
+            var studentId = Session["UserId"].ToString(); // Assuming you're using ASP.NET Identity
+            var student = db.Students
+                .Include(s => s.Enrollments.Select(e => e.Courses))
+                .FirstOrDefault(s => s.StudentID == studentId);
+
+            if (student == null)
+            {
+                return HttpNotFound();
+            }
+
+            var courses = student.Enrollments.SelectMany(e => e.Courses).ToList();
+
+            var model = new ProgressCenterViewModel
+            {
+                Courses = courses
+            };
+
+            return View(model);
+        }
+
+        [HttpPost]
+        public ActionResult ViewProgress(string selectedCourseId)
+        {
+            if (string.IsNullOrEmpty(selectedCourseId))
+            {
+                return RedirectToAction("ProgressCenter");
+            }
+
+            var studentId = Session["UserId"].ToString(); 
+            var quizAttempts = db.QuizAttempts
+                .Include(qa => qa.Quiz)
+                .Where(qa => qa.StudentID == studentId && qa.Quiz.CourseID == selectedCourseId)
+                .ToList();
+
+            var highestMark = quizAttempts.Max(qa => (int?)qa.MarkObtained) ?? 0;
+            var averageMark = quizAttempts.Any() ? quizAttempts.Average(qa => qa.MarkObtained) : 0;
+
+            var model = new ProgressViewModel
+            {
+                QuizAttempts = quizAttempts,
+                HighestMark = highestMark,
+                AverageMark = averageMark
+            };
+
+            return View("QuizProgress", model);
+        }
+
+        public ActionResult ViewProgressReport()
+        {
+            var studentId = User.Identity.GetUserId();
+
+            var student = db.Students
+                            .Include(s => s.QuizAttempts.Select(qa => qa.Quiz.Course))
+                            .FirstOrDefault(s => s.StudentID == studentId);
+
+            if (student == null)
+            {
+                // Handle the case where the student is not found
+                return HttpNotFound();
+            }
+
+            var coursesQuizAttempts = student.QuizAttempts
+                                              .GroupBy(qa => qa.Quiz.Course)
+                                              .Select(g => new CourseQuizAttempts
+                                              {
+                                                  CourseName = g.Key.CourseName,
+                                                  QuizAttempts = g.ToList()
+                                              })
+                                              .ToList();
+
+            var model = new ProgressViewModel
+            {
+                CoursesQuizAttempts = coursesQuizAttempts
+            };
+
+            return View("ProgressReport", model);
         }
 
 

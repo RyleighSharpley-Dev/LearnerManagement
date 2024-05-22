@@ -1,0 +1,99 @@
+﻿@model LearniVerseNew.Models.ApplicationModels.ViewModels.ProgressViewModel
+
+@{
+    ViewBag.Title = "Quiz Progress";
+}
+
+<div class="container mt-5">
+    <h2 class="text-center">Progress</h2>
+    <div class="row mb-4">
+        <div class="col-md-6">
+            <p><strong>Highest Mark:</strong> @Model.HighestMark</p>
+        </div>
+        <div class="col-md-6">
+            <p><strong>Average Mark:</strong> @Model.AverageMark</p>
+        </div>
+    </div>
+
+    <div class="row mb-4">
+        <div class="col-md-12">
+            <canvas id="progressChart"></canvas>
+        </div>
+    </div>
+
+    <table class="table table-bordered">
+        <thead>
+            <tr>
+                <th>Quiz Description</th>
+                <th>Attempt Date</th>
+                <th>Mark Obtained</th>
+            </tr>
+        </thead>
+        <tbody>
+            @foreach (var attempt in Model.QuizAttempts)
+            {
+                <tr>
+                    <td>@attempt.Quiz.QuizDescription</td>
+                    <td>@attempt.AttemptDate.ToString("yyyy-MM-dd")</td>
+                    <td>@attempt.MarkObtained</td>
+                </tr>
+            }
+        </tbody>
+    </table>
+</div>
+
+@section Scripts {
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <script>
+        document.addEventListener('DOMContentLoaded', function () {
+            var ctx = document.getElementById('progressChart').getContext('2d');
+
+            var quizDescriptions = @Html.Raw(Json.Encode(Model.QuizAttempts.Select(qa => qa.Quiz.QuizDescription)));
+            var marksObtained = @Html.Raw(Json.Encode(Model.QuizAttempts.Select(qa => qa.MarkObtained)));
+            var averageMark =  @Html.Raw(Json.Encode(Model.AverageMark));;
+
+            var averageLineData = Array(quizDescriptions.length).fill(averageMark);
+
+            var progressChart = new Chart(ctx, {
+                type: 'line',
+                data: {
+                    labels: quizDescriptions,
+                    datasets: [
+                        {
+                            label: 'Marks Obtained',
+                            data: marksObtained,
+                            borderColor: 'rgba(75, 192, 192, 1)',
+                            backgroundColor: 'rgba(75, 192, 192, 0.2)',
+                            fill: true
+                        },
+                        {
+                            label: 'Average Mark',
+                            data: averageLineData,
+                            borderColor: 'rgba(255, 99, 132, 1)',
+                            backgroundColor: 'rgba(255, 99, 132, 0.2)',
+                            borderDash: [10, 5],
+                            fill: false
+                        }
+                    ]
+                },
+                options: {
+                    scales: {
+                        x: {
+                            title: {
+                                display: true,
+                                text: 'Quiz'
+                            }
+                        },
+                        y: {
+                            title: {
+                                display: true,
+                                text: 'Marks'
+                            },
+                            beginAtZero: true
+                        }
+                    }
+                }
+            });
+        });
+    </script>
+}
