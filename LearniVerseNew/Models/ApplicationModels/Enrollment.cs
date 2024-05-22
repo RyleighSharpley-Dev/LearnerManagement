@@ -23,5 +23,7 @@ namespace LearniVerseNew.Models.ApplicationModels
 
         public virtual Student Student { get; set; }
         public virtual ICollection<Course> Courses { get; set; }
+
+        public double? FinalMark { get; set; }
     }
 }

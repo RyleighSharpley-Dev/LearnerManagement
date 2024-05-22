@@ -83,6 +83,8 @@ namespace LearniVerseNew.Controllers
                     if (student != null)
                     {
                         List<Quiz> allQuizzes = new List<Quiz>();
+                        List<Submission> allSubmissions = new List<Submission>();
+
 
                         foreach (var enrollment in student.Enrollments)
                         {
@@ -170,14 +172,22 @@ namespace LearniVerseNew.Controllers
                 .Where(qa => qa.StudentID == studentId && qa.Quiz.CourseID == selectedCourseId)
                 .ToList();
 
+            var submissions = db.Submissions
+                .Include(s => s.Assignment)
+                .Where(s => s.StudentID == studentId && s.Assignment.CourseID == selectedCourseId)
+                .ToList();
+
             var highestMark = quizAttempts.Max(qa => (int?)qa.MarkObtained) ?? 0;
             var averageMark = quizAttempts.Any() ? quizAttempts.Average(qa => qa.MarkObtained) : 0;
 
+            var averageSubmissionMark = submissions.Any() ? submissions.Average(s => s.Mark) : 0;
             var model = new ProgressViewModel
             {
                 QuizAttempts = quizAttempts,
                 HighestMark = highestMark,
-                AverageMark = averageMark
+                AverageMark = averageMark,
+                Submissions = submissions,
+                AverageSubmissionMark = averageSubmissionMark
             };
 
             return View("QuizProgress", model);

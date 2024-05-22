@@ -500,6 +500,7 @@
     <Compile Include="Models\ApplicationModels\ViewModels\ClassroomViewModel.cs" />
     <Compile Include="Models\ApplicationModels\ViewModels\CourseQuizAttempts.cs" />
     <Compile Include="Models\ApplicationModels\ViewModels\CourseSelectionViewModel.cs" />
+    <Compile Include="Models\ApplicationModels\ViewModels\CourseViewModel.cs" />
     <Compile Include="Models\ApplicationModels\ViewModels\CreateSubmissionLinkViewModel.cs" />
     <Compile Include="Models\ApplicationModels\ViewModels\EnrolViewModel.cs" />
     <Compile Include="Models\ApplicationModels\ViewModels\ProgressCenterViewModel.cs" />
@@ -508,9 +509,11 @@
     <Compile Include="Models\ApplicationModels\ViewModels\RegisterTeacherViewModel.cs" />
     <Compile Include="Models\ApplicationModels\ViewModels\ReviewApplicationViewModel.cs" />
     <Compile Include="Models\ApplicationModels\ViewModels\StudentDashboardViewModel.cs" />
+    <Compile Include="Models\ApplicationModels\ViewModels\StudentMarksViewModel.cs" />
     <Compile Include="Models\ApplicationModels\ViewModels\StudySessionViewModel.cs" />
     <Compile Include="Models\ApplicationModels\ViewModels\SubmitAssignmentViewMode.cs" />
     <Compile Include="Models\ApplicationModels\ViewModels\UploadViewModel.cs" />
+    <Compile Include="Models\ApplicationModels\ViewModels\WeightingViewModel.cs" />
     <Compile Include="Models\Helpers\BlobHelper.cs" />
     <Compile Include="Models\Helpers\EmailHelper.cs" />
     <Compile Include="Models\Helpers\PaystackHelper.cs" />
@@ -696,6 +699,8 @@
     <Content Include="Views\Assignments\Index.cshtml" />
     <Content Include="Views\Assignments\SubmitAssignment.cshtml" />
     <Content Include="Views\Assignments\ViewSubmissions.cshtml" />
+    <Content Include="Views\Teachers\SetWeightings.cshtml" />
+    <Content Include="Views\Teachers\ViewCourse.cshtml" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include="App_Data\" />
