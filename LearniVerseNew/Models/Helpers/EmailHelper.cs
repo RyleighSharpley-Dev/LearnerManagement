@@ -118,7 +118,7 @@ namespace LearniVerseNew.Models.Helpers
                 msg.From = new MailAddress(_smtpUsername);
                 msg.To.Add(recipientEmail);
                 msg.Subject = "Booking Confirmation";
-                msg.Body = $"Dear {booking.Student.StudentFirstName},<br/><br/>Your booking has been confirmed.<br/><br/>Booking Details:<br/>Room: {booking.RoomID}<br/>Time: {booking.TimeSlot.StartTime}<br/>Booking Date: {booking.BookingDate.ToString("dd/MM/yyyy")}<br/><br/>Thank you for using our booking system.<br/><br/>Best regards,<br/><br/>Your Name<br/>Your Position<br/>Your Organization";
+                msg.Body = $"Dear {booking.Student.StudentFirstName},<br/><br/>Your booking has been confirmed.<br/><br/>Booking Details:<br/>Room: {booking.RoomID}<br/>Time: {booking.TimeSlot.StartTime}<br/>Booking Date: {booking.BookingDate.ToString("dd/MM/yyyy")}<br/><br/>Thank you for using our booking system.<br/><br/>Best regards,<br/><br/>Your Name<br/>Ryleigh<br/>Learniverse";
                 msg.IsBodyHtml = true;
 
                 using (SmtpClient smtpClient = new SmtpClient(_smtpServer, _smtpPort))

@@ -101,7 +101,14 @@ namespace LearniVerseNew.Controllers
 
             if (ModelState.IsValid)
             {
+                var Timeslot = db.TimeSlots.Find(booking.TimeSlotID);
+                var room = db.Rooms.Find(booking.RoomID);
+                var student = db.Students.Find(booking.StudentID);
+
                 booking.BookingID = Guid.NewGuid();
+                booking.TimeSlot = Timeslot;
+                booking.Room = room;
+                booking.Student = student;
                 db.Bookings.Add(booking);
                 db.SaveChanges();
                 mailer.SendEmailBooking(email, booking);

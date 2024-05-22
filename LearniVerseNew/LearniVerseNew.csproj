@@ -452,6 +452,10 @@
     <Compile Include="Migrations\202405211803286_Adding study center.Designer.cs">
       <DependentUpon>202405211803286_Adding study center.cs</DependentUpon>
     </Compile>
+    <Compile Include="Migrations\202405221458128_Fix booking .cs" />
+    <Compile Include="Migrations\202405221458128_Fix booking .Designer.cs">
+      <DependentUpon>202405221458128_Fix booking .cs</DependentUpon>
+    </Compile>
     <Compile Include="Migrations\Configuration.cs" />
     <Compile Include="Models\AccountViewModels.cs" />
     <Compile Include="Models\ApplicationModels\Booking.cs" />
@@ -739,6 +743,9 @@
     </EmbeddedResource>
     <EmbeddedResource Include="Migrations\202405211803286_Adding study center.resx">
       <DependentUpon>202405211803286_Adding study center.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Migrations\202405221458128_Fix booking .resx">
+      <DependentUpon>202405221458128_Fix booking .cs</DependentUpon>
     </EmbeddedResource>
   </ItemGroup>
   <PropertyGroup>
