@@ -458,6 +458,7 @@
     </Compile>
     <Compile Include="Migrations\Configuration.cs" />
     <Compile Include="Models\AccountViewModels.cs" />
+    <Compile Include="Models\ApplicationModels\Assignment.cs" />
     <Compile Include="Models\ApplicationModels\Booking.cs" />
     <Compile Include="Models\ApplicationModels\Course.cs" />
     <Compile Include="Models\ApplicationModels\Enrollment.cs" />
@@ -471,6 +472,7 @@
     <Compile Include="Models\ApplicationModels\Resource.cs" />
     <Compile Include="Models\ApplicationModels\Room.cs" />
     <Compile Include="Models\ApplicationModels\Student.cs" />
+    <Compile Include="Models\ApplicationModels\Submission.cs" />
     <Compile Include="Models\ApplicationModels\TaskItem.cs" />
     <Compile Include="Models\ApplicationModels\Teacher.cs" />
     <Compile Include="Models\ApplicationModels\ViewModels\AdminViewModel.cs" />

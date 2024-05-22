@@ -50,6 +50,8 @@ namespace LearniVerseNew.Models
         public DbSet<TimeSlot> TimeSlots { get; set; }
         public DbSet<StudySession> StudySessions { get; set; }
         public DbSet<TaskItem> TaskItems { get; set; }
+        public DbSet<Assignment> Assignments { get; set; }
+        public DbSet<Submission> Submissions { get; set; }
         
         
 

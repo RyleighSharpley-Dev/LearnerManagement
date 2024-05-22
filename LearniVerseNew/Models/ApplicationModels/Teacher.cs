@@ -41,5 +41,6 @@ namespace LearniVerseNew.Models.ApplicationModels
         // Navigation property
         public virtual Faculty Faculty { get; set; }
         public virtual ICollection<Course> Courses { get; set; }
+        public virtual ICollection<Assignment> Assignments { get; set; }
     }
 }
