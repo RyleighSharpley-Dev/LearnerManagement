@@ -17,34 +17,37 @@ namespace LearniVerseNew.Controllers
     {
         private ApplicationDbContext db = new ApplicationDbContext();
 
-        public ActionResult Classroom(string courseId)
+        public async Task<ActionResult> Classroom(string courseId)
         {
             // Get the student's email
             string email = User.Identity.Name;
 
-
             // Find the course with the provided courseId
-            var course = db.Courses.FirstOrDefault(c => c.CourseID == courseId);
+            var course = await db.Courses.FirstOrDefaultAsync(c => c.CourseID == courseId);
 
             if (course != null)
             {
                 // Retrieve all the files associated with the selected course
-                var courseFiles = db.Resources.Where(f => f.CourseID == courseId).ToList();
+                var courseFiles = await db.Resources.Where(f => f.CourseID == courseId).ToListAsync();
+
                 DateTime startOfToday = DateTime.Today;
                 DateTime endOfToday = startOfToday.AddDays(1);
 
-                var quizzes = db.Quizzes
-                                .Where(q => q.CourseID == courseId &&
-                                 q.QuizDate >= startOfToday &&
-                                 q.QuizDate < endOfToday)
-                                .ToList();
+                var assignments = await db.Assignments
+                                          .Where(a => a.CourseID == course.CourseID && a.Deadline >= DateTime.Now)
+                                          .ToListAsync();
+
+                var quizzes = await db.Quizzes
+                                      .Where(q => q.CourseID == courseId && q.QuizDate >= startOfToday && q.QuizDate < endOfToday)
+                                      .ToListAsync();
 
                 // Populate the view model with the course and files
                 var model = new ClassroomViewModel
                 {
                     Course = course,
                     Resources = courseFiles,
-                    Quizzes = quizzes
+                    Quizzes = quizzes,
+                    Assignments = assignments
                 };
 
                 return View(model);
