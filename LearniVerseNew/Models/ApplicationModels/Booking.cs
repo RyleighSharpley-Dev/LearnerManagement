@@ -25,8 +25,8 @@ namespace LearniVerseNew.Models.ApplicationModels
         [DataType(DataType.Date)]
         public DateTime BookingDate { get; set; }
 
-        public virtual Student Student { get;}
-        public virtual Room Room { get;}
+        public virtual Student Student { get; set; }
+        public virtual Room Room { get; set; }
         public virtual TimeSlot TimeSlot { get; set; }
     }
 }
