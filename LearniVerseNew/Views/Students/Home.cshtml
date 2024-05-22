@@ -10,9 +10,19 @@
             <div class="card shadow-sm">
                 <div class="card-body text-center">
                     <h2 class="card-title">Welcome to Your Dashboard</h2>
-                    <p>Welcome <strong>@(Model?.StudentFirstName ?? "Unknown") @(Model?.StudentLastName ?? "User")</strong></p>
-                    <p>Your Faculty: <strong>@(Model?.Faculty?.FacultyName ?? "Not Specified")</strong></p>
-                    <p>Your Qualification: <strong>@(Model?.Qualification?.Name ?? "Not Specified")</strong></p>
+                    <p><strong>@(Model?.StudentFirstName ?? "Unknown") @(Model?.StudentLastName ?? "User")</strong></p>
+                </div>
+            </div>
+        </div>
+
+        <div class="col-md-12 mb-4">
+            <div class="card shadow-sm">
+                <h1 class="card-header text-center">Calendar</h1>
+                <h4 class="card-header lead text-center">View past and upcoming events on the calendar</h4>
+                <div class="card-body text-center">
+                    <div id="calendar-container">
+                        <div id="calendar"></div>
+                    </div>
                 </div>
             </div>
         </div>
@@ -38,6 +48,7 @@
                 </div>
             </div>
         </div>
+
     </div>
 
     @{
@@ -93,17 +104,18 @@
                 </a>
             </div>
         }
-    }
+    } 
     else
     {
         <p>No current enrollment found.</p>
     }
-
+    
 
     <div class="col-md-12 mb-4">
         <div class="card shadow-sm">
+            <h1 class="card-header mb-5">Insights</h1>
             <div class="card-body text-center">
-                <h3 class="card-title">Study Sessions and Tasks Completed</h3>
+                <h3 class="card-title">Study Sessions Completed</h3>
                 <!-- Canvas for the chart -->
                 <canvas id="completionChart" width="400" height="200"></canvas>
             </div>
@@ -111,6 +123,18 @@
     </div>
 </div>
 
+<style>
+    #calendar-container {
+        display: flex;
+        justify-content: center;
+        align-items: center;
+    }
+
+    #calendar {
+        max-width: 900px;
+        width: 100%;
+    }
+</style>
 
 
 @Scripts.Render("~/bundles/jquery")
@@ -120,34 +144,33 @@
 @Styles.Render("~/Content/css")
 
 <script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/3.7.0/chart.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/fullcalendar@6.1.4/index.global.min.js"></script>
+
+
 <script>
     $(document).ready(function () {
         $('#courseCarousel').carousel();
     });
 
-
     $(document).ready(function () {
-        // Gather data for the chart (replace with actual data retrieval logic)
-       var studySessionsCompleted = @Html.Raw(Json.Encode(Model.StudySessions.Count));
-       var tasksCompleted = @Html.Raw(Json.Encode(ViewBag.StudySessionTaskItems));
+        // Gather data for the chart
+        var completedStudySessions = @Html.Raw(ViewBag.CompletedStudySessions);
+
+        // Extract dates and counts
+        var labels = completedStudySessions.map(item => item.Date);
+        var data = completedStudySessions.map(item => item.Count);
 
         // Render the chart
         var ctx = document.getElementById('completionChart').getContext('2d');
         var myChart = new Chart(ctx, {
-            type: 'bar',
+            type: 'line',
             data: {
-                labels: ['Study Sessions', 'Tasks'],
+                labels: labels,
                 datasets: [{
-                    label: 'Completed',
-                    data: [studySessionsCompleted, tasksCompleted],
-                    backgroundColor: [
-                        'rgba(255, 99, 132, 0.2)',
-                        'rgba(54, 162, 235, 0.2)',
-                    ],
-                    borderColor: [
-                        'rgba(255, 99, 132, 1)',
-                        'rgba(54, 162, 235, 1)',
-                    ],
+                    label: 'Completed Study Sessions',
+                    data: data,
+                    backgroundColor: 'rgba(54, 162, 235, 0.2)',
+                    borderColor: 'rgba(54, 162, 235, 1)',
                     borderWidth: 1
                 }]
             },
@@ -159,5 +182,36 @@
                 }
             }
         });
+
+       // Initialize FullCalendar
+
     });
+
+    document.addEventListener('DOMContentLoaded', function () {
+    var calendarEl = document.getElementById('calendar');
+    if (calendarEl) {
+        var calendar = new FullCalendar.Calendar(calendarEl, {
+            initialView: 'dayGridMonth',
+            events: {
+                url: '/Students/GetEvents',
+                method: 'GET',
+                failure: function () {
+                    alert('There was an error while fetching events!');
+                },
+                success: function (data) {
+                    console.log(data)
+                    // Always render the calendar, even if there are no events
+                    calendar.render(data);
+                }
+            }
+        });
+
+        // Initial render outside of success callback
+        calendar.render();
+    } else {
+        console.error('Element with ID "calendar" not found.');
+    }
+});
+
+
 </script>

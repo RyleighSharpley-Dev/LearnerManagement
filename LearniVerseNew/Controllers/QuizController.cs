@@ -20,8 +20,7 @@ namespace LearniVerseNew.Controllers
 
         public ActionResult TakeQuiz(Guid QuizID)
         {
-           
-            string studentId = Session["StudentId"]?.ToString();
+            string studentId = Session["UserId"]?.ToString();
             if (string.IsNullOrEmpty(studentId))
             {
                 return RedirectToAction("Login", "Account");
