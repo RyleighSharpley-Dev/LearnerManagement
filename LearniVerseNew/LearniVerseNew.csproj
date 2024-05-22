@@ -85,6 +85,9 @@
     <Reference Include="IronSoftware.Shared, Version=2024.1.0.7, Culture=neutral, PublicKeyToken=212d70e9efeae4c7, processorArchitecture=MSIL">
       <HintPath>..\packages\IronSoftware.Common.2024.1.7\lib\netstandard2.0\IronSoftware.Shared.dll</HintPath>
     </Reference>
+    <Reference Include="Microsoft.Azure.KeyVault.Core, Version=1.0.0.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL">
+      <HintPath>..\packages\Microsoft.Azure.KeyVault.Core.1.0.0\lib\net40\Microsoft.Azure.KeyVault.Core.dll</HintPath>
+    </Reference>
     <Reference Include="Microsoft.Bcl.AsyncInterfaces, Version=6.0.0.0, Culture=neutral, PublicKeyToken=cc7b13ffcd2ddd51, processorArchitecture=MSIL">
       <HintPath>..\packages\Microsoft.Bcl.AsyncInterfaces.6.0.0\lib\net461\Microsoft.Bcl.AsyncInterfaces.dll</HintPath>
     </Reference>
@@ -146,6 +149,9 @@
     <Reference Include="Microsoft.ML.OnnxRuntime, Version=0.0.0.0, Culture=neutral, PublicKeyToken=f27f157f0a5b7bb6, processorArchitecture=MSIL">
       <HintPath>..\packages\Microsoft.ML.OnnxRuntime.Managed.1.17.1\lib\netstandard2.0\Microsoft.ML.OnnxRuntime.dll</HintPath>
     </Reference>
+    <Reference Include="Microsoft.WindowsAzure.Storage, Version=9.3.2.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL">
+      <HintPath>..\packages\WindowsAzure.Storage.9.3.3\lib\net45\Microsoft.WindowsAzure.Storage.dll</HintPath>
+    </Reference>
     <Reference Include="PayStack.Net, Version=1.1.1.0, Culture=neutral, processorArchitecture=MSIL">
       <HintPath>..\packages\Paystack.Net.1.1.1\lib\netstandard2.0\PayStack.Net.dll</HintPath>
     </Reference>
@@ -178,6 +184,11 @@
     <Reference Include="System.IdentityModel" />
     <Reference Include="System.IO, Version=4.1.1.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a, processorArchitecture=MSIL">
       <HintPath>..\packages\System.IO.4.3.0\lib\net462\System.IO.dll</HintPath>
+      <Private>True</Private>
+      <Private>True</Private>
+    </Reference>
+    <Reference Include="System.IO.Compression, Version=4.1.2.0, Culture=neutral, PublicKeyToken=b77a5c561934e089, processorArchitecture=MSIL">
+      <HintPath>..\packages\System.IO.Compression.4.3.0\lib\net46\System.IO.Compression.dll</HintPath>
       <Private>True</Private>
       <Private>True</Private>
     </Reference>
@@ -361,6 +372,7 @@
     <Compile Include="App_Start\Startup.Auth.cs" />
     <Compile Include="Controllers\AccountController.cs" />
     <Compile Include="Controllers\AdminController.cs" />
+    <Compile Include="Controllers\AssignmentsController.cs" />
     <Compile Include="Controllers\BookingsController.cs" />
     <Compile Include="Controllers\CoursesController.cs" />
     <Compile Include="Controllers\EnrollmentsController.cs" />
@@ -456,8 +468,17 @@
     <Compile Include="Migrations\202405221458128_Fix booking .Designer.cs">
       <DependentUpon>202405221458128_Fix booking .cs</DependentUpon>
     </Compile>
+    <Compile Include="Migrations\202405221721568_Add- Assignment and submission tables .cs" />
+    <Compile Include="Migrations\202405221721568_Add- Assignment and submission tables .Designer.cs">
+      <DependentUpon>202405221721568_Add- Assignment and submission tables .cs</DependentUpon>
+    </Compile>
+    <Compile Include="Migrations\202405221751557_File name in Submission.cs" />
+    <Compile Include="Migrations\202405221751557_File name in Submission.Designer.cs">
+      <DependentUpon>202405221751557_File name in Submission.cs</DependentUpon>
+    </Compile>
     <Compile Include="Migrations\Configuration.cs" />
     <Compile Include="Models\AccountViewModels.cs" />
+    <Compile Include="Models\ApplicationModels\Assignment.cs" />
     <Compile Include="Models\ApplicationModels\Booking.cs" />
     <Compile Include="Models\ApplicationModels\Course.cs" />
     <Compile Include="Models\ApplicationModels\Enrollment.cs" />
@@ -471,12 +492,16 @@
     <Compile Include="Models\ApplicationModels\Resource.cs" />
     <Compile Include="Models\ApplicationModels\Room.cs" />
     <Compile Include="Models\ApplicationModels\Student.cs" />
+    <Compile Include="Models\ApplicationModels\Submission.cs" />
     <Compile Include="Models\ApplicationModels\TaskItem.cs" />
     <Compile Include="Models\ApplicationModels\Teacher.cs" />
     <Compile Include="Models\ApplicationModels\ViewModels\AdminViewModel.cs" />
+    <Compile Include="Models\ApplicationModels\ViewModels\AssignmentSubmissionsViewModel.cs" />
     <Compile Include="Models\ApplicationModels\ViewModels\ClassroomViewModel.cs" />
     <Compile Include="Models\ApplicationModels\ViewModels\CourseQuizAttempts.cs" />
     <Compile Include="Models\ApplicationModels\ViewModels\CourseSelectionViewModel.cs" />
+    <Compile Include="Models\ApplicationModels\ViewModels\CourseViewModel.cs" />
+    <Compile Include="Models\ApplicationModels\ViewModels\CreateSubmissionLinkViewModel.cs" />
     <Compile Include="Models\ApplicationModels\ViewModels\EnrolViewModel.cs" />
     <Compile Include="Models\ApplicationModels\ViewModels\ProgressCenterViewModel.cs" />
     <Compile Include="Models\ApplicationModels\ViewModels\ProgressViewModel.cs" />
@@ -484,8 +509,11 @@
     <Compile Include="Models\ApplicationModels\ViewModels\RegisterTeacherViewModel.cs" />
     <Compile Include="Models\ApplicationModels\ViewModels\ReviewApplicationViewModel.cs" />
     <Compile Include="Models\ApplicationModels\ViewModels\StudentDashboardViewModel.cs" />
+    <Compile Include="Models\ApplicationModels\ViewModels\StudentMarksViewModel.cs" />
     <Compile Include="Models\ApplicationModels\ViewModels\StudySessionViewModel.cs" />
+    <Compile Include="Models\ApplicationModels\ViewModels\SubmitAssignmentViewMode.cs" />
     <Compile Include="Models\ApplicationModels\ViewModels\UploadViewModel.cs" />
+    <Compile Include="Models\ApplicationModels\ViewModels\WeightingViewModel.cs" />
     <Compile Include="Models\Helpers\BlobHelper.cs" />
     <Compile Include="Models\Helpers\EmailHelper.cs" />
     <Compile Include="Models\Helpers\PaystackHelper.cs" />
@@ -664,6 +692,15 @@
     <Content Include="Views\Students\ProgressCenter.cshtml" />
     <Content Include="Views\Students\QuizProgress.cshtml" />
     <Content Include="Views\Students\ProgressReport.cshtml" />
+    <Content Include="Views\Assignments\Create.cshtml" />
+    <Content Include="Views\Assignments\Delete.cshtml" />
+    <Content Include="Views\Assignments\Details.cshtml" />
+    <Content Include="Views\Assignments\Edit.cshtml" />
+    <Content Include="Views\Assignments\Index.cshtml" />
+    <Content Include="Views\Assignments\SubmitAssignment.cshtml" />
+    <Content Include="Views\Assignments\ViewSubmissions.cshtml" />
+    <Content Include="Views\Teachers\SetWeightings.cshtml" />
+    <Content Include="Views\Teachers\ViewCourse.cshtml" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include="App_Data\" />
@@ -752,6 +789,12 @@
     </EmbeddedResource>
     <EmbeddedResource Include="Migrations\202405221458128_Fix booking .resx">
       <DependentUpon>202405221458128_Fix booking .cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Migrations\202405221721568_Add- Assignment and submission tables .resx">
+      <DependentUpon>202405221721568_Add- Assignment and submission tables .cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Migrations\202405221751557_File name in Submission.resx">
+      <DependentUpon>202405221751557_File name in Submission.cs</DependentUpon>
     </EmbeddedResource>
   </ItemGroup>
   <PropertyGroup>

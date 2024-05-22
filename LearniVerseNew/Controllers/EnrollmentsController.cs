@@ -266,9 +266,8 @@ namespace LearniVerseNew.Controllers
                 viewmodel.Student = student;
                 viewmodel.Enrollment = enrollment;
                 viewmodel.NSC = nsc;
-                viewmodel.Subjects = subjects;
+                viewmodel.Subjects = subjects; 
                 viewmodel.average = viewmodel.CalcAverage(subjects);
-            
 
             return View(viewmodel);
         }

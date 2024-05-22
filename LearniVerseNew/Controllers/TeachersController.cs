@@ -125,6 +125,8 @@ namespace LearniVerseNew.Controllers
 
         }
 
+
+
         public ActionResult Details(string id)
         {
             if (id == null)

@@ -74,6 +74,26 @@
                             </ul>
                         </div>
                     }
+
+                    <hr />
+                    <h3 class="card-title">Assignments</h3>
+                    <ul class="list-group list-group-flush">
+                        @if (!Model.Assignments.Any())
+                        {
+                            <li class="list-group-item">No assignments available.</li>
+                        }
+                        else
+                        {
+                            foreach (var assignment in Model.Assignments)
+                            {
+                                <li class="list-group-item">
+                                    <h5>@assignment.Title</h5>
+                                    <p>@assignment.Description</p>
+                                    <a href="@Url.Action("SubmitAssignment", "Assignments", new { assignmentId = assignment.AssignmentID })" class="btn btn-primary btn-sm">Submit Assignment</a>
+                                </li>
+                            }
+                        }
+                    </ul>
                 </div>
             </div>
         </div>

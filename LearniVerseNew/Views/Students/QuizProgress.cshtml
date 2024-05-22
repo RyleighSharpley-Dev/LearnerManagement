@@ -45,55 +45,69 @@
 @section Scripts {
     <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
     <script>
-        document.addEventListener('DOMContentLoaded', function () {
-            var ctx = document.getElementById('progressChart').getContext('2d');
+    document.addEventListener('DOMContentLoaded', function () {
+        var ctx = document.getElementById('progressChart').getContext('2d');
 
-            var quizDescriptions = @Html.Raw(Json.Encode(Model.QuizAttempts.Select(qa => qa.Quiz.QuizDescription)));
-            var marksObtained = @Html.Raw(Json.Encode(Model.QuizAttempts.Select(qa => qa.MarkObtained)));
-            var averageMark =  @Html.Raw(Json.Encode(Model.AverageMark));;
+        var quizDescriptions = @Html.Raw(Json.Encode(Model.QuizAttempts.Select(qa => qa.Quiz.QuizDescription)));
+        var quizMarks = @Html.Raw(Json.Encode(Model.QuizAttempts.Select(qa => qa.MarkObtained)));
+        var averageQuizMark = @Html.Raw(Json.Encode(Model.AverageMark));
 
-            var averageLineData = Array(quizDescriptions.length).fill(averageMark);
+        var submissionDescriptions = @Html.Raw(Json.Encode(Model.Submissions.Select(s => s.Assignment.Description)));
+        var submissionMarks = @Html.Raw(Json.Encode(Model.Submissions.Select(s => s.Mark)));
+        var averageSubmissionMark = @Html.Raw(Json.Encode(Model.AverageSubmissionMark));
 
-            var progressChart = new Chart(ctx, {
-                type: 'line',
-                data: {
-                    labels: quizDescriptions,
-                    datasets: [
-                        {
-                            label: 'Marks Obtained',
-                            data: marksObtained,
-                            borderColor: 'rgba(75, 192, 192, 1)',
-                            backgroundColor: 'rgba(75, 192, 192, 0.2)',
-                            fill: true
-                        },
-                        {
-                            label: 'Average Mark',
-                            data: averageLineData,
-                            borderColor: 'rgba(255, 99, 132, 1)',
-                            backgroundColor: 'rgba(255, 99, 132, 0.2)',
-                            borderDash: [10, 5],
-                            fill: false
+        var averageQuizLineData = Array(quizDescriptions.length).fill(averageQuizMark);
+        var averageSubmissionLineData = Array(submissionDescriptions.length).fill(averageSubmissionMark);
+
+        var progressChart = new Chart(ctx, {
+            type: 'line',
+            data: {
+                labels: [...quizDescriptions, ...submissionDescriptions],
+                datasets: [
+                    {
+                        label: 'Quiz Marks',
+                        data: [...quizMarks, ...submissionMarks],
+                        borderColor: 'rgba(75, 192, 192, 1)',
+                        backgroundColor: 'rgba(75, 192, 192, 0.2)',
+                        fill: true
+                    },
+                    {
+                        label: 'Average Quiz Mark',
+                        data: [...averageQuizLineData, NaN], // NaN to separate quiz and submission lines
+                        borderColor: 'rgba(255, 99, 132, 1)',
+                        backgroundColor: 'rgba(255, 99, 132, 0.2)',
+                        borderDash: [10, 5],
+                        fill: false
+                    },
+                    {
+                        label: 'Average Submission Mark',
+                        data: [NaN, ...averageSubmissionLineData], // NaN to separate quiz and submission lines
+                        borderColor: 'rgba(54, 162, 235, 1)',
+                        backgroundColor: 'rgba(54, 162, 235, 0.2)',
+                        borderDash: [10, 5],
+                        fill: false
+                    }
+                ]
+            },
+            options: {
+                scales: {
+                    x: {
+                        title: {
+                            display: true,
+                            text: 'Quiz / Submission'
                         }
-                    ]
-                },
-                options: {
-                    scales: {
-                        x: {
-                            title: {
-                                display: true,
-                                text: 'Quiz'
-                            }
+                    },
+                    y: {
+                        title: {
+                            display: true,
+                            text: 'Marks'
                         },
-                        y: {
-                            title: {
-                                display: true,
-                                text: 'Marks'
-                            },
-                            beginAtZero: true
-                        }
+                        beginAtZero: true
                     }
                 }
-            });
+            }
         });
+    });
     </script>
+
 }

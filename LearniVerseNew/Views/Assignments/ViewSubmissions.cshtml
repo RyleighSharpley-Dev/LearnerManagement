@@ -1,0 +1,49 @@
+﻿@model LearniVerseNew.Models.ApplicationModels.ViewModels.AssignmentSubmissionsViewModel
+
+<div class="container mt-5">
+    <h2>@Model.Assignment.Title - Submissions</h2>
+
+    <table class="table table-striped">
+        <thead>
+            <tr>
+                <th>Student</th>
+                <th>File</th>
+                <th>Grade</th>
+                <th>Action</th>
+            </tr>
+        </thead>
+        <tbody>
+            @foreach (var submission in Model.Submissions)
+            {
+                <tr>
+                    <td>@submission.StudentID</td>
+                    <td>
+                        <a href="@submission.BlobUrl" target="_blank">@submission.FileName</a>
+                    </td>
+                    <td>
+                        @if (submission.Mark.HasValue)
+                        {
+                            @submission.Mark
+                        }
+                        else
+                        {
+                            <form action="@Url.Action("GradeSubmission", "Assignments")" method="post" class="form-inline">
+                                <input type="hidden" name="submissionId" value="@submission.SubmissionID" />
+                                <input type="number" name="mark" class="form-control" required />
+                                <button type="submit" class="btn btn-primary ml-2">Grade</button>
+                            </form>
+                        }
+                    </td>
+                    <td>
+                        <form action="@Url.Action("DownloadSubmission", "Assignments")" method="post">
+                            <input type="hidden" name="submissionId" value="@submission.SubmissionID" />
+                            <button type="submit" class="btn btn-secondary">Download</button>
+                        </form>
+                    </td>
+                </tr>
+            }
+        </tbody>
+    </table>
+
+    <a href="@Url.Action("DownloadAllSubmissions", "Assignments", new { assignmentId = Model.Assignment.AssignmentID })" class="btn btn-success">Download All Submissions</a>
+</div>

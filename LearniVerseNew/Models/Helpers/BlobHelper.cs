@@ -18,7 +18,7 @@ namespace LearniVerseNew.Models.Helpers
         private readonly BlobServiceClient _blobServiceClient;
         private readonly string _containerName = "classroom-file-container";
         private readonly string _nscContainerName = "nsc-documents";
-
+        private readonly string _submissioncontainerName = "submissions";
         public BlobHelper()
         {
             string connectionString = ConfigurationManager.ConnectionStrings["BlobConnectionString"].ConnectionString; //change this in prod
@@ -235,6 +235,74 @@ namespace LearniVerseNew.Models.Helpers
             };
 
             return uriBuilder.Uri;
+        }
+
+        public async Task<(bool Success, string Uri)> UploadSubmissionAsync(string assignmentId, string studentId, string fileName, Stream content)
+        {
+            try
+            {
+                var containerClient = _blobServiceClient.GetBlobContainerClient(_submissioncontainerName);
+                if (!await containerClient.ExistsAsync())
+                {
+                    await containerClient.CreateAsync();
+                }
+
+                string uniqueBlobName = $"submissions/{assignmentId}/{studentId}_{fileName}";
+                var blobClient = containerClient.GetBlobClient(uniqueBlobName);
+
+                if (await blobClient.ExistsAsync())
+                {
+                    return (false, $"Blob '{uniqueBlobName}' already exists.");
+                }
+
+                await blobClient.UploadAsync(content, true);
+                return (true, blobClient.Uri.ToString());
+            }
+            catch (Exception ex)
+            {
+                return (false, $"Error uploading file: {ex.Message}");
+            }
+        }
+
+        public List<(string BlobName, Uri BlobUri)> ListAssignmentSubmissions(string assignmentId)
+        {
+            try
+            {
+                var containerClient = _blobServiceClient.GetBlobContainerClient(_submissioncontainerName);
+                var submissions = new List<(string BlobName, Uri BlobUri)>();
+
+                foreach (var blobItem in containerClient.GetBlobs(prefix: $"submissions/{assignmentId}/"))
+                {
+                    var blobClient = containerClient.GetBlobClient(blobItem.Name);
+                    submissions.Add((blobItem.Name, blobClient.Uri));
+                }
+
+                return submissions;
+            }
+            catch (Exception ex)
+            {
+                throw new Exception($"Error listing blobs: {ex.Message}");
+            }
+        }
+
+      
+
+        public async Task<Dictionary<string, Stream>> DownloadAssignmentSubmissionsAsync(string assignmentId)
+        {
+            var containerClient = _blobServiceClient.GetBlobContainerClient(_submissioncontainerName);
+            var blobs = ListAssignmentSubmissions(assignmentId);
+            var result = new Dictionary<string, Stream>();
+
+            foreach (var (blobName, blobUri) in blobs)
+            {
+                var blobClient = containerClient.GetBlobClient(blobName);
+                var memoryStream = new MemoryStream();
+                await blobClient.DownloadToAsync(memoryStream);
+                memoryStream.Seek(0, SeekOrigin.Begin);
+                result.Add(blobName, memoryStream);
+            }
+
+            return result;
         }
 
     }
