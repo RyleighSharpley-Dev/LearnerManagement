@@ -7,9 +7,11 @@ using System.Net;
 using System.Threading.Tasks;
 using System.Web;
 using System.Web.Mvc;
+using System.Windows.Forms.Design;
 using LearniVerseNew.Models;
 using LearniVerseNew.Models.ApplicationModels;
 using LearniVerseNew.Models.ApplicationModels.ViewModels;
+using Newtonsoft.Json;
 
 namespace LearniVerseNew.Controllers
 {
@@ -18,15 +20,16 @@ namespace LearniVerseNew.Controllers
         private ApplicationDbContext db = new ApplicationDbContext();
 
         [Authorize(Roles = "User")]
-        public ActionResult Home(Student student, string id)
+        public ActionResult Home()
         {
-            id = Session["UserId"].ToString();
+            string id = Session["UserId"].ToString();
 
-            student = db.Students.Include(s => s.Enrollments.Select(e => e.Courses))
-                                  .Include(f => f.Faculty)
-                                  .Include(q => q.Qualification)
-                                  .Include(q => q.QuizAttempts.Select(a => a.Quiz))
-                                  .FirstOrDefault(s => s.StudentID == id);
+            var student = db.Students.Include(s => s.Enrollments.Select(e => e.Courses))
+                                     .Include(f => f.Faculty)
+                                     .Include(q => q.Qualification)
+                                     .Include(q => q.QuizAttempts.Select(a => a.Quiz))
+                                     .Include(sc => sc.StudySessions.Select(ss => ss.TaskItems))
+                                     .FirstOrDefault(s => s.StudentID == id);
 
             if (student != null)
             {
@@ -40,12 +43,96 @@ namespace LearniVerseNew.Controllers
                     })
                     .ToList();
 
+                // Group study sessions by date and count the completed sessions
+                var completedStudySessions = student.StudySessions
+                    .Where(session => session.TaskItems.All(task => task.IsComplete))
+                    .GroupBy(session => session.SessionDate.Date)
+                    .Select(group => new
+                    {
+                        Date = group.Key,
+                        Count = group.Count()
+                    })
+                    .ToList();
+
                 ViewBag.CourseHighestMarks = courseHighestMarks;
+                ViewBag.CompletedStudySessions = JsonConvert.SerializeObject(completedStudySessions);
 
                 return View(student);
             }
+
             return RedirectToAction("Account", "Login");
         }
+
+        public ActionResult GetEvents()
+        {
+            // Retrieve the student ID from the session
+            var id = Session["UserId"]?.ToString();
+
+            if (!string.IsNullOrEmpty(id))
+            {
+                using (var context = new ApplicationDbContext()) // Replace 'YourDbContextName' with the actual name of your DbContext class
+                {
+                    // Directly fetch the student along with their related data
+                    var student = context.Students
+                                 .Include(s => s.Enrollments.Select(e => e.Courses.Select(c => c.Quizzes)))
+                                 .FirstOrDefault(s => s.StudentID == id);
+
+
+
+                    if (student != null)
+                    {
+                        List<Quiz> allQuizzes = new List<Quiz>();
+
+                        foreach (var enrollment in student.Enrollments)
+                        {
+                            // Access courses for the current enrollment
+                            var courses = enrollment.Courses;
+
+                            // Iterate over each course to collect quizzes
+                            foreach (var course in courses)
+                            {
+                                var quizzes = course.Quizzes;
+
+                                foreach (var quiz in quizzes)
+                                {
+                                    allQuizzes.Add(quiz);
+                                }
+                            }
+                            // Serialize the aggregated quizzes for sending to the calendar
+                            
+                        };
+                        var settings = new JsonSerializerSettings
+                        {
+                            ReferenceLoopHandling = ReferenceLoopHandling.Ignore
+                        };
+
+                        // Serialize the aggregated quizzes for sending to the calendar
+                        var events = allQuizzes.Select(quiz => new
+                        {
+                            title = quiz.QuizDescription,
+                            date = quiz.QuizDate.ToString("yyyy-MM-dd"), // Only date portion
+                            end = quiz.QuizDate.Add(quiz.QuizEnd).ToString("yyyy-MM-ddTHH:mm:ss")
+                            // You can add more properties here if needed
+                        });
+
+                        // Return events as JSON
+                        return Json(events, JsonRequestBehavior.AllowGet);
+
+                    }
+                    else
+                    {
+                        // Handle the case where the student is not found
+                        return HttpNotFound(); // Corrected to use the method for returning a 404 Not Found status code
+                    }
+                }
+            }
+            else
+            {
+                // Handle the case where the student ID is not available in the session
+                return HttpNotFound(); // Or return an appropriate status code
+            }
+        }
+
 
         [Authorize(Roles = "User")]
         public ActionResult MyCourses(string id)

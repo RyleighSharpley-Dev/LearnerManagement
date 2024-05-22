@@ -373,6 +373,8 @@
     <Compile Include="Controllers\ResourcesController.cs" />
     <Compile Include="Controllers\RoomsController.cs" />
     <Compile Include="Controllers\StudentsController.cs" />
+    <Compile Include="Controllers\StudySessionsController.cs" />
+    <Compile Include="Controllers\TaskItemsController.cs" />
     <Compile Include="Controllers\TeachersController.cs" />
     <Compile Include="Controllers\TimeSlotsController.cs" />
     <Compile Include="Global.asax.cs">
@@ -446,6 +448,10 @@
     <Compile Include="Migrations\202405131054403_Added timeslot nav to booking.Designer.cs">
       <DependentUpon>202405131054403_Added timeslot nav to booking.cs</DependentUpon>
     </Compile>
+    <Compile Include="Migrations\202405211803286_Adding study center.cs" />
+    <Compile Include="Migrations\202405211803286_Adding study center.Designer.cs">
+      <DependentUpon>202405211803286_Adding study center.cs</DependentUpon>
+    </Compile>
     <Compile Include="Migrations\Configuration.cs" />
     <Compile Include="Models\AccountViewModels.cs" />
     <Compile Include="Models\ApplicationModels\Booking.cs" />
@@ -461,6 +467,7 @@
     <Compile Include="Models\ApplicationModels\Resource.cs" />
     <Compile Include="Models\ApplicationModels\Room.cs" />
     <Compile Include="Models\ApplicationModels\Student.cs" />
+    <Compile Include="Models\ApplicationModels\TaskItem.cs" />
     <Compile Include="Models\ApplicationModels\Teacher.cs" />
     <Compile Include="Models\ApplicationModels\ViewModels\AdminViewModel.cs" />
     <Compile Include="Models\ApplicationModels\ViewModels\ClassroomViewModel.cs" />
@@ -470,6 +477,7 @@
     <Compile Include="Models\ApplicationModels\ViewModels\RegisterTeacherViewModel.cs" />
     <Compile Include="Models\ApplicationModels\ViewModels\ReviewApplicationViewModel.cs" />
     <Compile Include="Models\ApplicationModels\ViewModels\StudentDashboardViewModel.cs" />
+    <Compile Include="Models\ApplicationModels\ViewModels\StudySessionViewModel.cs" />
     <Compile Include="Models\ApplicationModels\ViewModels\UploadViewModel.cs" />
     <Compile Include="Models\Helpers\BlobHelper.cs" />
     <Compile Include="Models\Helpers\EmailHelper.cs" />
@@ -478,6 +486,7 @@
     <Compile Include="Models\Helpers\QRHelper.cs" />
     <Compile Include="Models\IdentityModels.cs" />
     <Compile Include="Models\ManageViewModels.cs" />
+    <Compile Include="Models\ApplicationModels\StudySession.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="Startup.cs" />
   </ItemGroup>
@@ -634,6 +643,17 @@
     <Content Include="Views\Teachers\Home.cshtml" />
     <Content Include="Views\Teachers\MyCourses.cshtml" />
     <Content Include="Views\Payments\Payments.cshtml" />
+    <Content Include="Views\StudySessions\Create.cshtml" />
+    <Content Include="Views\StudySessions\Delete.cshtml" />
+    <Content Include="Views\StudySessions\Details.cshtml" />
+    <Content Include="Views\StudySessions\Edit.cshtml" />
+    <Content Include="Views\StudySessions\Index.cshtml" />
+    <Content Include="Views\TaskItems\Create.cshtml" />
+    <Content Include="Views\TaskItems\Delete.cshtml" />
+    <Content Include="Views\TaskItems\Details.cshtml" />
+    <Content Include="Views\TaskItems\Edit.cshtml" />
+    <Content Include="Views\TaskItems\Index.cshtml" />
+    <Content Include="Views\StudySessions\StudySession.cshtml" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include="App_Data\" />
@@ -716,6 +736,9 @@
     </EmbeddedResource>
     <EmbeddedResource Include="Migrations\202405131054403_Added timeslot nav to booking.resx">
       <DependentUpon>202405131054403_Added timeslot nav to booking.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Migrations\202405211803286_Adding study center.resx">
+      <DependentUpon>202405211803286_Adding study center.cs</DependentUpon>
     </EmbeddedResource>
   </ItemGroup>
   <PropertyGroup>
