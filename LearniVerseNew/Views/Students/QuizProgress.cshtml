@@ -5,7 +5,7 @@
 }
 
 <div class="container mt-5">
-    <h2 class="text-center">Progress</h2>
+    <h2 class="text-center">Progress: @Model.Coursename</h2>
     <div class="row mb-4">
         <div class="col-md-6">
             <p><strong>Highest Mark:</strong> @Model.HighestMark</p>
@@ -38,6 +38,39 @@
                     <td>@attempt.MarkObtained</td>
                 </tr>
             }
+        </tbody>
+    </table>
+    <br />
+    <table class="table table-bordered">
+        <thead>
+            <tr>
+                <th>Assignment</th>
+                <th>Mark Obtained (%)</th>
+            </tr>
+        </thead>
+        <tbody>
+            @foreach (var submission in Model.Submissions)
+            {
+                <tr>
+                    <td>@submission.Assignment.Title</td>
+                    <td>@submission.Mark</td>
+                </tr>
+            }
+        </tbody>
+    </table>
+
+    <table class="table table-bordered">
+        <thead>
+            <tr>
+                
+                <th>Final Percentage achieved</th>
+            </tr>
+        </thead>
+        <tbody>
+            <tr>
+               
+                <td>@Model.FinalMark</td>
+            </tr>
         </tbody>
     </table>
 </div>

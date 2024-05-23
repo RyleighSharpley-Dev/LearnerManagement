@@ -44,5 +44,7 @@ namespace LearniVerseNew.Models.ApplicationModels
         public virtual ICollection<Booking> Bookings { get; set; }
 
         public virtual ICollection<StudySession> StudySessions { get; set; }
+
+        public virtual ICollection<StudentFinalMark> StudentFinalMarks { get; set; }
     }
 }
