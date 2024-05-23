@@ -476,6 +476,10 @@
     <Compile Include="Migrations\202405221751557_File name in Submission.Designer.cs">
       <DependentUpon>202405221751557_File name in Submission.cs</DependentUpon>
     </Compile>
+    <Compile Include="Migrations\202405222349578_Added Student Final MArks Table.cs" />
+    <Compile Include="Migrations\202405222349578_Added Student Final MArks Table.Designer.cs">
+      <DependentUpon>202405222349578_Added Student Final MArks Table.cs</DependentUpon>
+    </Compile>
     <Compile Include="Migrations\Configuration.cs" />
     <Compile Include="Models\AccountViewModels.cs" />
     <Compile Include="Models\ApplicationModels\Assignment.cs" />
@@ -492,12 +496,15 @@
     <Compile Include="Models\ApplicationModels\Resource.cs" />
     <Compile Include="Models\ApplicationModels\Room.cs" />
     <Compile Include="Models\ApplicationModels\Student.cs" />
+    <Compile Include="Models\ApplicationModels\StudentFinalMark.cs" />
     <Compile Include="Models\ApplicationModels\Submission.cs" />
     <Compile Include="Models\ApplicationModels\TaskItem.cs" />
     <Compile Include="Models\ApplicationModels\Teacher.cs" />
     <Compile Include="Models\ApplicationModels\ViewModels\AdminViewModel.cs" />
     <Compile Include="Models\ApplicationModels\ViewModels\AssignmentSubmissionsViewModel.cs" />
+    <Compile Include="Models\ApplicationModels\ViewModels\CalculateFinalMarksViewModel.cs" />
     <Compile Include="Models\ApplicationModels\ViewModels\ClassroomViewModel.cs" />
+    <Compile Include="Models\ApplicationModels\ViewModels\CourseDetailsViewModel.cs" />
     <Compile Include="Models\ApplicationModels\ViewModels\CourseQuizAttempts.cs" />
     <Compile Include="Models\ApplicationModels\ViewModels\CourseSelectionViewModel.cs" />
     <Compile Include="Models\ApplicationModels\ViewModels\CourseViewModel.cs" />
@@ -701,6 +708,9 @@
     <Content Include="Views\Assignments\ViewSubmissions.cshtml" />
     <Content Include="Views\Teachers\SetWeightings.cshtml" />
     <Content Include="Views\Teachers\ViewCourse.cshtml" />
+    <Content Include="Views\Teachers\CalculateFinalMarks.cshtml" />
+    <Content Include="Views\Teachers\CourseDetails.cshtml" />
+    <Content Include="Views\Bookings\MyBookings.cshtml" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include="App_Data\" />
@@ -795,6 +805,9 @@
     </EmbeddedResource>
     <EmbeddedResource Include="Migrations\202405221751557_File name in Submission.resx">
       <DependentUpon>202405221751557_File name in Submission.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Migrations\202405222349578_Added Student Final MArks Table.resx">
+      <DependentUpon>202405222349578_Added Student Final MArks Table.cs</DependentUpon>
     </EmbeddedResource>
   </ItemGroup>
   <PropertyGroup>

@@ -90,7 +90,16 @@ namespace LearniVerseNew.Controllers
                                  .Include(x => x.Faculty)
                                  .FirstOrDefault(s => s.TeacherID == id);
 
-            var courses = db.Courses.ToList();
+            var courses = db.Courses
+                            .Select(c => new {
+                                c.CourseID,
+                                c.CourseName,
+                                c.Department,
+                                c.Semester,
+                                c.Description,
+                                c.Price
+                            })
+                            .ToList();
 
             var settings = new JsonSerializerSettings
             {
@@ -125,7 +134,115 @@ namespace LearniVerseNew.Controllers
 
         }
 
+        [HttpGet]
+        public ActionResult CalculateFinalMarks()
+        {
+            var teacherId = User.Identity.GetUserId(); // Assuming you're using ASP.NET Identity
+            var courses = db.Courses
+                .Where(c => c.TeacherID == teacherId)
+                .Select(c => new SelectListItem
+                {
+                    Value = c.CourseID,
+                    Text = c.CourseName
+                })
+                .ToList();
 
+            var model = new CalculateFinalMarksViewModel
+            {
+                Courses = courses
+            };
+
+            return View(model);
+        }
+
+        [HttpPost]
+        public async Task<ActionResult> CalculateFinalMarks(CalculateFinalMarksViewModel model)
+        {
+            if (model.QuizWeighting + model.AssignmentWeighting != 100)
+            {
+                ModelState.AddModelError("", "The total of quiz and assignment weightings must be 100%");
+                model.Courses = db.Courses
+                    .Where(c => c.TeacherID == User.Identity.GetUserId())
+                    .Select(c => new SelectListItem
+                    {
+                        Value = c.CourseID,
+                        Text = c.CourseName
+                    })
+                    .ToList();
+                return View(model);
+            }
+
+            var enrollments = db.Enrollments
+                .Include(e => e.Student)
+                .Include(e => e.Courses)
+                .Where(e => e.Courses.Any(c => c.CourseID == model.CourseID))
+                .ToList();
+
+            foreach (var enrollment in enrollments)
+            {
+                var studentId = enrollment.StudentID;
+
+                var quizAttempts = db.QuizAttempts
+                    .Where(qa => qa.StudentID == studentId && qa.Quiz.CourseID == model.CourseID)
+                    .GroupBy(qa => qa.QuizID)
+                    .Select(g => g.OrderByDescending(qa => qa.MarkObtained).FirstOrDefault())
+                    .ToList();
+
+                var assignments = db.Submissions
+                    .Where(s => s.StudentID == studentId && s.Assignment.CourseID == model.CourseID)
+                    .ToList();
+
+                var totalQuizPercentage = quizAttempts.Any() ?
+                    quizAttempts.Max(qa => (double)qa.MarkObtained / qa.Quiz.QuizMaxMark * 100) : 0;
+
+                var totalAssignmentPercentage = assignments.Any() ?
+                    assignments.Average(a => (double)a.Mark) : 0;
+
+                var finalMark = (totalQuizPercentage * model.QuizWeighting / 100) +
+                                (totalAssignmentPercentage * model.AssignmentWeighting / 100);
+
+                var studentFinalMark = new StudentFinalMark
+                {
+                    ID = Guid.NewGuid(), // Ensure to use a GUID for the primary key
+                    StudentID = studentId,
+                    EnrollmentID = enrollment.EnrollmentID,
+                    CourseID = model.CourseID,
+                    FinalMark = finalMark
+                };
+
+                db.StudentFinalMarks.Add(studentFinalMark);
+            }
+
+            await db.SaveChangesAsync();
+
+            return RedirectToAction("CourseDetails", "Teachers", new { id = model.CourseID });
+        }
+        public async Task<ActionResult> CourseDetails(string id)
+        {
+            var course = await db.Courses
+                .Include(c => c.StudentFinalMarks)
+                .FirstOrDefaultAsync(c => c.CourseID == id);
+
+            if (course == null)
+            {
+                return HttpNotFound();
+            }
+
+            var model = new CourseDetailsViewModel
+            {
+                CourseName = course.CourseName,
+                StudentFinalMarks = course.StudentFinalMarks
+                    .Select(fm => new StudentFinalMarkViewModel
+                    {
+                        StudentID = fm.StudentID,
+                        StudentName = fm.Student.StudentFirstName + " " + fm.Student.StudentLastName,
+                        FinalMark = fm.FinalMark
+                    })
+                    .ToList()
+            };
+
+            return View(model);
+        }
 
         public ActionResult Details(string id)
         {

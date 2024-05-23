@@ -52,6 +52,7 @@ namespace LearniVerseNew.Models
         public DbSet<TaskItem> TaskItems { get; set; }
         public DbSet<Assignment> Assignments { get; set; }
         public DbSet<Submission> Submissions { get; set; }
+        public DbSet<StudentFinalMark> StudentFinalMarks { get; set; }
         
         
 

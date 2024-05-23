@@ -16,7 +16,13 @@ namespace LearniVerseNew.Controllers
         [Authorize(Roles = "Admin")]
         public ActionResult Home()
         {
-            var payments = db.Payments.ToList();
+            var payments = db.Payments
+                            .Select(p => new {
+                                p.PaymentID,
+                                p.AmountPaid,
+                                p.PaymentDate
+                            })
+                            .ToList();
 
             var settings = new JsonSerializerSettings
             {

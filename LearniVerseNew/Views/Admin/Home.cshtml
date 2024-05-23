@@ -68,11 +68,13 @@
 
 @section Scripts{
     <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
-
+    
     <script>
         var payments = @Html.Raw(Model.JsonPayments);
 
         var monthlyTotals = {};
+
+        console.log(payments)
 
         payments.forEach(function (payment) {
             var date = new Date(payment.PaymentDate);

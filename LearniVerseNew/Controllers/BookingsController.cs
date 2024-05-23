@@ -11,6 +11,7 @@ using LearniVerseNew.Models;
 using LearniVerseNew.Models.ApplicationModels;
 using LearniVerseNew.Models.Helpers;
 using Microsoft.Ajax.Utilities;
+using Microsoft.AspNet.Identity;
 
 namespace LearniVerseNew.Controllers
 {
@@ -19,6 +20,14 @@ namespace LearniVerseNew.Controllers
         private ApplicationDbContext db = new ApplicationDbContext();
 
         // GET: Bookings
+        [Authorize(Roles = "User")]
+        public ActionResult MyBookings()
+        {
+            string id = User.Identity.GetUserId();
+            var bookings = db.Bookings.Include(b => b.TimeSlot).Where(s=>s.StudentID == id );
+            return View(bookings.ToList());
+        }
+
         public ActionResult Index()
         {
             var bookings = db.Bookings.Include(b => b.TimeSlot);
@@ -47,6 +56,10 @@ namespace LearniVerseNew.Controllers
 
             ViewBag.StudentId = studentId;
             ViewBag.TimeSlotID = new SelectList(db.TimeSlots, "TimeSlotID", "SlotName");
+
+            // Fetch the list of rooms from the database
+            ViewBag.RoomID = new SelectList(db.Rooms, "RoomID", "RoomID");
+
             return View();
         }
 
@@ -116,6 +129,7 @@ namespace LearniVerseNew.Controllers
             }
 
             ViewBag.TimeSlotID = new SelectList(db.TimeSlots, "TimeSlotID", "SlotName", booking.TimeSlotID);
+            ViewBag.RoomID = new SelectList(db.Rooms, "RoomID", "RoomID");
             return View(booking);
         }
 

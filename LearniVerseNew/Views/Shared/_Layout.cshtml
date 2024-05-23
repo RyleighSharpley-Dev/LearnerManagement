@@ -42,7 +42,9 @@
                         <li class="nav-item">@Html.ActionLink("Home", "Home", "Teachers", new { area = "" }, new { @class = "nav-link" })</li>
                         <li class="nav-item">@Html.ActionLink("My Courses", "MyCourses", "Teachers", new { area = "" }, new { @class = "nav-link" })</li>
                         <li class="nav-item">@Html.ActionLink("Upload", "Upload", "Resources", new { area = "" }, new { @class = "nav-link" })</li>
-                        <li class="nav-item">@Html.ActionLink("Quiz", "Index", "Quiz", new { area = "" }, new { @class = "nav-link" })</li>
+                        <li class="nav-item">@Html.ActionLink("Create Quiz", "Index", "Quiz", new { area = "" }, new { @class = "nav-link" })</li>
+                        <li class="nav-item">@Html.ActionLink("Process Marks", "CalculateFinalMarks", "Teachers", new { area = "" }, new { @class = "nav-link" })</li>
+                        <li class="nav-item">@Html.ActionLink("View Submissions", "ViewSubmissions", "Assignments", new { area = "" }, new { @class = "nav-link" })</li>
                     }
 
                     @if (User.IsInRole("User"))
@@ -55,9 +57,10 @@
                             </li>
                         }
                         <li class="nav-item">@Html.ActionLink("My Courses", "MyCourses", "Students", new { area = "" }, new { @class = "nav-link" })</li>
+                        <li class="nav-item">@Html.ActionLink("Progress Center", "ProgressCenter", "Students", new { area = "" }, new { @class = "nav-link" })</li>
                         <li class="nav-item">@Html.ActionLink("Apply", "SelectFaculty", "Enrollments", new { area = "" }, new { @class = "nav-link" })</li>
                         <li class="nav-item">@Html.ActionLink("My Enrollments", "MyEnrollments", "Enrollments", new { area = "" }, new { @class = "nav-link" })</li>
-                        <li class="nav-item">@Html.ActionLink("Bookings", "Create", "Bookings", new { area = "" }, new { @class = "nav-link" })</li>
+                        <li class="nav-item">@Html.ActionLink("Bookings", "MyBookings", "Bookings", new { area = "" }, new { @class = "nav-link" })</li>
                     }
                 </ul>
             </div>

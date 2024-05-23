@@ -166,7 +166,16 @@ namespace LearniVerseNew.Controllers
                 return RedirectToAction("ProgressCenter");
             }
 
-            var studentId = Session["UserId"].ToString(); 
+            var courseName = db.Courses
+                   .Where(c => c.CourseID == selectedCourseId)
+                   .Select(c => c.CourseName)
+                   .FirstOrDefault();
+
+            var studentId = Session["UserId"].ToString();
+
+            var StudentFinalMark = db.StudentFinalMarks
+                              .Where(s => s.StudentID == studentId && s.CourseID == selectedCourseId);
+
             var quizAttempts = db.QuizAttempts
                 .Include(qa => qa.Quiz)
                 .Where(qa => qa.StudentID == studentId && qa.Quiz.CourseID == selectedCourseId)
@@ -181,13 +190,18 @@ namespace LearniVerseNew.Controllers
             var averageMark = quizAttempts.Any() ? quizAttempts.Average(qa => qa.MarkObtained) : 0;
 
             var averageSubmissionMark = submissions.Any() ? submissions.Average(s => s.Mark) : 0;
+
+            var finalMark = StudentFinalMark.Max(fm => fm.FinalMark) ?? 0;
+
             var model = new ProgressViewModel
             {
                 QuizAttempts = quizAttempts,
                 HighestMark = highestMark,
                 AverageMark = averageMark,
                 Submissions = submissions,
-                AverageSubmissionMark = averageSubmissionMark
+                AverageSubmissionMark = averageSubmissionMark,
+                FinalMark = finalMark,
+                Coursename = courseName
             };
 
             return View("QuizProgress", model);
