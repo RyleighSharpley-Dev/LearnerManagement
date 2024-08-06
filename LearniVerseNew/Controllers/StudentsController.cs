@@ -23,7 +23,7 @@ namespace LearniVerseNew.Controllers
         [Authorize(Roles = "User")]
         public ActionResult Home()
         {
-            string id = Session["UserId"].ToString();
+            string id = User.Identity.GetUserId();
 
             var student = db.Students.Include(s => s.Enrollments.Select(e => e.Courses))
                                      .Include(f => f.Faculty)

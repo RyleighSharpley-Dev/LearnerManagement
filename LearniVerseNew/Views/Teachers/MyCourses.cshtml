@@ -10,6 +10,12 @@
     <h1>@Model.TeacherFirstName @Model.TeacherLastName </h1>
     <hr />
 
+    <div class="mb-3">
+        <a href="@Url.Action("Upload", "Resources")" class="btn btn-primary">Upload Resources</a>
+        <a href="@Url.Action("Create", "Quiz")" class="btn btn-success">Create Quiz</a>
+        <a href="@Url.Action("Create", "Assignments")" class="btn btn-info">Create Assignment</a>
+    </div>
+    <hr />
     <h3>Current Courses:</h3>
     @if (Model.Courses.Any())
     {

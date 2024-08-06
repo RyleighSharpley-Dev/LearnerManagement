@@ -125,7 +125,7 @@ namespace LearniVerseNew.Controllers
                 db.Bookings.Add(booking);
                 db.SaveChanges();
                 mailer.SendEmailBooking(email, booking);
-                return RedirectToAction("Index");
+                return RedirectToAction("MyBookings");
             }
 
             ViewBag.TimeSlotID = new SelectList(db.TimeSlots, "TimeSlotID", "SlotName", booking.TimeSlotID);

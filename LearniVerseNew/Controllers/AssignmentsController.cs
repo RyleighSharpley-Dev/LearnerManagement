@@ -86,6 +86,37 @@ namespace LearniVerseNew.Controllers
         }
 
 
+        public ActionResult MyAssignments()
+        {
+            var teacherId = User.Identity.GetUserId();
+            var courses = db.Courses.Where(c => c.TeacherID == teacherId).ToList();
+
+            var model = new AssignmentsViewModel
+            {
+                Courses = new SelectList(courses, "CourseID", "CourseName"),
+                Assignments = new List<Assignment>() // Initialize with an empty list
+            };
+
+            return View(model);
+        }
+
+        // Action to fetch assignments based on the selected course
+        [HttpPost]
+        public ActionResult GetAssignments(AssignmentsViewModel model)
+        {
+            var teacherId = User.Identity.GetUserId();
+            var assignments = db.Assignments
+                                .Where(a => a.CourseID == model.SelectedCourseId && a.Course.TeacherID == teacherId)
+                                .Include(a => a.Course)
+                                .ToList();
+
+            model.Courses = new SelectList(db.Courses.Where(c => c.TeacherID == teacherId), "CourseID", "CourseName");
+            model.Assignments = assignments;
+
+            return View("MyAssignments", model); // Return the same view with updated assignments
+        }
+
+
         // Action to view submissions for an assignment
         public ActionResult ViewSubmissions(Guid assignmentId)
         {

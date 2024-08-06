@@ -29,6 +29,7 @@
                     {
                         <li class="nav-item">@Html.ActionLink("Home", "Home", "Admin", new { area = "" }, new { @class = "nav-link" })</li>
                         <li class="nav-item">@Html.ActionLink("Students", "Index", "Students", new { area = "" }, new { @class = "nav-link" })</li>
+                        <li class="nav-item">@Html.ActionLink("Pending Enrollments", "PendingApplications", "Enrollments", new { area = "" }, new { @class = "nav-link" })</li>
                         <li class="nav-item">@Html.ActionLink("Teachers", "Index", "Teachers", new { area = "" }, new { @class = "nav-link" })</li>
                         <li class="nav-item">@Html.ActionLink("Courses", "Index", "Courses", new { area = "" }, new { @class = "nav-link" })</li>
                         <li class="nav-item">@Html.ActionLink("Payments", "Payments", "Payments", new { area = "" }, new { @class = "nav-link" })</li>
@@ -43,8 +44,9 @@
                         <li class="nav-item">@Html.ActionLink("My Courses", "MyCourses", "Teachers", new { area = "" }, new { @class = "nav-link" })</li>
                         <li class="nav-item">@Html.ActionLink("Upload", "Upload", "Resources", new { area = "" }, new { @class = "nav-link" })</li>
                         <li class="nav-item">@Html.ActionLink("Create Quiz", "Index", "Quiz", new { area = "" }, new { @class = "nav-link" })</li>
+                        <li class="nav-item">@Html.ActionLink("Create Assignment", "Create", "Assignments", new { area = "" }, new { @class = "nav-link" })</li>
                         <li class="nav-item">@Html.ActionLink("Process Marks", "CalculateFinalMarks", "Teachers", new { area = "" }, new { @class = "nav-link" })</li>
-                        <li class="nav-item">@Html.ActionLink("View Submissions", "ViewSubmissions", "Assignments", new { area = "" }, new { @class = "nav-link" })</li>
+                        <li class="nav-item">@Html.ActionLink("Assignments", "MyAssignments", "Assignments", new { area = "" }, new { @class = "nav-link" })</li>
                     }
 
                     @if (User.IsInRole("User"))

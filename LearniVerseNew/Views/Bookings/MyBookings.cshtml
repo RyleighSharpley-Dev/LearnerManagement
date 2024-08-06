@@ -28,9 +28,7 @@
                 <td>@(item.Student != null ? item.Student.StudentFirstName : "N/A")</td>
                 <td>@(item.TimeSlot != null ? item.TimeSlot.SlotName : "N/A")</td>
                 <td>@Html.DisplayFor(modelItem => item.BookingDate)</td>
-                <td>
-                    @Html.ActionLink("Details", "Details", new { id = item.BookingID }, new { @class = "btn btn-danger" })
-                </td>
+                
             </tr>
         }
     </tbody>

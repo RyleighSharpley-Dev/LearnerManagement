@@ -49,6 +49,11 @@ namespace LearniVerseNew.Controllers
             return View(payments.ToList());
         }
 
+        public ActionResult PaymentSuccessful()
+        {
+          
+            return View();
+        }
 
 
         // GET: Payments/Details/5

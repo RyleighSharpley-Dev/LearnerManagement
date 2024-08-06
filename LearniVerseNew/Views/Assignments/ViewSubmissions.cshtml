@@ -9,7 +9,6 @@
                 <th>Student</th>
                 <th>File</th>
                 <th>Grade</th>
-                <th>Action</th>
             </tr>
         </thead>
         <tbody>
@@ -34,12 +33,7 @@
                             </form>
                         }
                     </td>
-                    <td>
-                        <form action="@Url.Action("DownloadSubmission", "Assignments")" method="post">
-                            <input type="hidden" name="submissionId" value="@submission.SubmissionID" />
-                            <button type="submit" class="btn btn-secondary">Download</button>
-                        </form>
-                    </td>
+                    
                 </tr>
             }
         </tbody>

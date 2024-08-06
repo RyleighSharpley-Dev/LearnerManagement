@@ -23,7 +23,7 @@ namespace LearniVerseNew.Models
     public class ApplicationDbContext : IdentityDbContext<ApplicationUser>
     {
         public ApplicationDbContext()
-            : base("DefaultConnection", throwIfV1Schema: false)
+            : base("LearniverseDeploymentString", throwIfV1Schema: false)
         {
         }
 

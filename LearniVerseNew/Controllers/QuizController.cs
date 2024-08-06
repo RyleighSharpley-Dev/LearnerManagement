@@ -139,9 +139,17 @@ namespace LearniVerseNew.Controllers
 
             db.SaveChanges();
 
-            return RedirectToAction("Home", "Students");
+            return RedirectToAction("QuizSubmitted", "Quiz");
 
         }
+
+        public ActionResult QuizSubmitted()
+        {
+
+            return View();
+        }
+
+
 
         public ActionResult View(Guid QuizID)
         {
@@ -221,7 +229,7 @@ namespace LearniVerseNew.Controllers
         // more details see https://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public ActionResult Create([Bind(Include = "QuizID,QuizDescription,QuizMaxMark,QuizDate,QuizStart,QuizEnd,MaxAttempts,Status,CourseID")] Quiz quiz)
+        public ActionResult Create([Bind(Include = "QuizID,QuizDescription,QuizMaxMark,QuizDate,QuizStart,QuizEnd,MaxAttempts,Status,Duration,CourseID")] Quiz quiz)
         {
             string email = User.Identity.Name;
 
@@ -233,6 +241,7 @@ namespace LearniVerseNew.Controllers
             if (ModelState.IsValid)
             {
                 quiz.QuizID = Guid.NewGuid();
+                //quiz.Duration = quiz.Duration;
                 db.Quizzes.Add(quiz);
                 db.SaveChanges();
                 return RedirectToAction("Index");

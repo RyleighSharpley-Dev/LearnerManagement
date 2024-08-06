@@ -220,7 +220,7 @@ namespace LearniVerseNew.Controllers
         {
             string studentEmail = User.Identity.Name;
             var paystackService = new PaystackHelper();
-            var initializeResponse = paystackService.InitializeTransaction(studentEmail, Convert.ToInt32(1500 * 100), "https://bf38-41-144-0-170.ngrok-free.app/Enrollments/ApplicationCallBack"); //
+            var initializeResponse = paystackService.InitializeTransaction(studentEmail, Convert.ToInt32(1500 * 100), "https://empress-learniverse.azurewebsites.net/Enrollments/ApplicationCallBack"); //
 
             if (!initializeResponse.Status)
             {
@@ -357,7 +357,7 @@ namespace LearniVerseNew.Controllers
             decimal totalCost = enrollment.Courses.Sum(c => c.Price);
 
             var paystackService = new PaystackHelper();
-            var initializeResponse = paystackService.InitializeTransaction(email, Convert.ToInt32(totalCost * 100), "https://bf38-41-144-0-170.ngrok-free.app/Enrollments/PaystackCallback"); // add callback url
+            var initializeResponse = paystackService.InitializeTransaction(email, Convert.ToInt32(totalCost * 100), "https://empress-learniverse.azurewebsites.net/Enrollments/PaystackCallback"); // add callback url
 
             if (!initializeResponse.Status)
             {
@@ -549,7 +549,7 @@ namespace LearniVerseNew.Controllers
                         List<string> courseIds = enrollment.Courses.Select(c => c.CourseID).ToList();
 
                         // Generate and email invoice
-                        PdfHelper.GenerateAndEmailInvoice(student, courseIds, (totalCost/100), paymentReference);
+                        //PdfHelper.GenerateAndEmailInvoice(student, courseIds, (totalCost/100), paymentReference);
 
                     }
                     else
@@ -570,7 +570,7 @@ namespace LearniVerseNew.Controllers
                 return View("Error");
             }
 
-            return RedirectToAction("Home", "Students");
+            return RedirectToAction("PaymentSuccessful", "Payments"); //create payment received
         }
 
 

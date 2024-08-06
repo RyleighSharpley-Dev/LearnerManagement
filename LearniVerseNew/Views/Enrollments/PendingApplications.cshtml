@@ -14,7 +14,11 @@
 
 <div class="container mt-5">
     <h2>Pending Enrollments</h2>
-
+    <hr />
+    <div class="mb-3">
+        <a href="@Url.Action("RejectedApplications", "Enrollments")" class="btn btn-info">Rejected Applications</a>
+    </div>
+    <hr />
     @if (Model.Any())
     {
         <div class="table-responsive">

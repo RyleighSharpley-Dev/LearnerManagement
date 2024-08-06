@@ -1,15 +1,17 @@
 {
   "dependencies": {
-    "mssql1": {
-      "type": "mssql",
-      "connectionId": "ConnectionStrings:DefaultConnection"
-    },
     "secrets1": {
       "type": "secrets"
     },
+    "mssql2": {
+      "type": "mssql",
+      "connectionId": "ConnectionStrings:LearniverseDeploymentString",
+      "dynamicId": null
+    },
     "storage1": {
       "type": "storage",
-      "connectionId": "BlobConnectionString"
+      "connectionId": "EmpressConnectionString",
+      "dynamicId": null
     }
   }
 }

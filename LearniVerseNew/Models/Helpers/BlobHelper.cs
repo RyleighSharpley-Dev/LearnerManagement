@@ -21,7 +21,7 @@ namespace LearniVerseNew.Models.Helpers
         private readonly string _submissioncontainerName = "submissions";
         public BlobHelper()
         {
-            string connectionString = ConfigurationManager.ConnectionStrings["BlobConnectionString"].ConnectionString; //change this in prod
+            string connectionString = ConfigurationManager.ConnectionStrings["EmpressConnectionString"].ConnectionString; //change this in prod
             _blobServiceClient = new BlobServiceClient(connectionString);
 
         }
@@ -226,7 +226,7 @@ namespace LearniVerseNew.Models.Helpers
             sasBuilder.SetPermissions(BlobSasPermissions.Read);
 
             // Generate the SAS token
-            string sasToken = sasBuilder.ToSasQueryParameters(new StorageSharedKeyCredential("learniversestorage", "qgf9TcU5BnZaxPSkIyFsOyBznjo1/cM+k6xjdCW1v0A7isd/BB9VibIrrEP0YR5q9EKogIwOPV+D+AStCnCHnA==")).ToString(); //change in prod
+            string sasToken = sasBuilder.ToSasQueryParameters(new StorageSharedKeyCredential("empressstorage", "ecuO6ZSEBO4X9mn0BgDZlo1aF+k9rCTlUpdbYMBN1F6+M55NE6SByaooHBmzzWwayHtXMAGaaSVD+ASt+DnPJw==")).ToString(); //change in prod
 
             // Construct the full URI with SAS token
             UriBuilder uriBuilder = new UriBuilder(blobClient.Uri)
