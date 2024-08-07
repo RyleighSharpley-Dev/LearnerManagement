@@ -741,6 +741,7 @@
     <Content Include="Views\BodyComposistions\Details.cshtml" />
     <Content Include="Views\BodyComposistions\Edit.cshtml" />
     <Content Include="Views\BodyComposistions\Index.cshtml" />
+    <Content Include="Views\Home\Gainz.cshtml" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include="App_Data\" />
