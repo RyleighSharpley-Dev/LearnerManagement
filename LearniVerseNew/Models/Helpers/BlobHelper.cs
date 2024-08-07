@@ -21,7 +21,7 @@ namespace LearniVerseNew.Models.Helpers
         private readonly string _submissioncontainerName = "submissions";
         public BlobHelper()
         {
-            string connectionString = ConfigurationManager.ConnectionStrings["EmpressConnectionString"].ConnectionString; //change this in prod
+            string connectionString = ConfigurationManager.ConnectionStrings["BlobLocal"].ConnectionString; //change this in prod
             _blobServiceClient = new BlobServiceClient(connectionString);
 
         }
