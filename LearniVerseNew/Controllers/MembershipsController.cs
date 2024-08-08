@@ -7,7 +7,9 @@ using System.Net;
 using System.Web;
 using System.Web.Mvc;
 using LearniVerseNew.Models;
+using LearniVerseNew.Models.ApplicationModels;
 using LearniVerseNew.Models.ApplicationModels.Gym_Models;
+using Microsoft.AspNet.Identity;
 
 namespace LearniVerseNew.Controllers
 {
@@ -21,6 +23,17 @@ namespace LearniVerseNew.Controllers
             var memberships = db.Memberships.Include(m => m.Student);
             return View(memberships.ToList());
         }
+
+        public ActionResult Plans()
+        {
+            var basic = db.Plans.FirstOrDefault(p=>p.PlanName == "Basic");
+            var premium = db.Plans.FirstOrDefault(p=>p.PlanName == "Premium");
+
+            ViewBag.BasicPlan = basic;
+            ViewBag.PremiumPlan = premium;
+            return View();
+        }
+
 
         // GET: Memberships/Details/5
         public ActionResult Details(Guid? id)
@@ -38,11 +51,38 @@ namespace LearniVerseNew.Controllers
         }
 
         // GET: Memberships/Create
-        public ActionResult Create()
+        public ActionResult Create(string tier)
         {
-            ViewBag.StudentID = new SelectList(db.Students, "StudentID", "StudentFirstName");
-            return View();
+            string id = User.Identity.GetUserId();
+            var plan = db.Plans.FirstOrDefault(p => p.PlanName == tier);
+            var student = db.Students.FirstOrDefault(s => s.StudentID == id );
+
+            if (plan == null || student == null)
+            {
+                return HttpNotFound();
+            }
+
+            var membership = new Membership
+            {
+                MembershipTier = plan.PlanName,
+                MembershipDuration = plan.PlanDuration,
+                MembershipPrice = plan.PlanCost,
+                StudentID = student.StudentID,
+                Student = student,
+                MembershipStart = DateTime.Now,
+                MembershipEnd = DateTime.Now.AddMonths(plan.PlanDuration)
+            };
+
+            return View(membership);
         }
+
+        [HttpPost]
+        public ActionResult Subscribe()
+        {
+
+        }
+
+
 
         // POST: Memberships/Create
         // To protect from overposting attacks, enable the specific properties you want to bind to, for 

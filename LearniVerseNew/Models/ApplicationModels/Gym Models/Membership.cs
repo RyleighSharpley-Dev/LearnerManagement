@@ -20,5 +20,8 @@ namespace LearniVerseNew.Models.ApplicationModels.Gym_Models
         public string StudentID { get; set; }
         public virtual Student Student { get; set; }
 
+        public Guid PlanID { get; set; }
+        public virtual Plans Plan { get; set; }
+
     }
 }

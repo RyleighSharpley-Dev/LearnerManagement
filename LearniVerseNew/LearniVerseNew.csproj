@@ -389,6 +389,7 @@
     <Compile Include="Controllers\ManageController.cs" />
     <Compile Include="Controllers\MembershipsController.cs" />
     <Compile Include="Controllers\PaymentsController.cs" />
+    <Compile Include="Controllers\PlansController.cs" />
     <Compile Include="Controllers\QualificationsController.cs" />
     <Compile Include="Controllers\QuizController.cs" />
     <Compile Include="Controllers\ResourcesController.cs" />
@@ -493,6 +494,10 @@
     <Compile Include="Migrations\202408071431569_Added Membership and BodyComposition Entities.Designer.cs">
       <DependentUpon>202408071431569_Added Membership and BodyComposition Entities.cs</DependentUpon>
     </Compile>
+    <Compile Include="Migrations\202408081128457_Added Membrship Plans.cs" />
+    <Compile Include="Migrations\202408081128457_Added Membrship Plans.Designer.cs">
+      <DependentUpon>202408081128457_Added Membrship Plans.cs</DependentUpon>
+    </Compile>
     <Compile Include="Migrations\Configuration.cs" />
     <Compile Include="Models\AccountViewModels.cs" />
     <Compile Include="Models\ApplicationModels\Assignment.cs" />
@@ -502,6 +507,7 @@
     <Compile Include="Models\ApplicationModels\Faculty.cs" />
     <Compile Include="Models\ApplicationModels\Gym Models\BodyComposistion.cs" />
     <Compile Include="Models\ApplicationModels\Gym Models\Membership.cs" />
+    <Compile Include="Models\ApplicationModels\Gym Models\Plans.cs" />
     <Compile Include="Models\ApplicationModels\NSCSubmission.cs" />
     <Compile Include="Models\ApplicationModels\Payment.cs" />
     <Compile Include="Models\ApplicationModels\Qualification.cs" />
@@ -742,6 +748,12 @@
     <Content Include="Views\BodyComposistions\Edit.cshtml" />
     <Content Include="Views\BodyComposistions\Index.cshtml" />
     <Content Include="Views\Home\Gainz.cshtml" />
+    <Content Include="Views\Memberships\Plans.cshtml" />
+    <Content Include="Views\Plans\Create.cshtml" />
+    <Content Include="Views\Plans\Delete.cshtml" />
+    <Content Include="Views\Plans\Details.cshtml" />
+    <Content Include="Views\Plans\Edit.cshtml" />
+    <Content Include="Views\Plans\Index.cshtml" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include="App_Data\" />
@@ -842,6 +854,9 @@
     </EmbeddedResource>
     <EmbeddedResource Include="Migrations\202408071431569_Added Membership and BodyComposition Entities.resx">
       <DependentUpon>202408071431569_Added Membership and BodyComposition Entities.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Migrations\202408081128457_Added Membrship Plans.resx">
+      <DependentUpon>202408081128457_Added Membrship Plans.cs</DependentUpon>
     </EmbeddedResource>
   </ItemGroup>
   <PropertyGroup>
