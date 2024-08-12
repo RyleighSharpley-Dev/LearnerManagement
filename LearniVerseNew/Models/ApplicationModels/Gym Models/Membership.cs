@@ -17,11 +17,15 @@ namespace LearniVerseNew.Models.ApplicationModels.Gym_Models
         public decimal MembershipPrice { get; set; }
         public bool HasPaid { get; set; }
         public bool IsActive { get; set; }
+        public bool CancelRequested { get; set; }
         public string StudentID { get; set; }
         public virtual Student Student { get; set; }
 
         public Guid PlanID { get; set; }
         public virtual Plans Plan { get; set; }
+
+        public Guid PaymentID { get; set; }
+        public virtual ICollection<MembershipPayment> MembershipPayments { get; set; }
 
     }
 }

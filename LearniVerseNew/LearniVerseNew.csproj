@@ -498,6 +498,22 @@
     <Compile Include="Migrations\202408081128457_Added Membrship Plans.Designer.cs">
       <DependentUpon>202408081128457_Added Membrship Plans.cs</DependentUpon>
     </Compile>
+    <Compile Include="Migrations\202408121036216_Added Plan Code from Paystack to Database.cs" />
+    <Compile Include="Migrations\202408121036216_Added Plan Code from Paystack to Database.Designer.cs">
+      <DependentUpon>202408121036216_Added Plan Code from Paystack to Database.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Migrations\202408121224526_Added Place to store payment for Memberships.cs" />
+    <Compile Include="Migrations\202408121224526_Added Place to store payment for Memberships.Designer.cs">
+      <DependentUpon>202408121224526_Added Place to store payment for Memberships.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Migrations\202408121308193_Added payment form membrships id tp the membrship table.cs" />
+    <Compile Include="Migrations\202408121308193_Added payment form membrships id tp the membrship table.Designer.cs">
+      <DependentUpon>202408121308193_Added payment form membrships id tp the membrship table.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Migrations\202408121754030_Added cancel flag to membership.cs" />
+    <Compile Include="Migrations\202408121754030_Added cancel flag to membership.Designer.cs">
+      <DependentUpon>202408121754030_Added cancel flag to membership.cs</DependentUpon>
+    </Compile>
     <Compile Include="Migrations\Configuration.cs" />
     <Compile Include="Models\AccountViewModels.cs" />
     <Compile Include="Models\ApplicationModels\Assignment.cs" />
@@ -507,6 +523,7 @@
     <Compile Include="Models\ApplicationModels\Faculty.cs" />
     <Compile Include="Models\ApplicationModels\Gym Models\BodyComposistion.cs" />
     <Compile Include="Models\ApplicationModels\Gym Models\Membership.cs" />
+    <Compile Include="Models\ApplicationModels\Gym Models\MembershipPayment.cs" />
     <Compile Include="Models\ApplicationModels\Gym Models\Plans.cs" />
     <Compile Include="Models\ApplicationModels\NSCSubmission.cs" />
     <Compile Include="Models\ApplicationModels\Payment.cs" />
@@ -754,6 +771,11 @@
     <Content Include="Views\Plans\Details.cshtml" />
     <Content Include="Views\Plans\Edit.cshtml" />
     <Content Include="Views\Plans\Index.cshtml" />
+    <Content Include="Views\Memberships\SubscriptionSuccess.cshtml" />
+    <Content Include="Views\Memberships\MyMemberships.cshtml" />
+    <Content Include="Views\Memberships\RequestCancel.cshtml" />
+    <Content Include="Views\Memberships\RequestConfirmed.cshtml" />
+    <Content Include="Views\Memberships\CancelRequests.cshtml" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include="App_Data\" />
@@ -857,6 +879,18 @@
     </EmbeddedResource>
     <EmbeddedResource Include="Migrations\202408081128457_Added Membrship Plans.resx">
       <DependentUpon>202408081128457_Added Membrship Plans.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Migrations\202408121036216_Added Plan Code from Paystack to Database.resx">
+      <DependentUpon>202408121036216_Added Plan Code from Paystack to Database.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Migrations\202408121224526_Added Place to store payment for Memberships.resx">
+      <DependentUpon>202408121224526_Added Place to store payment for Memberships.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Migrations\202408121308193_Added payment form membrships id tp the membrship table.resx">
+      <DependentUpon>202408121308193_Added payment form membrships id tp the membrship table.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Migrations\202408121754030_Added cancel flag to membership.resx">
+      <DependentUpon>202408121754030_Added cancel flag to membership.cs</DependentUpon>
     </EmbeddedResource>
   </ItemGroup>
   <PropertyGroup>

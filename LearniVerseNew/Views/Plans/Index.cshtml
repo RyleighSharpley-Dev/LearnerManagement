@@ -20,6 +20,9 @@
         <th>
             @Html.DisplayNameFor(model => model.PlanCost)
         </th>
+        <th>
+            @Html.DisplayNameFor(model => model.PlanCode)
+        </th>
         <th></th>
     </tr>
 
@@ -35,9 +38,13 @@
             @Html.DisplayFor(modelItem => item.PlanCost)
         </td>
         <td>
-            @Html.ActionLink("Edit", "Edit", new { id=item.PlanID }) |
-            @Html.ActionLink("Details", "Details", new { id=item.PlanID }) |
-            @Html.ActionLink("Delete", "Delete", new { id=item.PlanID })
+            @Html.DisplayFor(modelItem => item.PlanCode)
+        </td>
+
+        <td>
+            @Html.ActionLink("Edit", "Edit", new { id = item.PlanID }) |
+            @Html.ActionLink("Details", "Details", new { id = item.PlanID }) |
+            @Html.ActionLink("Delete", "Delete", new { id = item.PlanID })
         </td>
     </tr>
 }

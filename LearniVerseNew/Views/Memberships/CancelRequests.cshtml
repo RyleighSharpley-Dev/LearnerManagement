@@ -1,0 +1,56 @@
+﻿@model IEnumerable<LearniVerseNew.Models.ApplicationModels.Gym_Models.Membership>
+
+@{
+    ViewBag.Title = "Cancel Requests";
+}
+
+<div class="container mt-5">
+    <h2 class="mb-4">Cancel Requests</h2>
+
+    <form method="get" action="@Url.Action("CancelRequests", "Memberships")" class="form-inline mb-4">
+        <input type="text" name="searchEmail" class="form-control mr-2" placeholder="Search by Student Email" value="@Request.QueryString["searchEmail"]" />
+        <button type="submit" class="btn btn-primary">Search</button>
+    </form>
+
+    <div class="table-responsive">
+        <table class="table table-bordered">
+            <thead>
+                <tr>
+                    <th>Plan Name</th>
+                    <th>Student Name</th>
+                    <th>Membership Tier</th>
+                    <th>Start Date</th>
+                    <th>End Date</th>
+                    <th>Duration (Months)</th>
+                    <th>Price</th>
+                    <th>Paid</th>
+                    <th>Active</th>
+                    <th>Cancel Requested</th>
+                    <th>Payment ID</th>
+                    <th>Actions</th>
+                </tr>
+            </thead>
+            <tbody>
+                @foreach (var item in Model)
+                {
+                    <tr>
+                        <td>@item.Plan.PlanName</td>
+                        <td>@item.Student.StudentFirstName @item.Student.StudentLastName</td>
+                        <td>@item.MembershipTier</td>
+                        <td>@item.MembershipStart.ToShortDateString()</td>
+                        <td>@item.MembershipEnd.ToShortDateString()</td>
+                        <td>@item.MembershipDuration</td>
+                        <td>@item.MembershipPrice.ToString("C")</td>
+                        <td>@(item.HasPaid ? "Yes" : "No")</td>
+                        <td>@(item.IsActive ? "Yes" : "No")</td>
+                        <td>@(item.CancelRequested ? "Yes" : "No")</td>
+                        <td>@item.PaymentID</td>
+                        <td>
+                            <a href="@Url.Action("ApproveCancelRequest", "Memberships", new { id = item.MembershipID })" class="btn btn-success btn-sm">Approve</a>
+                        </td>
+                    </tr>
+                }
+            </tbody>
+        </table>
+    </div>
+</div>
