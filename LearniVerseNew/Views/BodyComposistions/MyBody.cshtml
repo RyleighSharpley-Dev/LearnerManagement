@@ -4,7 +4,6 @@
     ViewBag.Title = "My Body Metrics";
 }
 
-<h2>My Body Dashboard</h2>
 
 @if (Model == null)
 {
@@ -14,90 +13,134 @@
 }
 else
 {
-    <div class="container">
-        <!-- Needle Gauge for BMI -->
-        <div class="row mb-4">
-            <div class="col-md-12">
-                <h3>BMI</h3>
-                <div id="bmiBarChart" class="ct-chart ct-perfect-fourth"></div>
+<div class="container">
+
+    <div class="col-md-12 mb-4">
+        <div class="card shadow-sm">
+            <div class="card-body text-center">
+                <h2 class="card-title">Welcome to Your Dashboard</h2>
+                <p>Hi @Model.Student.StudentFirstName</p>
+            </div>
+        </div>
+    </div>
+    <!-- Needle Gauge for BMI -->
+    <div class="row mb-4">
+        <div class="col-md-9">
+            <div class="card mb-4">
+                <div class="card-header bg-danger-subtle">
+                    <h4>Member Information</h4>
+                </div>
+                <div class="card-body">
+                    <p><strong>Name:</strong> @Model.Student.StudentFirstName @Model.Student.StudentLastName</p>
+                    <p><strong>Date of Birth:</strong> @Model.Student.DOB.ToShortDateString()</p>
+                    <p><strong>Gender:</strong> @Model.Student.Gender</p>
+                </div>
             </div>
         </div>
 
-        <!-- Cards for Other Metrics -->
-        <div class="row">
-            <div class="col-md-3">
-                <div class="card text-center">
-                    <div class="card-body">
-                        <h5 class="card-title">BMR</h5>
-                        <p class="card-text">@Model.BMR kcal/day</p>
-                        <p class="card-text"><small>Basal Metabolic Rate</small></p>
-                    </div>
-                </div>
-            </div>
 
-            <div class="col-md-3">
-                <div class="card text-center">
-                    <div class="card-body">
-                        <h5 class="card-title">Body Fat %</h5>
-                        <p class="card-text">@Model.BodyFatPercentage %</p>
-                        <p class="card-text"><small>Body Fat Percentage</small></p>
-                    </div>
+        <div class="col-md-3">
+            <div class="card mb-4">
+                <div class="card-header bg-warning-subtle">
+                    <h4>Your BMI</h4>
                 </div>
-            </div>
-
-            <div class="col-md-3">
-                <div class="card text-center">
-                    <div class="card-body">
-                        <h5 class="card-title">Lean Muscle Mass</h5>
-                        <p class="card-text">@Model.LeanMuscleMass kg</p>
-                        <p class="card-text"><small>Lean Muscle Mass</small></p>
-                    </div>
-                </div>
-            </div>
-
-            <div class="col-md-3">
-                <div class="card text-center">
-                    <div class="card-body">
-                        <h5 class="card-title">Status</h5>
-                        <p class="card-text">@Model.Status</p>
-                        <p class="card-text"><small>Body Composition Status</small></p>
-                    </div>
+                <div class="card-body">
+                    <h5 class="card-title">@Model.BMI</h5>
+                    <canvas id="bmichart" width="400" height="200"></canvas>
                 </div>
             </div>
         </div>
     </div>
+
+    <!-- Cards for Other Metrics -->
+    <div class="row">
+        <div class="col-md-3">
+            <div class="card text-center">
+                <div class="card-body" style="background-color:#da8ee7;">
+                    <h5 class="card-title">BMR</h5>
+                    <p class="card-text">@Model.BMR kcal/day</p>
+                    <p class="card-text"><small>Basal Metabolic Rate</small></p>
+                </div>
+            </div>
+        </div>
+
+        <div class="col-md-3">
+            <div class="card text-center">
+                <div class="card-body" style="background-color:#4dd091" ;>
+                    <h5 class="card-title">Body Fat %</h5>
+                    <p class="card-text">@Model.BodyFatPercentage %</p>
+                    <p class="card-text"><small>Body Fat Percentage</small></p>
+                </div>
+            </div>
+        </div>
+
+        <div class="col-md-3">
+            <div class="card text-center">
+                <div class="card-body" style="background-color:#ff96c5;">
+                    <h5 class="card-title">Lean Muscle Mass</h5>
+                    <p class="card-text">@Model.LeanMuscleMass kg</p>
+                    <p class="card-text"><small>Lean Muscle Mass</small></p>
+                </div>
+            </div>
+        </div>
+
+        <div class="col-md-3">
+            <div class="card text-center">
+                <div id="status-Card" class="card-body">
+                    <h5 class="card-title">Status</h5>
+                    <p class="card-text">@Model.Status</p>
+                    <p class="card-text"><small>Body Composition Status</small></p>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
 }
 
 
-@section Scripts {
-    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
 
+@section Scripts {
+
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
     <script>
+    // Get the BMI value from the model
     var bmi = @Html.Raw(Json.Encode(Model.BMI));
 
-        var ctx = document.getElementById('bmiBarChart').getContext('2d');
+    // Get the context of the canvas element
+    var ctx = document.getElementById('bmichart').getContext('2d');
 
-    new Chart(ctx, {
+    // Create a bar chart
+    var bmichart = new Chart(ctx, {
         type: 'bar',
         data: {
-            labels: ['Your BMI'],
+            labels: ['BMI'],
             datasets: [{
-                label: 'BMI',
+                label: 'Your BMI',
                 data: [bmi],
-                backgroundColor: '#ff6384',
-                borderColor: '#ff6384',
+                backgroundColor: 'rgba(75, 192, 192, 0.2)', // Light green
+                borderColor: 'rgba(75, 192, 192, 1)', // Dark green
                 borderWidth: 1
             }]
         },
         options: {
             scales: {
+                x: {
+                    beginAtZero: true
+                },
                 y: {
                     beginAtZero: true,
+                    min: 0,
                     max: 40,
                     ticks: {
-                        stepSize: 5,
+                        stepSize: 5, // Set step size to 5
                         callback: function(value) {
-                            return value; // Display step values
+                            if (value === 0) return '0';
+                            if (value === 10) return '10';
+                            if (value === 20) return '20';
+                            if (value === 30) return '30';
+                            if (value === 40) return '40';
+                            return '';
                         }
                     },
                     grid: {
@@ -106,17 +149,44 @@ else
                 }
             },
             plugins: {
-                tooltip: {
-                    callbacks: {
-                        label: function(context) {
-                            return 'BMI: ' + context.raw;
-                        }
-                    }
+                legend: {
+                    display: false // Hide the legend if not needed
                 }
             }
         }
     });
+
+    console.log(bmi); // Log BMI value for debugging
     </script>
+
+    <script>
+    // Run the statusColorchanger function when the page loads
+    window.onload = function() {
+        statusColorchanger();
+    };
+
+    function statusColorchanger() {
+        // Get the status from the model
+        var status = @Html.Raw(Json.Encode(Model.Status));
+
+        // Get the card element by ID
+        var card = document.getElementById('status-Card');
+
+        // Change the card's background color based on the status
+        if (status === 'Normal') {
+            card.style.backgroundColor = '#abf7b1';
+        } else if (status === 'Underweight') {
+            card.style.backgroundColor = '#63e5ff';
+        } else if (status === 'Overweight') {
+            card.style.backgroundColor = '#ee9f27';
+        } else if (status === 'Obese') {
+            card.style.backgroundColor = '#fb3b1e';
+        } else {
+            card.style.backgroundColor = 'gray'; // Default color if status is undefined
+        }
+    }
+    </script>
+
 }
 
 
