@@ -50,5 +50,6 @@ namespace LearniVerseNew.Models.ApplicationModels
         public virtual ICollection<Membership> Memberships { get; set; }
         public virtual ICollection<BodyComposistion> BodyComposistions { get; set; }
         public virtual ICollection<MembershipPayment> MembershipPayments { get; set; }
+        public virtual ICollection<SubscriptionCancellationRequest> SubscriptionCancellationRequests { get; set; }
     }
 }

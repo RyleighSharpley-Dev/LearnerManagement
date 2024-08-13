@@ -58,6 +58,7 @@ namespace LearniVerseNew.Models
         public DbSet<BodyComposistion> BodyComposistions { get; set; }
         public DbSet<Plans> Plans { get; set; }
         public DbSet<MembershipPayment> MembershipPayments { get; set; }
+        public DbSet<SubscriptionCancellationRequest> SubscriptionCancellationRequests { get; set; }
 
 
         

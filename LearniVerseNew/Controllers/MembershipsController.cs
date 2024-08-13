@@ -174,19 +174,55 @@ namespace LearniVerseNew.Controllers
             return View(membership); 
         }
 
+
         public async Task<ActionResult> ConfirmCancel(Guid Id)
         {
+            var membership = await db.Memberships.Include(m => m.SubscriptionCancellationRequests)
+                                                 .FirstOrDefaultAsync(m => m.MembershipID == Id);
 
-            var membership = await db.Memberships.FindAsync(Id);
+            var student = await db.Students.FindAsync(membership.StudentID);
 
-            membership.CancelRequested = true;
+            if (membership == null)
+            {
+                return HttpNotFound();
+            }
+
+            // Check if a cancellation request has already been made
+            if (membership.SubscriptionCancellationRequests != null)
+            {
+                // Optional: Provide feedback that a cancellation request already exists
+                return RedirectToAction("RequestAlreadyMade");
+            }
+
+            Guid ReqID = Guid.NewGuid();
+
+            // Create a new cancellation request
+            var cancellationRequest = new SubscriptionCancellationRequest
+            {
+                RequestID = ReqID,
+                StudentID = membership.StudentID,
+                MembershipID = membership.MembershipID,
+                RequestDate = DateTime.Now,
+                RequestStatus = "Pending",
+                Reason = "User requested cancellation", // Optionally, get a reason from the user input
+                Membership = membership,
+                Student = student
+            };
+
+            db.SubscriptionCancellationRequests.Add(cancellationRequest);
+
+            membership.RequestID = ReqID;
+
+            
 
             await db.SaveChangesAsync();
 
-            //Add email
+            // Optional: Send an email notification to the user or admin
 
             return RedirectToAction("RequestConfirmed");
         }
+
+
 
         public ActionResult RequestConfirmed()
         {
@@ -194,26 +230,70 @@ namespace LearniVerseNew.Controllers
         }
 
         [Authorize(Roles = "Admin")]
-        public ActionResult CancelRequests(string searchEmail)
+        public async Task<ActionResult> CancelRequests(string searchEmail)
         {
-            var memberships = db.Memberships
-                                .Include(s => s.Student)
-                                .Include(m => m.MembershipPayments)
-                                .Where(c => c.CancelRequested == true);
+            var cancellationRequests = db.SubscriptionCancellationRequests
+                                         .Include(r => r.Student)
+                                         .Include(r => r.Membership.Plan)
+                                         .Include(r => r.Membership)
+                                         .AsQueryable().Where(s => s.RequestStatus == "Pending");
 
             if (!string.IsNullOrEmpty(searchEmail))
             {
-                memberships = memberships.Where(m => m.Student.StudentEmail.Contains(searchEmail));
+                cancellationRequests = cancellationRequests.Where(r => r.Student.StudentEmail.Contains(searchEmail));
             }
 
-            return View(memberships.ToList());
+            return View(await cancellationRequests.ToListAsync());
         }
 
-        public ActionResult ApproveCancelRequest(Guid id)
+        public async Task<ActionResult> AllCancelRequests(string searchEmail)
         {
-            //fix tomorrow
+            var cancellationRequests = db.SubscriptionCancellationRequests
+                                         .Include(r => r.Student)
+                                         .Include(r => r.Membership.Plan)
+                                         .Include(r => r.Membership)
+                                         .AsQueryable();
 
-            return View(); 
+            if (!string.IsNullOrEmpty(searchEmail))
+            {
+                cancellationRequests = cancellationRequests.Where(r => r.Student.StudentEmail.Contains(searchEmail));
+            }
+
+            return View(await cancellationRequests.ToListAsync());
+        }
+
+
+        [HttpPost]
+        public async Task<ActionResult> ApproveCancelRequest(Guid id)
+        {
+            var cancellationRequest = await db.SubscriptionCancellationRequests
+                                              .Include(r => r.Membership)
+                                              .FirstOrDefaultAsync(r => r.MembershipID == id);
+
+            if (cancellationRequest == null)
+            {
+                return HttpNotFound();
+            }
+
+            // Check if the cancellation request has already been approved
+            if (cancellationRequest.RequestStatus == "Approved")
+            {
+                return RedirectToAction("CancelRequests");
+            }
+
+            // Update the membership status
+            var membership = cancellationRequest.Membership;
+            membership.IsActive = false;
+            db.Entry(membership).State = EntityState.Modified;
+
+            // Update the cancellation request status
+            cancellationRequest.RequestStatus = "Approved";
+            db.Entry(cancellationRequest).State = EntityState.Modified;
+
+            // Save changes to the database
+            await db.SaveChangesAsync();
+
+            return RedirectToAction("CancelRequests");
         }
 
         // GET: Memberships/Details/5

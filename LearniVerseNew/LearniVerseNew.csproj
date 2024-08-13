@@ -514,6 +514,10 @@
     <Compile Include="Migrations\202408121754030_Added cancel flag to membership.Designer.cs">
       <DependentUpon>202408121754030_Added cancel flag to membership.cs</DependentUpon>
     </Compile>
+    <Compile Include="Migrations\202408131047180_Sub cancel table added.cs" />
+    <Compile Include="Migrations\202408131047180_Sub cancel table added.Designer.cs">
+      <DependentUpon>202408131047180_Sub cancel table added.cs</DependentUpon>
+    </Compile>
     <Compile Include="Migrations\Configuration.cs" />
     <Compile Include="Models\AccountViewModels.cs" />
     <Compile Include="Models\ApplicationModels\Assignment.cs" />
@@ -525,6 +529,7 @@
     <Compile Include="Models\ApplicationModels\Gym Models\Membership.cs" />
     <Compile Include="Models\ApplicationModels\Gym Models\MembershipPayment.cs" />
     <Compile Include="Models\ApplicationModels\Gym Models\Plans.cs" />
+    <Compile Include="Models\ApplicationModels\Gym Models\SubscriptionCancellationRequest.cs" />
     <Compile Include="Models\ApplicationModels\NSCSubmission.cs" />
     <Compile Include="Models\ApplicationModels\Payment.cs" />
     <Compile Include="Models\ApplicationModels\Qualification.cs" />
@@ -776,6 +781,7 @@
     <Content Include="Views\Memberships\RequestCancel.cshtml" />
     <Content Include="Views\Memberships\RequestConfirmed.cshtml" />
     <Content Include="Views\Memberships\CancelRequests.cshtml" />
+    <Content Include="Views\Memberships\AllCancelRequests.cshtml" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include="App_Data\" />
@@ -891,6 +897,9 @@
     </EmbeddedResource>
     <EmbeddedResource Include="Migrations\202408121754030_Added cancel flag to membership.resx">
       <DependentUpon>202408121754030_Added cancel flag to membership.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Migrations\202408131047180_Sub cancel table added.resx">
+      <DependentUpon>202408131047180_Sub cancel table added.cs</DependentUpon>
     </EmbeddedResource>
   </ItemGroup>
   <PropertyGroup>

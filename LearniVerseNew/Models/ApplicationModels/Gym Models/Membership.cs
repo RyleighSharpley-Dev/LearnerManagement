@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
+using System.ComponentModel.DataAnnotations.Schema;
 using System.Linq;
 using System.Web;
 
@@ -17,7 +18,6 @@ namespace LearniVerseNew.Models.ApplicationModels.Gym_Models
         public decimal MembershipPrice { get; set; }
         public bool HasPaid { get; set; }
         public bool IsActive { get; set; }
-        public bool CancelRequested { get; set; }
         public string StudentID { get; set; }
         public virtual Student Student { get; set; }
 
@@ -26,6 +26,10 @@ namespace LearniVerseNew.Models.ApplicationModels.Gym_Models
 
         public Guid PaymentID { get; set; }
         public virtual ICollection<MembershipPayment> MembershipPayments { get; set; }
+        public Guid? RequestID { get; set; }
+
+        [ForeignKey(nameof(RequestID))]
+        public virtual SubscriptionCancellationRequest SubscriptionCancellationRequests { get; set; }
 
     }
 }

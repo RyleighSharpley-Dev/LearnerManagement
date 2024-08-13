@@ -1,14 +1,14 @@
 ﻿@model IEnumerable<LearniVerseNew.Models.ApplicationModels.Gym_Models.SubscriptionCancellationRequest>
 
 @{
-    ViewBag.Title = "Cancel Requests";
+    ViewBag.Title = "All Cancel Requests";
 }
 
 <div class="container mt-5">
     <h2 class="mb-4">Cancel Requests</h2>
 
     <!-- Search Form -->
-    <form method="get" action="@Url.Action("CancelRequests", "Memberships")" class="form-inline mb-4">
+    <form method="get" action="@Url.Action("AllCancelRequests", "Memberships")" class="form-inline mb-4">
         <input type="text" name="searchEmail" class="form-control mr-2 mb-2" placeholder="Search by Student Email" value="@Request.QueryString["searchEmail"]" />
         <button type="submit" class="btn btn-primary">Search</button>
     </form>
@@ -37,7 +37,7 @@
                         <th>Request Date</th>
                         <th>Request Status</th>
                         <th>Reason</th>
-                        <th>Actions</th>
+                       
                     </tr>
                 </thead>
                 <tbody>
@@ -56,18 +56,7 @@
                             <td>@item.RequestDate.ToShortDateString()</td>
                             <td>@item.RequestStatus</td>
                             <td>@item.Reason</td>
-                            <td>
-                                @using (Html.BeginForm("ApproveCancelRequest", "Memberships", FormMethod.Post))
-                                {
-                                    @Html.AntiForgeryToken()
-
-                                    @Html.Hidden("id", item.MembershipID)
-
-                                    <button type="submit" class="btn btn-success btn-sm" @(item.RequestStatus == "Approved" ? "disabled" : "")>
-                                        Approve
-                                    </button>
-                                }
-                            </td>
+                           
                         </tr>
                     }
                 </tbody>
