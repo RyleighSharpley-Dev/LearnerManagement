@@ -26,7 +26,7 @@ namespace LearniVerseNew.Models.ApplicationModels.Gym_Models
         //Methods
         public double CalcBMI(double height, double weight)
         {
-            BMI = (weight/ Math.Pow(height, 2))*10000;
+            BMI = weight/ Math.Pow(height, 2);
             return Math.Round(BMI, 2);
         }
 
@@ -35,13 +35,13 @@ namespace LearniVerseNew.Models.ApplicationModels.Gym_Models
             int age = DateTime.Now.Year - dob.Year;
             if (gender == "Male")
             {
-                BMR = 88.362 + (13.397 * weight) + (4.799 * height) - (5.677 * age);
-                return BMR;
+                BMR = 88.362 + (13.397 * weight) + (4.799 * (height*100)) - (5.677 * age);
+                return Math.Round(BMR, 0);
             }
             else
             {
-                BMR = 447.593 + (9.247 * weight) + (3.098 * height) - (4.330 * age);
-                return BMR;
+                BMR = 447.593 + (9.247 * weight) + (3.098 * (height*100)) - (4.330 * age);
+                return Math.Round(BMR,0);
             }
         }
 

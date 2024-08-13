@@ -4,10 +4,12 @@ using System.Data;
 using System.Data.Entity;
 using System.Linq;
 using System.Net;
+using System.Threading.Tasks;
 using System.Web;
 using System.Web.Mvc;
 using LearniVerseNew.Models;
 using LearniVerseNew.Models.ApplicationModels.Gym_Models;
+using Microsoft.AspNet.Identity;
 
 namespace LearniVerseNew.Controllers
 {
@@ -38,11 +40,98 @@ namespace LearniVerseNew.Controllers
         }
 
         // GET: BodyComposistions/Create
+        public async Task<ActionResult> NewComposition()
+        {
+            string id = User.Identity.GetUserId();
+
+            ViewBag.Student = await db.Students.FindAsync(id);
+
+            return View();
+        }
+
+        [HttpPost]
+        [ValidateAntiForgeryToken]
+        public async Task<ActionResult> NewComposition(BodyComposistion model)
+        {
+            
+
+            if (ModelState.IsValid)
+            {
+                string id = User.Identity.GetUserId();
+                var student = await db.Students.FindAsync(id);
+
+                if (student != null)
+                {
+                    // Calculate BMI
+                    model.BMI = model.CalcBMI(model.Height, model.Weight);
+
+                    // Calculate BMR
+                    model.BMR = model.CalculateBMR(model.Height, model.Weight, student.Gender, student.DOB);
+
+                    // Calculate Body Fat Percentage
+                    model.BodyFatPercentage = model.CalculateBF(model.BMI, student.Gender, student.DOB);
+
+                    // Calculate Lean Muscle Mass
+                    model.LeanMuscleMass = model.CalcLeanMuscleMass(model.Weight, model.BodyFatPercentage);
+
+                    // Set other model properties
+                    model.BodyCompositionID = Guid.NewGuid();
+                    model.DateRecorded = DateTime.Now;
+                    model.StudentID = student.StudentID;
+                    model.Student = student;
+
+                    if (model.BMI >= 18.5 && model.BMI <= 24.9)
+                    {
+                        model.Status = "Normal";
+                    }
+                    else if (model.BMI >= 25 && model.BMI <= 29.9)
+                    {
+                        model.Status = "Overweight";
+                    }
+                    else if (model.BMI >= 30)
+                    {
+                        model.Status = "Obese";
+                    }
+                    else if (model.BMI < 18.5)
+                    {
+                        model.Status = "Underweight";
+                    }
+
+
+                    // Add the new composition to the database
+                    db.BodyComposistions.Add(model);
+                    await db.SaveChangesAsync();
+
+                    // Optionally redirect to a confirmation page or the student's profile page
+                    return RedirectToAction("MyBody");
+                }
+            }
+
+            // If we got this far, something failed; redisplay form
+            ViewBag.Student = await db.Students.FindAsync(User.Identity.GetUserId());
+            return View(model);
+        }
+
+
+        public async Task<ActionResult> MyBody()
+        {
+            string id = User.Identity.GetUserId();
+            var latestComposition = await db.BodyComposistions
+                                           .Where(bc => bc.StudentID == id)
+                                           .OrderByDescending(bc => bc.DateRecorded)
+                                           .FirstOrDefaultAsync();
+
+            return View(latestComposition);
+        }
+
+
+
         public ActionResult Create()
         {
             ViewBag.StudentID = new SelectList(db.Students, "StudentID", "StudentFirstName");
             return View();
         }
+
 
         // POST: BodyComposistions/Create
         // To protect from overposting attacks, enable the specific properties you want to bind to, for 

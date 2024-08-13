@@ -782,6 +782,9 @@
     <Content Include="Views\Memberships\RequestConfirmed.cshtml" />
     <Content Include="Views\Memberships\CancelRequests.cshtml" />
     <Content Include="Views\Memberships\AllCancelRequests.cshtml" />
+    <Content Include="Views\Payments\AllGymPayments.cshtml" />
+    <Content Include="Views\BodyComposistions\NewComposition.cshtml" />
+    <Content Include="Views\BodyComposistions\MyBody.cshtml" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include="App_Data\" />
