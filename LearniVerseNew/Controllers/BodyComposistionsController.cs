@@ -116,13 +116,50 @@ namespace LearniVerseNew.Controllers
         public async Task<ActionResult> MyBody()
         {
             string id = User.Identity.GetUserId();
+
+            // Fetch the latest body composition for the current user
             var latestComposition = await db.BodyComposistions
                                            .Where(bc => bc.StudentID == id)
                                            .OrderByDescending(bc => bc.DateRecorded)
                                            .FirstOrDefaultAsync();
 
+            // Fetch weight and date records for the current user
+            var weightRecords = await db.BodyComposistions
+                                        .Where(bc => bc.StudentID == id)
+                                        .OrderBy(bc => bc.DateRecorded)
+                                        .Select(b => b.Weight)
+                                        .ToListAsync();
+
+            var dateRecords = await db.BodyComposistions
+                                       .Where(bc => bc.StudentID == id)
+                                       .OrderBy(bc => bc.DateRecorded)
+                                       .Select(b => b.DateRecorded)
+                                       .ToListAsync();
+
+            var correctDateFormatDates = new List<string>();
+
+            foreach (var date in dateRecords)
+            {
+                correctDateFormatDates.Add(date.ToShortDateString());
+            }
+
+            // Check if there are any records
+            if (weightRecords.Count == 0 || correctDateFormatDates.Count == 0)
+            {
+                ViewBag.WeightRecords = new List<double>(); // Empty list
+                ViewBag.DateRecords = new List<string>();   // Empty list
+            }
+            else
+            {
+                ViewBag.WeightRecords = weightRecords;
+                ViewBag.DateRecords = correctDateFormatDates;
+            }
+
+            // Pass the latest composition to the view, even if it's null
             return View(latestComposition);
         }
+
+
 
 
 
