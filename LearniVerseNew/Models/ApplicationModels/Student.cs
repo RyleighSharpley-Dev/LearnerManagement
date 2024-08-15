@@ -5,6 +5,7 @@ using System.ComponentModel.DataAnnotations;
 using System.Linq;
 using System.Web;
 using LearniVerseNew.Models.ApplicationModels.Gym_Models;
+using LearniVerseNew.Models.ApplicationModels.Meal_Planner_Models;
 
 namespace LearniVerseNew.Models.ApplicationModels
 {
@@ -51,5 +52,6 @@ namespace LearniVerseNew.Models.ApplicationModels
         public virtual ICollection<BodyComposistion> BodyComposistions { get; set; }
         public virtual ICollection<MembershipPayment> MembershipPayments { get; set; }
         public virtual ICollection<SubscriptionCancellationRequest> SubscriptionCancellationRequests { get; set; }
+        public virtual ICollection<FoodRecord> FoodRecords { get; set; }
     }
 }

@@ -3,6 +3,7 @@ using System.Security.Claims;
 using System.Threading.Tasks;
 using LearniVerseNew.Models.ApplicationModels;
 using LearniVerseNew.Models.ApplicationModels.Gym_Models;
+using LearniVerseNew.Models.ApplicationModels.Meal_Planner_Models;
 using Microsoft.AspNet.Identity;
 using Microsoft.AspNet.Identity.EntityFramework;
 
@@ -59,6 +60,11 @@ namespace LearniVerseNew.Models
         public DbSet<Plans> Plans { get; set; }
         public DbSet<MembershipPayment> MembershipPayments { get; set; }
         public DbSet<SubscriptionCancellationRequest> SubscriptionCancellationRequests { get; set; }
+
+        public DbSet<FoodRecord> FoodRecords { get; set; }
+        public DbSet<Meal> Meals { get; set; }
+        public DbSet<FoodItem> FoodItems { get; set; }
+
 
 
         

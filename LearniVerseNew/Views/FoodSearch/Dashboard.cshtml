@@ -1,0 +1,18 @@
+﻿@model LearniVerseNew.Models.ApplicationModels.ViewModels.MealPlannerViewModel
+@{
+    ViewBag.Title = "Dashboard";
+}
+
+<h2>Dashboard</h2>
+
+@if (!Model.FoodRecords.Any())
+{
+    <div class="text-center mt-5">
+        <h1 class="text-lg">No Records Found</h1>
+        <p>@ViewBag.NoRecords</p>
+        <a href="@Url.Action("RecordMeal", "FoodSearch")" class="btn btn-danger">Create New Meal Record</a>
+    </div>
+}
+
+<h1>@Model.TodaysRecord.DateRecorded</h1>
+<h1>@Model.TodaysRecord.FoodRecordID</h1>

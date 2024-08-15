@@ -385,6 +385,7 @@
     <Compile Include="Controllers\CoursesController.cs" />
     <Compile Include="Controllers\EnrollmentsController.cs" />
     <Compile Include="Controllers\FacultiesController.cs" />
+    <Compile Include="Controllers\FoodSearchController.cs" />
     <Compile Include="Controllers\HomeController.cs" />
     <Compile Include="Controllers\ManageController.cs" />
     <Compile Include="Controllers\MembershipsController.cs" />
@@ -518,6 +519,10 @@
     <Compile Include="Migrations\202408131047180_Sub cancel table added.Designer.cs">
       <DependentUpon>202408131047180_Sub cancel table added.cs</DependentUpon>
     </Compile>
+    <Compile Include="Migrations\202408151445014_Added Models for Meal Planner.cs" />
+    <Compile Include="Migrations\202408151445014_Added Models for Meal Planner.Designer.cs">
+      <DependentUpon>202408151445014_Added Models for Meal Planner.cs</DependentUpon>
+    </Compile>
     <Compile Include="Migrations\Configuration.cs" />
     <Compile Include="Models\AccountViewModels.cs" />
     <Compile Include="Models\ApplicationModels\Assignment.cs" />
@@ -530,6 +535,12 @@
     <Compile Include="Models\ApplicationModels\Gym Models\MembershipPayment.cs" />
     <Compile Include="Models\ApplicationModels\Gym Models\Plans.cs" />
     <Compile Include="Models\ApplicationModels\Gym Models\SubscriptionCancellationRequest.cs" />
+    <Compile Include="Models\ApplicationModels\Meal Planner Models\APIResponse.cs" />
+    <Compile Include="Models\ApplicationModels\Meal Planner Models\Food.cs" />
+    <Compile Include="Models\ApplicationModels\Meal Planner Models\FoodItem.cs" />
+    <Compile Include="Models\ApplicationModels\Meal Planner Models\FoodRecord.cs" />
+    <Compile Include="Models\ApplicationModels\Meal Planner Models\Foods.cs" />
+    <Compile Include="Models\ApplicationModels\Meal Planner Models\Meal.cs" />
     <Compile Include="Models\ApplicationModels\NSCSubmission.cs" />
     <Compile Include="Models\ApplicationModels\Payment.cs" />
     <Compile Include="Models\ApplicationModels\Qualification.cs" />
@@ -554,6 +565,7 @@
     <Compile Include="Models\ApplicationModels\ViewModels\CourseViewModel.cs" />
     <Compile Include="Models\ApplicationModels\ViewModels\CreateSubmissionLinkViewModel.cs" />
     <Compile Include="Models\ApplicationModels\ViewModels\EnrolViewModel.cs" />
+    <Compile Include="Models\ApplicationModels\ViewModels\MealPlannerViewModel.cs" />
     <Compile Include="Models\ApplicationModels\ViewModels\ProgressCenterViewModel.cs" />
     <Compile Include="Models\ApplicationModels\ViewModels\ProgressViewModel.cs" />
     <Compile Include="Models\ApplicationModels\ViewModels\QuizViewModel.cs" />
@@ -567,6 +579,7 @@
     <Compile Include="Models\ApplicationModels\ViewModels\WeightingViewModel.cs" />
     <Compile Include="Models\Helpers\BlobHelper.cs" />
     <Compile Include="Models\Helpers\EmailHelper.cs" />
+    <Compile Include="Models\Helpers\FatsecretHelper.cs" />
     <Compile Include="Models\Helpers\PaystackHelper.cs" />
     <Compile Include="Models\Helpers\PdfHelper.cs" />
     <Compile Include="Models\Helpers\QRHelper.cs" />
@@ -785,6 +798,9 @@
     <Content Include="Views\Payments\AllGymPayments.cshtml" />
     <Content Include="Views\BodyComposistions\NewComposition.cshtml" />
     <Content Include="Views\BodyComposistions\MyBody.cshtml" />
+    <Content Include="Views\FoodSearch\Index.cshtml" />
+    <Content Include="Views\FoodSearch\Dashboard.cshtml" />
+    <Content Include="Views\FoodSearch\RecordMeal.cshtml" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include="App_Data\" />
@@ -903,6 +919,9 @@
     </EmbeddedResource>
     <EmbeddedResource Include="Migrations\202408131047180_Sub cancel table added.resx">
       <DependentUpon>202408131047180_Sub cancel table added.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Migrations\202408151445014_Added Models for Meal Planner.resx">
+      <DependentUpon>202408151445014_Added Models for Meal Planner.cs</DependentUpon>
     </EmbeddedResource>
   </ItemGroup>
   <PropertyGroup>
