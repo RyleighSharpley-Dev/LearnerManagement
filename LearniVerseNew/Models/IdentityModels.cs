@@ -2,6 +2,7 @@
 using System.Security.Claims;
 using System.Threading.Tasks;
 using LearniVerseNew.Models.ApplicationModels;
+using LearniVerseNew.Models.ApplicationModels.Gym_Models;
 using Microsoft.AspNet.Identity;
 using Microsoft.AspNet.Identity.EntityFramework;
 
@@ -53,10 +54,14 @@ namespace LearniVerseNew.Models
         public DbSet<Assignment> Assignments { get; set; }
         public DbSet<Submission> Submissions { get; set; }
         public DbSet<StudentFinalMark> StudentFinalMarks { get; set; }
-        
-        
+        public DbSet<Membership> Memberships { get; set; }
+        public DbSet<BodyComposistion> BodyComposistions { get; set; }
+        public DbSet<Plans> Plans { get; set; }
+        public DbSet<MembershipPayment> MembershipPayments { get; set; }
+        public DbSet<SubscriptionCancellationRequest> SubscriptionCancellationRequests { get; set; }
 
 
+        
         protected override void OnModelCreating(DbModelBuilder modelBuilder)
         {
             modelBuilder.Entity<Course>()
@@ -104,6 +109,8 @@ namespace LearniVerseNew.Models
                .HasRequired(s => s.Student) // StudySession requires a Student
                .WithMany(s => s.StudySessions) // Student can have many StudySessions
                .HasForeignKey(s => s.StudentID); // Foreign key constraint
+
+           
 
             base.OnModelCreating(modelBuilder);
         }

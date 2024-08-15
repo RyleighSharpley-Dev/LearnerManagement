@@ -4,6 +4,7 @@ using System.ComponentModel.DataAnnotations.Schema;
 using System.ComponentModel.DataAnnotations;
 using System.Linq;
 using System.Web;
+using LearniVerseNew.Models.ApplicationModels.Gym_Models;
 
 namespace LearniVerseNew.Models.ApplicationModels
 {
@@ -46,5 +47,9 @@ namespace LearniVerseNew.Models.ApplicationModels
         public virtual ICollection<StudySession> StudySessions { get; set; }
 
         public virtual ICollection<StudentFinalMark> StudentFinalMarks { get; set; }
+        public virtual ICollection<Membership> Memberships { get; set; }
+        public virtual ICollection<BodyComposistion> BodyComposistions { get; set; }
+        public virtual ICollection<MembershipPayment> MembershipPayments { get; set; }
+        public virtual ICollection<SubscriptionCancellationRequest> SubscriptionCancellationRequests { get; set; }
     }
 }

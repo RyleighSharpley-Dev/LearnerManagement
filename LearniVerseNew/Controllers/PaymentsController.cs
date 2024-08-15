@@ -71,6 +71,20 @@ namespace LearniVerseNew.Controllers
             return View(payment);
         }
 
+        //Gym
+
+        public ActionResult AllGymPayments(string email)
+        {
+            var GymPayments = db.MembershipPayments.Include(s => s.Student).Include(m => m.Membership);
+
+            if (!string.IsNullOrEmpty(email))
+            {
+                GymPayments = GymPayments.Where(r => r.Student.StudentEmail.Contains(email));
+            }
+
+            return View(GymPayments.ToList());
+        }
+
         // GET: Payments/Create
         public ActionResult Create()
         {

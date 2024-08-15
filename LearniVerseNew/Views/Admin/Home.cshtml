@@ -42,11 +42,42 @@
         </div>
     </div>
 
+    <!-- Gym Features Navigation -->
+    <div class="row">
+        <div class="col-md-4 mb-4">
+            <div class="card shadow-sm">
+                <div class="card-body text-center">
+                    <h3 class="card-title">Gym Members</h3>
+                    <p class="card-text">Manage all gym members.</p>
+                    @Html.ActionLink("View Members", "Index", "Memberships", null, new { @class = "btn btn-primary" })
+                </div>
+            </div>
+        </div>
+
+        <div class="col-md-4 mb-4">
+            <div class="card shadow-sm">
+                <div class="card-body text-center">
+                    <h3 class="card-title">Cancel Requests</h3>
+                    <p class="card-text">Handle membership cancel requests.</p>
+                    @Html.ActionLink("View Cancel Requests", "CancelRequests", "Memberships", null, new { @class = "btn btn-warning" })
+                </div>
+            </div>
+        </div>
+
+        <div class="col-md-4 mb-4">
+            <div class="card shadow-sm">
+                <div class="card-body text-center">
+                    <h3 class="card-title">Gym Payments</h3>
+                    <p class="card-text">Manage all gym payments.</p>
+                    @Html.ActionLink("View Payments", "AllGymPayments", "Payments", null, new { @class = "btn btn-danger" })
+                </div>
+            </div>
+        </div>
+    </div>
+
     <div class="row">
         <div class="border-bottom shadow-sm mb-2">
-            <h1>
-                Revenue Insights
-            </h1>
+            <h1>Revenue Insights</h1>
         </div>
 
         <div class="col-md-8">
@@ -63,49 +94,38 @@
     </div>
 </div>
 
-
-
-
-@section Scripts{
+@section Scripts {
     <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
-    
     <script>
         var payments = @Html.Raw(Model.JsonPayments);
 
         var monthlyTotals = {};
-
-        console.log(payments)
 
         payments.forEach(function (payment) {
             var date = new Date(payment.PaymentDate);
             var monthYear = date.toLocaleString('default', { month: 'short', year: 'numeric' });
             var amount = payment.AmountPaid;
 
-            // If the monthYear key doesn't exist in monthlyTotals, create it and set the total to 0
             if (!monthlyTotals[monthYear]) {
                 monthlyTotals[monthYear] = 0;
             }
 
-            // Add the amount to the total for the corresponding monthYear
             monthlyTotals[monthYear] += amount;
         });
 
-
-        // Extract month labels and total amounts from the monthlyTotals object
         var labels = Object.keys(monthlyTotals);
         var data = Object.values(monthlyTotals);
 
         var ctx = document.getElementById('moneyReceivedChart').getContext('2d');
-
         var moneyReceivedChart = new Chart(ctx, {
-            type: 'bar', // Change the chart type to 'bar'
+            type: 'bar',
             data: {
                 labels: labels,
                 datasets: [{
-                    label: 'Total Revenue', // Update the label
+                    label: 'Total Revenue',
                     data: data,
-                    backgroundColor: 'rgba(75, 192, 192, 0.2)', // Green color
-                    borderColor: 'rgba(75, 192, 192, 1)', // Green color
+                    backgroundColor: 'rgba(75, 192, 192, 0.2)',
+                    borderColor: 'rgba(75, 192, 192, 1)',
                     borderWidth: 1
                 }]
             },
@@ -113,7 +133,6 @@
                 scales: {
                     y: {
                         beginAtZero: true,
-
                         ticks: {
                             stepSize: 1000
                         }
@@ -122,14 +141,10 @@
             }
         });
 
-
         var totalRevenue = data.reduce((acc, val) => acc + val, 0);
-
-        // Calculate the percentage contribution of each month to the total revenue
         var percentages = data.map(amount => (amount / totalRevenue) * 100);
 
         var pieCtx = document.getElementById('percentageChart').getContext('2d');
-
         var percentageChart = new Chart(pieCtx, {
             type: 'pie',
             data: {
@@ -144,7 +159,6 @@
                         'rgba(75, 192, 192, 0.2)',
                         'rgba(153, 102, 255, 0.2)',
                         'rgba(255, 159, 64, 0.2)'
-
                     ],
                     borderColor: [
                         'rgba(255, 99, 132, 1)',
@@ -153,7 +167,6 @@
                         'rgba(75, 192, 192, 1)',
                         'rgba(153, 102, 255, 1)',
                         'rgba(255, 159, 64, 1)'
-
                     ],
                     borderWidth: 1
                 }]
@@ -166,8 +179,5 @@
                 }
             }
         });
-
-
     </script>
-
 }

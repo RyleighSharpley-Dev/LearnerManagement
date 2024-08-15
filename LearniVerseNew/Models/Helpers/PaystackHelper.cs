@@ -35,5 +35,22 @@ namespace LearniVerseNew.Models.Helpers
         {
             return _api.Transactions.Verify(reference);
         }
+
+        //subscriptions
+        public TransactionInitializeResponse InitializeSubscriptionTransaction(string email, string planCode, string callbackUrl)
+        {
+            var request = new TransactionInitializeRequest
+            {
+                Email = email,
+                AmountInKobo = 10, // This amount will be overridden by the plan code
+                Currency = "ZAR",
+                CallbackUrl = callbackUrl,
+                Plan = planCode // Pass the plan code to subscribe the customer
+            };
+
+            return _api.Transactions.Initialize(request);
+        }
+
+
     }
 }
