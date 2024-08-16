@@ -3,6 +3,7 @@ using LearniVerseNew.Models.ApplicationModels.Meal_Planner_Models;
 using LearniVerseNew.Models.ApplicationModels.ViewModels;
 using LearniVerseNew.Models.Helpers;
 using Microsoft.AspNet.Identity;
+using Newtonsoft.Json;
 using System;
 using System.Collections.Generic;
 using System.Data.Entity;
@@ -123,6 +124,96 @@ namespace LearniVerseNew.Controllers
 
 
         }
+
+        [HttpPost]
+        public async Task<ActionResult> SaveMeal(List<MealDTO> meals)
+        {
+            DateTime today = DateTime.Today;
+
+            var mealData = meals;
+
+            if (meals == null || !meals.Any())
+            {
+                return Json(new { success = false, message = "No data received" });
+            }
+            // Loop through each meal data
+            foreach (var mealDto in mealData)
+            {
+                // Check if FoodRecord exists or create a new one
+                var foodRecord = db.FoodRecords.Include(fr => fr.Meals)
+                                                .FirstOrDefault(fr => fr.DateRecorded == today && fr.StudentID == mealDto.StudentID);
+
+                if (foodRecord == null)
+                {
+                    foodRecord = new FoodRecord
+                    {
+                        FoodRecordID = Guid.NewGuid(),
+                        DateRecorded = DateTime.Now,
+                        StudentID = mealDto.StudentID,
+                        Student = await db.Students.FindAsync(mealDto.StudentID),
+                        Meals = new List<Meal>()
+                    };
+                    db.FoodRecords.Add(foodRecord);
+                }
+
+                // Check if the meal already exists or create a new one
+                var existingMeal = foodRecord.Meals.FirstOrDefault(m => m.Name == mealDto.MealName);
+                if (existingMeal == null)
+                {
+                    existingMeal = new Meal
+                    {
+                        MealID = Guid.NewGuid(),
+                        Name = mealDto.MealName,
+                        FoodRecordID = foodRecord.FoodRecordID,
+                        FoodItems = new List<FoodItem>()
+                    };
+                    foodRecord.Meals.Add(existingMeal);
+                }
+
+                // Add or update food items
+                foreach (var foodItemDto in mealDto.Foods)
+                {
+                    var existingFoodItem = existingMeal.FoodItems.FirstOrDefault(f => f.FoodName == foodItemDto.FoodName &&
+                                                                                     f.ServingSize == foodItemDto.ServingSize);
+
+                    if (existingFoodItem == null)
+                    {
+                        existingFoodItem = new FoodItem
+                        {
+                            FoodItemID = Guid.NewGuid(), // Generate new ID for new food items
+                            FoodName = foodItemDto.FoodName,
+                            ServingSize = foodItemDto.ServingSize,
+                            ServingWeightInGrams = foodItemDto.ServingWeightInGrams,
+                            CaloriesPerServing = foodItemDto.Calories,
+                            Protein = foodItemDto.Protein,
+                            Carbohydrates = foodItemDto.Carbs,
+                            Fats = foodItemDto.Fat,
+                            TotalCalories = (foodItemDto.Calories * foodItemDto.ServingSize / 100)
+                        };
+                        existingMeal.FoodItems.Add(existingFoodItem);
+                    }
+                    else
+                    {
+                        // Update existing food item
+                        existingFoodItem.ServingSize = foodItemDto.ServingSize;
+                        existingFoodItem.ServingWeightInGrams = foodItemDto.ServingWeightInGrams;
+                        existingFoodItem.CaloriesPerServing = foodItemDto.Calories;
+                        existingFoodItem.Protein = foodItemDto.Protein;
+                        existingFoodItem.Carbohydrates = foodItemDto.Carbs;
+                        existingFoodItem.Fats = foodItemDto.Fat;
+                        existingFoodItem.TotalCalories = (foodItemDto.Calories * foodItemDto.ServingSize / 100);
+                    }
+                }
+            }
+
+            // Save changes to the database
+            await db.SaveChangesAsync();
+
+            // Return a success response
+            return Json(new { success = true });
+        }
+
+
 
     }
 }

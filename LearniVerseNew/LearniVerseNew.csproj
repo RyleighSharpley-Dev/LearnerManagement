@@ -538,9 +538,11 @@
     <Compile Include="Models\ApplicationModels\Meal Planner Models\APIResponse.cs" />
     <Compile Include="Models\ApplicationModels\Meal Planner Models\Food.cs" />
     <Compile Include="Models\ApplicationModels\Meal Planner Models\FoodItem.cs" />
+    <Compile Include="Models\ApplicationModels\Meal Planner Models\FoodItemDTO.cs" />
     <Compile Include="Models\ApplicationModels\Meal Planner Models\FoodRecord.cs" />
     <Compile Include="Models\ApplicationModels\Meal Planner Models\Foods.cs" />
     <Compile Include="Models\ApplicationModels\Meal Planner Models\Meal.cs" />
+    <Compile Include="Models\ApplicationModels\Meal Planner Models\MealDTO.cs" />
     <Compile Include="Models\ApplicationModels\NSCSubmission.cs" />
     <Compile Include="Models\ApplicationModels\Payment.cs" />
     <Compile Include="Models\ApplicationModels\Qualification.cs" />
