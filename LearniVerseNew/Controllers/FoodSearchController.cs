@@ -59,6 +59,8 @@ namespace LearniVerseNew.Controllers
             string Id = User.Identity.GetUserId();
             var student = await db.Students.FindAsync(Id);
 
+            DateTime today = DateTime.Today;
+
             var foodRecords = db.FoodRecords.Where(fr => fr.StudentID == Id);
 
 
@@ -67,8 +69,27 @@ namespace LearniVerseNew.Controllers
                 ViewBag.NoRecords = "Hmm... Looks like you have not recorded any meals. You must be starving! Lets Record a Meal...";
             }
 
-            var todaysRecord = await foodRecords.OrderByDescending(s => s.DateRecorded).FirstAsync();
+            var todaysRecord = await foodRecords
+                                       .Where(fr => fr.StudentID == Id && fr.DateRecorded == today)
+                                       .FirstOrDefaultAsync();
 
+            if (todaysRecord == null)
+            {
+                var newRecord = new FoodRecord
+                {
+                    FoodRecordID = Guid.NewGuid(),
+                    DateRecorded = DateTime.Today,
+                    StudentID = Id,
+                    Student = student,
+                    Meals = new List<Meal>()
+                };
+
+                db.FoodRecords.Add(newRecord);
+
+                await db.SaveChangesAsync();
+
+                todaysRecord = newRecord;
+            }
 
             if (student == null) 
             {

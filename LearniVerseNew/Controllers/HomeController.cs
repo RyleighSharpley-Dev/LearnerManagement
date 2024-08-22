@@ -24,15 +24,47 @@ namespace LearniVerseNew.Controllers
 
             var student = db.Students.Include(st => st.Memberships).FirstOrDefault(s => s.StudentID == id);
 
-            var membership = student.Memberships.OrderByDescending(s => s.MembershipStart).First();
+            var membership = student?.Memberships
+                           .OrderByDescending(s => s.MembershipStart)
+                           .FirstOrDefault();
 
             if (membership != null && membership.IsActive) 
             {
-               return RedirectToAction("MyBody", "BodyComposistions");
+               return RedirectToAction("MembershipHome");
             }                                     
 
             return View();
         }
+
+        public ActionResult MembershipHome()
+        {
+            string id = User.Identity.GetUserId();
+
+            var student = db.Students.Include(st => st.Memberships)
+                                     .Include(bd => bd.BodyComposistions)
+                                     .Include(fr => fr.FoodRecords)
+                                     .FirstOrDefault(s => s.StudentID == id);
+
+            var membership = student.Memberships.OrderByDescending(s => s.MembershipStart).First();
+            var todaysFood = student.FoodRecords.OrderByDescending(s => s.DateRecorded).First();
+            var latestBody = student.BodyComposistions.OrderByDescending(s => s.DateRecorded).First();
+
+            ViewBag.Student = student;
+            ViewBag.Membership = membership;
+            ViewBag.TodaysFood = todaysFood;
+            ViewBag.LatestBody = latestBody;
+
+            double totalCalories = 0;
+            if (todaysFood != null)
+            {
+                totalCalories = todaysFood.Meals.Sum(m => m.FoodItems.Sum(f => f.CaloriesPerServing));
+            }
+
+            ViewBag.TotalCalories = totalCalories;
+
+            return View();
+        }
+
 
         public ActionResult About()
         {
