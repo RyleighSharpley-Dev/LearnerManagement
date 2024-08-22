@@ -29,6 +29,8 @@ namespace LearniVerseNew.Controllers
             return View(memberships.ToList());
         }
 
+
+
         public ActionResult MyMemberships()
         {
              string id = User.Identity.GetUserId();
