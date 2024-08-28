@@ -36,18 +36,18 @@ namespace LearniVerseNew.Controllers
             return View();
         }
 
-        public ActionResult MembershipHome()
+        public async Task<ActionResult> MembershipHome()
         {
             string id = User.Identity.GetUserId();
 
-            var student = db.Students.Include(st => st.Memberships)
+            var student = await db.Students.Include(st => st.Memberships)
                                      .Include(bd => bd.BodyComposistions)
                                      .Include(fr => fr.FoodRecords)
-                                     .FirstOrDefault(s => s.StudentID == id);
+                                     .FirstOrDefaultAsync(s => s.StudentID == id);
 
-            var membership = student.Memberships.OrderByDescending(s => s.MembershipStart).First();
-            var todaysFood = student.FoodRecords.OrderByDescending(s => s.DateRecorded).First();
-            var latestBody = student.BodyComposistions.OrderByDescending(s => s.DateRecorded).First();
+            var membership =  student.Memberships.OrderByDescending(s => s.MembershipStart).FirstOrDefault();
+            var todaysFood =  student.FoodRecords.OrderByDescending(s => s.DateRecorded).FirstOrDefault();
+            var latestBody =  student.BodyComposistions.OrderByDescending(s => s.DateRecorded).FirstOrDefault();
 
             ViewBag.Student = student;
             ViewBag.Membership = membership;

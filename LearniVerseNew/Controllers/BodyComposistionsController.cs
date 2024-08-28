@@ -112,7 +112,6 @@ namespace LearniVerseNew.Controllers
             return View(model);
         }
 
-
         public async Task<ActionResult> MyBody()
         {
             string id = User.Identity.GetUserId();
