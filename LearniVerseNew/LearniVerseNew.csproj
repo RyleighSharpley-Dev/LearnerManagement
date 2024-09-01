@@ -554,6 +554,7 @@
     <Compile Include="Models\ApplicationModels\Quiz.cs" />
     <Compile Include="Models\ApplicationModels\QuizAttempt.cs" />
     <Compile Include="Models\ApplicationModels\Regimen Models\Exercise.cs" />
+    <Compile Include="Models\ApplicationModels\Regimen Models\ExerciseResponse.cs" />
     <Compile Include="Models\ApplicationModels\Regimen Models\Regimen.cs" />
     <Compile Include="Models\ApplicationModels\Regimen Models\Workout.cs" />
     <Compile Include="Models\ApplicationModels\Resource.cs" />
@@ -588,6 +589,7 @@
     <Compile Include="Models\ApplicationModels\ViewModels\WeightingViewModel.cs" />
     <Compile Include="Models\Helpers\BlobHelper.cs" />
     <Compile Include="Models\Helpers\EmailHelper.cs" />
+    <Compile Include="Models\Helpers\ExerciseHelper.cs" />
     <Compile Include="Models\Helpers\FatsecretHelper.cs" />
     <Compile Include="Models\Helpers\PaystackHelper.cs" />
     <Compile Include="Models\Helpers\PdfHelper.cs" />
