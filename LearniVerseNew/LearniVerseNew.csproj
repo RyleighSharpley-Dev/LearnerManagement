@@ -804,6 +804,7 @@
     <Content Include="Views\FoodSearch\Dashboard.cshtml" />
     <Content Include="Views\FoodSearch\RecordMeal.cshtml" />
     <Content Include="Views\Home\MembershipHome.cshtml" />
+    <Content Include="Views\BodyComposistions\NoBodyCompositions.cshtml" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include="App_Data\" />

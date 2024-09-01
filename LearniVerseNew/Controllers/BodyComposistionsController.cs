@@ -112,17 +112,18 @@ namespace LearniVerseNew.Controllers
             return View(model);
         }
 
+
         public async Task<ActionResult> MyBody()
         {
             string id = User.Identity.GetUserId();
 
-            // Fetch the latest body composition for the current user
+            // Get the latest body composition for the current user
             var latestComposition = await db.BodyComposistions
                                            .Where(bc => bc.StudentID == id)
                                            .OrderByDescending(bc => bc.DateRecorded)
                                            .FirstOrDefaultAsync();
 
-            // Fetch weight and date records for the current user
+            // Get weight and date records for the current user
             var weightRecords = await db.BodyComposistions
                                         .Where(bc => bc.StudentID == id)
                                         .OrderBy(bc => bc.DateRecorded)
@@ -154,12 +155,23 @@ namespace LearniVerseNew.Controllers
                 ViewBag.DateRecords = correctDateFormatDates;
             }
 
-            // Pass the latest composition to the view, even if it's null
-            return View(latestComposition);
+            //Check if latestComposition is not null and return the record
+            if(latestComposition != null)
+            {
+                return View(latestComposition);
+            }
+
+            //if latest composition is null redirect user to create a record 
+
+            return RedirectToAction("NoBodyCompositions");
+
         }
 
 
-
+        public ActionResult NoBodyCompositions()
+        {
+            return View();
+        }
 
 
         public ActionResult Create()

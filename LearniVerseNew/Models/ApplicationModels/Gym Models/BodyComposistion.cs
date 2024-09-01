@@ -55,7 +55,7 @@ namespace LearniVerseNew.Models.ApplicationModels.Gym_Models
             }
             else
             {
-                BodyFatPercentage = Convert.ToInt32((1.20 * BMI) + (0.23 * age) - 5.4);
+                BodyFatPercentage = Convert.ToInt32((1.20 * bmi) + (0.23 * age) - 5.4);
                 return BodyFatPercentage;
             }
         }
