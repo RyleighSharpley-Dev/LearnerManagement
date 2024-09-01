@@ -1,0 +1,197 @@
+﻿using LearniVerseNew.Models;
+using LearniVerseNew.Models.ApplicationModels.Regimen_Models;
+using LearniVerseNew.Models.Helpers.Regimen_Models;
+using Microsoft.AspNet.Identity;
+using System;
+using System.Collections.Generic;
+using System.Data.Entity;
+using System.Linq;
+using System.Net.Http;
+using System.Threading.Tasks;
+using System.Web;
+using System.Web.Mvc;
+
+namespace LearniVerseNew.Controllers
+{
+    public class WorkoutsController : Controller
+    {
+        private ApplicationDbContext db = new ApplicationDbContext();
+        private readonly ExerciseHelper _exerciseHelper;
+
+        public WorkoutsController()
+        {
+            
+            var client = new HttpClient();
+            _exerciseHelper = new ExerciseHelper(client);
+        }
+
+        public ActionResult CreateRegimen()
+        {
+           return View();
+        }
+
+        [HttpPost]
+        [ValidateAntiForgeryToken]
+        public async Task<ActionResult> CreateRegimen(Regimen model)
+        {
+            string Id = User.Identity.GetUserId();
+
+            var student = await db.Students.FindAsync(Id);
+
+            if (student == null)
+            {
+                return View("Error");
+            }
+
+            if (ModelState.IsValid)
+            {
+                model.RegimenID = Guid.NewGuid();
+                model.DateCreated = DateTime.Now.Date;
+                model.StudentID = Id;
+                model.Student = student;
+                model.Workouts = new List <Workout>();
+                db.Regimens.Add(model);
+
+                await db.SaveChangesAsync();
+
+                return View("WorkoutDashboard");
+            }
+
+            return View(model);
+            
+        }
+
+
+        public async Task<ActionResult> CreateWorkout() 
+        {
+            string Id = User.Identity?.GetUserId();
+
+            var student = await db.Students.FindAsync(Id);
+
+            if (student == null)
+            {
+                return HttpNotFound();
+            }
+
+
+            var regimens = await db.Regimens
+                           .Where(fr => fr.StudentID == Id)
+                           .ToListAsync();
+
+
+            if (regimens.Count  == 0) 
+            {
+                ViewBag.Message = "You haven't created a Workout Regimen yet...";
+                return View("NoRegimen");
+            }
+
+            var latestRegimen = regimens.OrderByDescending(lr => lr.DateCreated).FirstOrDefault();
+
+            
+            return View(latestRegimen); 
+        }
+
+        [HttpPost]
+        public async Task<ActionResult> SaveWorkout(WorkoutDTO workoutDTO)
+        {
+            string Id = User.Identity.GetUserId();
+
+            if (workoutDTO == null || workoutDTO.Exercises == null || !workoutDTO.Exercises.Any())
+            {
+                return Json(new { success = false, message = "No data received" });
+            }
+
+            var student = await db.Students.Include(s => s.Regimens).FirstOrDefaultAsync(r => r.StudentID == Id);
+
+            if (student == null)
+            {
+                return Json(new { success = false, message = "Student not found" });
+            }
+
+            var regimen = student.Regimens.OrderByDescending(s => s.DateCreated).FirstOrDefault();
+           
+
+            
+                var workoutRecord = new Workout
+                {
+                    WorkoutID = Guid.NewGuid(),
+                    Name = workoutDTO.Name,
+                    DayOfWeek = workoutDTO.DayOfWeek,
+                    RegimenID = regimen.RegimenID,
+                    Regimen = regimen,
+                    TimesTrained = 0, //Add API
+                    Excercises = new List<Exercise>()
+                };
+
+                db.Workouts.Add(workoutRecord);
+            
+
+            foreach (var exerciseDTO in workoutDTO.Exercises)
+            {
+                var existingExercise = workoutRecord.Excercises
+                    .FirstOrDefault(e => e.Name == exerciseDTO.Name);
+
+                if (existingExercise == null)
+                {
+                    existingExercise = new Exercise
+                    {
+                        ExceciseID = Guid.NewGuid() , // assuming ExerciseID is provided by client
+                        Name = exerciseDTO.Name,
+                        WorkoutID = workoutRecord.WorkoutID,
+                        Workout = workoutRecord,
+                        Instructions = exerciseDTO.Instructions,
+                        Difficulty = exerciseDTO.Difficulty,
+                        Reps = exerciseDTO.Reps,
+                        Sets = exerciseDTO.Sets,
+                        TargetMuscle = exerciseDTO.Muscle,
+                        Equipment = exerciseDTO.Equipment
+                    };
+                    workoutRecord.Excercises.Add(existingExercise);
+                }
+                else
+                {
+                    // Update existing exercise
+                    existingExercise.Name = exerciseDTO.Name;
+                    existingExercise.Reps = exerciseDTO.Reps;
+                    existingExercise.Sets = exerciseDTO.Sets;
+                }
+            }
+
+            // Save changes to the database
+            await db.SaveChangesAsync();
+
+            // Return a success response
+            return Json(new { success = true });
+        }
+
+        [HttpPost]
+        public async Task<ActionResult> Search(string query)
+        {
+            if (string.IsNullOrWhiteSpace(query))
+            {
+                return Json(new { success = false, message = "Query cannot be empty." });
+            }
+
+            try
+            {
+                var exercises = await _exerciseHelper.FindExercisesAsync(query);
+
+                if (exercises != null && exercises.Count > 0)
+                {
+                    
+                    return Json(new { success = true, data = new { Exercises = exercises } });
+                }
+                else
+                {
+                    return Json(new { success = false, message = "No exercises found." });
+                }
+            }
+            catch (System.Exception ex)
+            {
+                return Json(new { success = false, message = $"Error: {ex.Message}" });
+            }
+        }
+
+
+    }
+}

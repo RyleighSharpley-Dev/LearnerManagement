@@ -400,6 +400,7 @@
     <Compile Include="Controllers\TaskItemsController.cs" />
     <Compile Include="Controllers\TeachersController.cs" />
     <Compile Include="Controllers\TimeSlotsController.cs" />
+    <Compile Include="Controllers\WorkoutsController.cs" />
     <Compile Include="Global.asax.cs">
       <DependentUpon>Global.asax</DependentUpon>
     </Compile>
@@ -527,6 +528,26 @@
     <Compile Include="Migrations\202409011456517_Added Models for Workout Planner.Designer.cs">
       <DependentUpon>202409011456517_Added Models for Workout Planner.cs</DependentUpon>
     </Compile>
+    <Compile Include="Migrations\202409011556239_Random Fix.cs" />
+    <Compile Include="Migrations\202409011556239_Random Fix.Designer.cs">
+      <DependentUpon>202409011556239_Random Fix.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Migrations\202409011602400_Added AttendanceGoal .cs" />
+    <Compile Include="Migrations\202409011602400_Added AttendanceGoal .Designer.cs">
+      <DependentUpon>202409011602400_Added AttendanceGoal .cs</DependentUpon>
+    </Compile>
+    <Compile Include="Migrations\202409011617586_Added Date Created .cs" />
+    <Compile Include="Migrations\202409011617586_Added Date Created .Designer.cs">
+      <DependentUpon>202409011617586_Added Date Created .cs</DependentUpon>
+    </Compile>
+    <Compile Include="Migrations\202409011748028_Sets and Reps Added.cs" />
+    <Compile Include="Migrations\202409011748028_Sets and Reps Added.Designer.cs">
+      <DependentUpon>202409011748028_Sets and Reps Added.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Migrations\202409011806206_Times Trained.cs" />
+    <Compile Include="Migrations\202409011806206_Times Trained.Designer.cs">
+      <DependentUpon>202409011806206_Times Trained.cs</DependentUpon>
+    </Compile>
     <Compile Include="Migrations\Configuration.cs" />
     <Compile Include="Models\AccountViewModels.cs" />
     <Compile Include="Models\ApplicationModels\Assignment.cs" />
@@ -554,9 +575,11 @@
     <Compile Include="Models\ApplicationModels\Quiz.cs" />
     <Compile Include="Models\ApplicationModels\QuizAttempt.cs" />
     <Compile Include="Models\ApplicationModels\Regimen Models\Exercise.cs" />
+    <Compile Include="Models\ApplicationModels\Regimen Models\ExerciseDTO.cs" />
     <Compile Include="Models\ApplicationModels\Regimen Models\ExerciseResponse.cs" />
     <Compile Include="Models\ApplicationModels\Regimen Models\Regimen.cs" />
     <Compile Include="Models\ApplicationModels\Regimen Models\Workout.cs" />
+    <Compile Include="Models\ApplicationModels\Regimen Models\WorkoutDTO.cs" />
     <Compile Include="Models\ApplicationModels\Resource.cs" />
     <Compile Include="Models\ApplicationModels\Room.cs" />
     <Compile Include="Models\ApplicationModels\Student.cs" />
@@ -814,6 +837,10 @@
     <Content Include="Views\FoodSearch\RecordMeal.cshtml" />
     <Content Include="Views\Home\MembershipHome.cshtml" />
     <Content Include="Views\BodyComposistions\NoBodyCompositions.cshtml" />
+    <Content Include="Views\Workouts\CreateRegimen.cshtml" />
+    <Content Include="Views\Workouts\WorkoutDashboard.cshtml" />
+    <Content Include="Views\Workouts\NoRegimen.cshtml" />
+    <Content Include="Views\Workouts\CreateWorkout.cshtml" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include="App_Data\" />
@@ -938,6 +965,21 @@
     </EmbeddedResource>
     <EmbeddedResource Include="Migrations\202409011456517_Added Models for Workout Planner.resx">
       <DependentUpon>202409011456517_Added Models for Workout Planner.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Migrations\202409011556239_Random Fix.resx">
+      <DependentUpon>202409011556239_Random Fix.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Migrations\202409011602400_Added AttendanceGoal .resx">
+      <DependentUpon>202409011602400_Added AttendanceGoal .cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Migrations\202409011617586_Added Date Created .resx">
+      <DependentUpon>202409011617586_Added Date Created .cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Migrations\202409011748028_Sets and Reps Added.resx">
+      <DependentUpon>202409011748028_Sets and Reps Added.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Migrations\202409011806206_Times Trained.resx">
+      <DependentUpon>202409011806206_Times Trained.cs</DependentUpon>
     </EmbeddedResource>
   </ItemGroup>
   <PropertyGroup>

@@ -38,7 +38,10 @@ namespace LearniVerseNew.Models.Helpers.Regimen_Models
         {
             var requestUri = GenerateRequestUri(keyword);
 
-            var response = await _client.GetAsync(requestUri);
+            var request = new HttpRequestMessage(HttpMethod.Get, requestUri);
+            request.Headers.Add("X-Api-Key", _secret); 
+
+            var response = await _client.SendAsync(request);
 
             if (response.IsSuccessStatusCode)
             {
@@ -50,9 +53,8 @@ namespace LearniVerseNew.Models.Helpers.Regimen_Models
             }
 
             throw new Exception("Error occurred while searching for exercises.");
-
         }
-        
+
 
 
     }
