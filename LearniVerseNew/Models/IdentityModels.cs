@@ -4,6 +4,7 @@ using System.Threading.Tasks;
 using LearniVerseNew.Models.ApplicationModels;
 using LearniVerseNew.Models.ApplicationModels.Gym_Models;
 using LearniVerseNew.Models.ApplicationModels.Meal_Planner_Models;
+using LearniVerseNew.Models.ApplicationModels.Regimen_Models;
 using Microsoft.AspNet.Identity;
 using Microsoft.AspNet.Identity.EntityFramework;
 
@@ -64,10 +65,13 @@ namespace LearniVerseNew.Models
         public DbSet<FoodRecord> FoodRecords { get; set; }
         public DbSet<Meal> Meals { get; set; }
         public DbSet<FoodItem> FoodItems { get; set; }
+        public DbSet<Exercise> Exercises { get; set; }
+        public DbSet<Workout> Workouts { get; set; }
+        public DbSet<Regimen> Regimens { get; set; }
 
 
 
-        
+
         protected override void OnModelCreating(DbModelBuilder modelBuilder)
         {
             modelBuilder.Entity<Course>()

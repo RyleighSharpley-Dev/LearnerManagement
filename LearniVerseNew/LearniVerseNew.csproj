@@ -523,6 +523,10 @@
     <Compile Include="Migrations\202408151445014_Added Models for Meal Planner.Designer.cs">
       <DependentUpon>202408151445014_Added Models for Meal Planner.cs</DependentUpon>
     </Compile>
+    <Compile Include="Migrations\202409011456517_Added Models for Workout Planner.cs" />
+    <Compile Include="Migrations\202409011456517_Added Models for Workout Planner.Designer.cs">
+      <DependentUpon>202409011456517_Added Models for Workout Planner.cs</DependentUpon>
+    </Compile>
     <Compile Include="Migrations\Configuration.cs" />
     <Compile Include="Models\AccountViewModels.cs" />
     <Compile Include="Models\ApplicationModels\Assignment.cs" />
@@ -549,6 +553,9 @@
     <Compile Include="Models\ApplicationModels\Question.cs" />
     <Compile Include="Models\ApplicationModels\Quiz.cs" />
     <Compile Include="Models\ApplicationModels\QuizAttempt.cs" />
+    <Compile Include="Models\ApplicationModels\Regimen Models\Exercise.cs" />
+    <Compile Include="Models\ApplicationModels\Regimen Models\Regimen.cs" />
+    <Compile Include="Models\ApplicationModels\Regimen Models\Workout.cs" />
     <Compile Include="Models\ApplicationModels\Resource.cs" />
     <Compile Include="Models\ApplicationModels\Room.cs" />
     <Compile Include="Models\ApplicationModels\Student.cs" />
@@ -926,6 +933,9 @@
     </EmbeddedResource>
     <EmbeddedResource Include="Migrations\202408151445014_Added Models for Meal Planner.resx">
       <DependentUpon>202408151445014_Added Models for Meal Planner.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Migrations\202409011456517_Added Models for Workout Planner.resx">
+      <DependentUpon>202409011456517_Added Models for Workout Planner.cs</DependentUpon>
     </EmbeddedResource>
   </ItemGroup>
   <PropertyGroup>
