@@ -165,6 +165,11 @@
     <Reference Include="PayStack.Net, Version=1.1.1.0, Culture=neutral, processorArchitecture=MSIL">
       <HintPath>..\packages\Paystack.Net.1.1.1\lib\netstandard2.0\PayStack.Net.dll</HintPath>
     </Reference>
+    <Reference Include="PresentationCore" />
+    <Reference Include="PresentationFramework" />
+    <Reference Include="QRCoder, Version=1.6.0.0, Culture=neutral, PublicKeyToken=c4ed5b9ae8358a28, processorArchitecture=MSIL">
+      <HintPath>..\packages\QRCoder.1.6.0\lib\net40\QRCoder.dll</HintPath>
+    </Reference>
     <Reference Include="QuestPDF, Version=2024.3.2.0, Culture=neutral, processorArchitecture=MSIL">
       <HintPath>..\packages\QuestPDF.2024.3.2\lib\netstandard2.0\QuestPDF.dll</HintPath>
     </Reference>
@@ -841,6 +846,8 @@
     <Content Include="Views\Workouts\WorkoutDashboard.cshtml" />
     <Content Include="Views\Workouts\NoRegimen.cshtml" />
     <Content Include="Views\Workouts\CreateWorkout.cshtml" />
+    <Content Include="Views\Workouts\AttendanceRecorded.cshtml" />
+    <Content Include="Views\Workouts\ViewWorkout.cshtml" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include="App_Data\" />

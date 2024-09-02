@@ -2,9 +2,12 @@
 using LearniVerseNew.Models.ApplicationModels.Regimen_Models;
 using LearniVerseNew.Models.Helpers.Regimen_Models;
 using Microsoft.AspNet.Identity;
+using QRCoder;
 using System;
 using System.Collections.Generic;
 using System.Data.Entity;
+using System.Drawing;
+using System.IO;
 using System.Linq;
 using System.Net.Http;
 using System.Threading.Tasks;
@@ -23,6 +26,45 @@ namespace LearniVerseNew.Controllers
             
             var client = new HttpClient();
             _exerciseHelper = new ExerciseHelper(client);
+        }
+
+        public async Task<ActionResult> WorkoutDashboard()
+        {
+            string studentId = User.Identity.GetUserId();
+
+            // Fetch the student
+            var student = await db.Students.FindAsync(studentId);
+
+            if (student == null)
+            {
+                return View("Error");
+            }
+
+            // Fetch the latest regimen for the student
+            var regimen = await db.Regimens
+                .Where(r => r.StudentID == studentId)
+                .OrderByDescending(r => r.DateCreated)
+                .FirstOrDefaultAsync();
+
+            if (regimen != null)
+            {
+                // Fetch workouts associated with the latest regimen
+                var workouts = await db.Workouts
+                    .Include(w => w.Excercises)
+                    .Where(w => w.RegimenID == regimen.RegimenID)
+                    .ToListAsync();
+
+                // Pass data to the view using ViewBag
+                ViewBag.Student = student;
+                ViewBag.Regimen = regimen;
+                ViewBag.Workouts = workouts;
+
+                return View();
+            }
+
+            // If no regimen is found, still return the view with an appropriate message or empty data
+            ViewBag.Message = "No regimen found.";
+            return View();
         }
 
         public ActionResult CreateRegimen()
@@ -192,6 +234,85 @@ namespace LearniVerseNew.Controllers
             }
         }
 
+        public ActionResult GenerateAttendanceQRCode(string studentId, Guid workoutId)
+        {
+            // Create the URL for the TrackAttendance action
+            string qrData = Url.Action("TrackAttendance", "Workouts", new { studentId = studentId, workoutId = workoutId }, protocol: Request.Url.Scheme);
 
+            //For Testing Purposes Only
+            //string qrData = $"https://f84d-41-144-0-11.ngrok-free.app/Workouts/TrackAttendance?studentId={studentId}&workoutId={workoutId}";
+
+            using (QRCodeGenerator qrGenerator = new QRCodeGenerator())
+            {
+                QRCodeData qrCodeData = qrGenerator.CreateQrCode(qrData, QRCodeGenerator.ECCLevel.Q);
+                using (QRCode qrCode = new QRCode(qrCodeData))
+                {
+                    using (Bitmap qrCodeImage = qrCode.GetGraphic(20))
+                    {
+                        // Convert Bitmap to a byte array
+                        using (MemoryStream ms = new MemoryStream())
+                        {
+                            qrCodeImage.Save(ms, System.Drawing.Imaging.ImageFormat.Png);
+                            return File(ms.ToArray(), "image/png");
+                        }
+                    }
+                }
+            }
+        }
+
+        public async Task<ActionResult> TrackAttendance(string studentId, Guid WorkoutId)
+        {
+            //Find student and load their regimens
+            var student = await db.Students.Include(s => s.Regimens).FirstOrDefaultAsync(s => s.StudentID == studentId);
+
+            if (student == null) 
+            {
+                return View("Error");
+            }
+
+            //find the latest regimen
+            var regimen = student.Regimens.OrderByDescending(d => d.DateCreated).FirstOrDefault();
+
+            //Get the specific workout that the student scanned
+            var workout = regimen.Workouts.Where(w => w.WorkoutID == WorkoutId).FirstOrDefault();
+
+            if(workout == null)
+            {
+                ViewBag.Error = "Workout Not Found.";
+                return View("Error");
+            }
+
+            workout.TimesTrained++;
+
+            await db.SaveChangesAsync();
+
+            return RedirectToAction("AttendanceRecorded", workout);
+
+        }
+
+        public ActionResult AttendanceRecorded(Workout model)
+        {
+            
+            return View(model);
+        }
+
+
+        public async Task<ActionResult> ViewWorkout(Guid id)
+        {
+
+            var workout = await db.Workouts
+                         .Include(r => r.Regimen)
+                         .Include(w => w.Excercises)  
+                         .FirstOrDefaultAsync(w => w.WorkoutID == id);
+
+            if (workout == null)
+            {
+                return HttpNotFound();
+            }
+
+            ViewBag.StudentId = User.Identity.GetUserId();
+
+            return View(workout);
+        }
     }
 }
