@@ -96,7 +96,7 @@ namespace LearniVerseNew.Controllers
 
                 await db.SaveChangesAsync();
 
-                return View("WorkoutDashboard");
+                return RedirectToAction("WorkoutDashboard");
             }
 
             return View(model);

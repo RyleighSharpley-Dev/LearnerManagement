@@ -53,8 +53,8 @@ namespace LearniVerseNew.Controllers
                                     .OrderByDescending(fr => fr.DateRecorded)
                                     .FirstOrDefault();
             var latestBody =  student.BodyComposistions.OrderByDescending(s => s.DateRecorded).FirstOrDefault();
-            var regimen = student.Regimens.OrderByDescending(s => s.DateCreated).FirstOrDefault();
-            var todaysWorkout = regimen.Workouts.Where(w => w.DayOfWeek == DateTime.Today.DayOfWeek).FirstOrDefault();
+            var regimen = student?.Regimens.OrderByDescending(s => s.DateCreated).FirstOrDefault();
+            var todaysWorkout = regimen?.Workouts.Where(w => w.DayOfWeek == DateTime.Today.DayOfWeek).FirstOrDefault();
             var exercises = new List<Exercise>();
             
             if(todaysWorkout != null)
@@ -71,7 +71,8 @@ namespace LearniVerseNew.Controllers
             ViewBag.TodaysFood = todaysFood;
             ViewBag.LatestBody = latestBody;
             ViewBag.TodaysWorkout = todaysWorkout;
-
+            ViewBag.Regimen = regimen;
+            
             double totalCalories = 0;
             if (todaysFood != null)
             {

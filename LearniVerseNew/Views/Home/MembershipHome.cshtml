@@ -52,10 +52,22 @@
                             }
                         </ul>
                     }
+                    else if (ViewBag.Regimen == null)
+                    {
+                        <p>Looks like you haven't made a Regimen.</p>
+                        <a href="@Url.Action("CreateRegimen", "Workouts")" class="btn btn-primary btn-sm">Get Started</a>
+
+                    }
+                    else if (ViewBag.Regimen != null && ViewBag.Regimen.Workouts.Count == 0)
+                    {
+                        <p>Looks like you have no Workouts in your Regimen....</p>
+                        <a href="@Url.Action("CreateWorkout", "Workouts")" class="btn btn-primary btn-sm">Add Workout</a>
+                    }
                     else
                     {
                         <p><strong>Today is a rest day!</strong></p>
                         <p>Rest days are important for muscle recovery and growth. Taking time off can help prevent injury and improve overall fitness by allowing your muscles to repair and strengthen.</p>
+                        <a href="@Url.Action("WorkoutDashboard", "Workouts")" class="btn btn-primary btn-sm">View Workouts</a>
                     }
                 </div>
             </div>
