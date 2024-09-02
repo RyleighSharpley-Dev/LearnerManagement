@@ -42,6 +42,7 @@ namespace LearniVerseNew.Controllers
             string id = User.Identity.GetUserId();
 
             var student = await db.Students.Include(st => st.Memberships)
+                                     .Include(wg => wg.WorkoutGoals)
                                      .Include(bd => bd.BodyComposistions)
                                      .Include(fr => fr.FoodRecords)
                                      .Include(r => r.Regimens)
@@ -56,8 +57,9 @@ namespace LearniVerseNew.Controllers
             var regimen = student?.Regimens.OrderByDescending(s => s.DateCreated).FirstOrDefault();
             var todaysWorkout = regimen?.Workouts.Where(w => w.DayOfWeek == DateTime.Today.DayOfWeek).FirstOrDefault();
             var exercises = new List<Exercise>();
-            
-            if(todaysWorkout != null)
+            var workoutGoals = student?.WorkoutGoals;
+
+            if (todaysWorkout != null)
             {
                 exercises = db.Exercises
                   .Where(e => e.WorkoutID == todaysWorkout.WorkoutID)
@@ -72,7 +74,8 @@ namespace LearniVerseNew.Controllers
             ViewBag.LatestBody = latestBody;
             ViewBag.TodaysWorkout = todaysWorkout;
             ViewBag.Regimen = regimen;
-            
+            ViewBag.WorkoutGoals = workoutGoals;
+
             double totalCalories = 0;
             if (todaysFood != null)
             {

@@ -68,6 +68,7 @@ namespace LearniVerseNew.Models
         public DbSet<Exercise> Exercises { get; set; }
         public DbSet<Workout> Workouts { get; set; }
         public DbSet<Regimen> Regimens { get; set; }
+        public DbSet<WorkoutGoal> WorkoutGoals { get; set; }
 
 
 

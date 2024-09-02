@@ -7,6 +7,7 @@ using System.Net.Mail;
 using System.Net;
 using System.Web;
 using LearniVerseNew.Models.ApplicationModels;
+using System.Threading.Tasks;
 
 namespace LearniVerseNew.Models.Helpers
 {
@@ -128,6 +129,28 @@ namespace LearniVerseNew.Models.Helpers
                     smtpClient.Send(msg);
                 }
             }
+        }
+
+        public async Task SendGoalCompletionEmailAsync(string recipientEmail, string goalName)
+        {
+            await Task.Run(() =>
+            {
+                using (MailMessage msg = new MailMessage())
+                {
+                    msg.From = new MailAddress(_smtpUsername);
+                    msg.To.Add("ryleighsharpley62@gmail.com");
+                    msg.Subject = "Congratulations on Completing Your Workout Goal!";
+                    msg.Body = $"Dear Student,<br><br>Congratulations! You have successfully completed your workout goal: <strong>{goalName}</strong>.<br><br>Keep up the great work and stay committed to your fitness journey!<br><br>Best regards,<br>LearniVerse";
+                    msg.IsBodyHtml = true;
+
+                    using (SmtpClient smtpClient = new SmtpClient(_smtpServer, _smtpPort))
+                    {
+                        smtpClient.Credentials = new NetworkCredential(_smtpUsername, _smtpPassword);
+                        smtpClient.EnableSsl = true;
+                        smtpClient.Send(msg);
+                    }
+                }
+            });
         }
     }
 }

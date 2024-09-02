@@ -16,5 +16,6 @@ namespace LearniVerseNew.Models.ApplicationModels.Regimen_Models
         //Navigation
         public virtual Regimen Regimen { get; set; }
         public virtual ICollection<Exercise> Excercises { get; set; }
+        public virtual ICollection<WorkoutGoal> WorkoutGoals { get; set; }
     }
 }

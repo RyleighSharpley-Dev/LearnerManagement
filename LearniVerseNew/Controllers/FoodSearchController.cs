@@ -73,6 +73,9 @@ namespace LearniVerseNew.Controllers
                                        .Where(fr => fr.StudentID == Id && fr.DateRecorded == today)
                                        .FirstOrDefaultAsync();
 
+            var bodycomp = db.BodyComposistions.OrderByDescending(fr => fr.DateRecorded).Where(r => r.StudentID == "1").FirstOrDefault();
+           
+
             if (todaysRecord == null)
             {
                 var newRecord = new FoodRecord
@@ -100,6 +103,13 @@ namespace LearniVerseNew.Controllers
             model.FoodRecords = foodRecords.ToList();
             model.TodaysRecord = todaysRecord;
 
+            if(bodycomp == null)
+            {
+                model.BMR = 0;
+                return View(model);
+            }
+
+            model.BMR = bodycomp.BMR;
             return View(model);
         }
 

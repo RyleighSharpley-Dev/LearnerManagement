@@ -1,5 +1,6 @@
 ﻿using LearniVerseNew.Models;
 using LearniVerseNew.Models.ApplicationModels.Regimen_Models;
+using LearniVerseNew.Models.Helpers;
 using LearniVerseNew.Models.Helpers.Regimen_Models;
 using Microsoft.AspNet.Identity;
 using QRCoder;
@@ -46,6 +47,8 @@ namespace LearniVerseNew.Controllers
                 .OrderByDescending(r => r.DateCreated)
                 .FirstOrDefaultAsync();
 
+            var workoutGoals = await db.WorkoutGoals.Where(wg => wg.StudentID == studentId && wg.IsCompleted == false).ToListAsync();
+
             if (regimen != null)
             {
                 // Fetch workouts associated with the latest regimen
@@ -58,6 +61,7 @@ namespace LearniVerseNew.Controllers
                 ViewBag.Student = student;
                 ViewBag.Regimen = regimen;
                 ViewBag.Workouts = workouts;
+                ViewBag.WorkoutGoals = workoutGoals;
 
                 return View();
             }
@@ -314,5 +318,178 @@ namespace LearniVerseNew.Controllers
 
             return View(workout);
         }
+
+
+        [HttpGet]
+        public async Task<ActionResult> NewGoal()
+        {
+            string studentId = User.Identity.GetUserId();
+
+            var student = await db.Students.FindAsync(studentId);
+            if (student == null)
+            {
+                return View("Error");
+            }
+
+            var regimen = await db.Regimens
+                .Where(r => r.StudentID == studentId)
+                .OrderByDescending(r => r.DateCreated)
+                .FirstOrDefaultAsync();
+
+            if (regimen != null)
+            {
+                var workouts = await db.Workouts
+                    .Where(w => w.RegimenID == regimen.RegimenID)
+                    .ToListAsync();
+
+                ViewBag.Student = student;
+                ViewBag.Workouts = new SelectList(workouts, "WorkoutID", "Name");
+
+                return View();
+            }
+
+            ViewBag.Message = "No regimen found.";
+            return View();
+        }
+
+
+        [HttpPost]
+        [ValidateAntiForgeryToken]
+        public async Task<ActionResult> NewGoal(WorkoutGoal model)
+        {
+
+            if (ModelState.IsValid)
+            {
+                var Student = await db.Students.FindAsync(model.StudentID);
+                var Wrkout = await db.Workouts.FindAsync(model.WorkoutID);
+
+                var workoutGoal = new WorkoutGoal
+                {
+                    GoalID = Guid.NewGuid(),
+                    GoalName = model.GoalName,
+                    GoalDescription = model.GoalDescription,
+                    GoalCount = model.GoalCount,
+                    DateCreated = DateTime.Now.Date,
+                    IsCompleted = false,
+                    StudentID = model.StudentID,
+                    Student = Student,
+                    WorkoutID = model.WorkoutID,
+                    Workout = Wrkout
+                };
+
+                db.WorkoutGoals.Add(workoutGoal);
+                await db.SaveChangesAsync();
+
+                return RedirectToAction("WorkoutDashboard");
+            }
+
+            // If we get here, something went wrong. Re-fetch the necessary data.
+            var student = await db.Students.FindAsync(model.StudentID);
+
+            if (student == null)
+            {
+                return View("Error");
+            }
+
+            var regimen = await db.Regimens
+                .Where(r => r.StudentID == model.StudentID)
+                .OrderByDescending(r => r.DateCreated)
+                .FirstOrDefaultAsync();
+
+            if (regimen != null)
+            {
+                var workouts = await db.Workouts
+                    .Where(w => w.RegimenID == regimen.RegimenID)
+                    .ToListAsync();
+
+                // Repopulate ViewBag with necessary data for the view
+                ViewBag.Student = student;
+                ViewBag.Regimen = regimen;
+                ViewBag.Workouts = workouts;
+
+                // Return the view with the current model to show validation errors
+                return View(model);
+            }
+
+            // Handle the case where no regimen is found
+            ViewBag.Message = "No regimen found.";
+            return View(model);
+        }
+
+        [HttpPost]
+        public async Task<ActionResult> MarkGoalCompleted(Guid goalId)
+        {
+            try
+            {
+                EmailHelper helper = new EmailHelper();
+                string studentId = User.Identity.GetUserId();
+
+                var student = await db.Students.FindAsync(studentId);
+
+                // Fetch the goal
+                var goal = await db.WorkoutGoals.FindAsync(goalId);
+
+                if (goal == null || goal.StudentID != studentId)
+                {
+                    return HttpNotFound();
+                }
+
+                // Update the goal status
+                goal.IsCompleted = true;
+                db.Entry(goal).State = EntityState.Modified;
+                await db.SaveChangesAsync();
+
+                // Send email notification
+                await helper.SendGoalCompletionEmailAsync(student.StudentEmail, goal.GoalName);
+
+                // Return JSON response for AJAX
+                return Json(new { success = true });
+            }
+            catch (Exception ex)
+            {
+              
+                // Return JSON response with error
+                return Json(new { success = false, message = ex.Message });
+            }
+        }
+
+        public async Task<ActionResult> ViewAllGoals()
+        {
+            string studentId = User.Identity.GetUserId();
+
+            // Fetch the goals for the student
+            var goals = await db.WorkoutGoals
+                .Where(g => g.StudentID == studentId)
+                .ToListAsync();
+
+            if (goals == null || !goals.Any())
+            {
+                ViewBag.Message = "No goals found.";
+            }
+
+            return View(goals);
+        }
+
+        [HttpPost]
+        public async Task<ActionResult> DeleteGoal(Guid goalId)
+        {
+            string studentId = User.Identity.GetUserId();
+
+            // Fetch the goal
+            var goal = await db.WorkoutGoals.FindAsync(goalId);
+
+            if (goal == null || goal.StudentID != studentId)
+            {
+                return HttpNotFound();
+            }
+
+            // Remove the goal from the database
+            db.WorkoutGoals.Remove(goal);
+            await db.SaveChangesAsync();
+
+            // Redirect to the view all goals page or another appropriate page
+            return RedirectToAction("ViewAllGoals");
+        }
+
     }
 }

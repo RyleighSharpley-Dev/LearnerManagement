@@ -553,6 +553,10 @@
     <Compile Include="Migrations\202409011806206_Times Trained.Designer.cs">
       <DependentUpon>202409011806206_Times Trained.cs</DependentUpon>
     </Compile>
+    <Compile Include="Migrations\202409022142558_Added Workout Goal Table.cs" />
+    <Compile Include="Migrations\202409022142558_Added Workout Goal Table.Designer.cs">
+      <DependentUpon>202409022142558_Added Workout Goal Table.cs</DependentUpon>
+    </Compile>
     <Compile Include="Migrations\Configuration.cs" />
     <Compile Include="Models\AccountViewModels.cs" />
     <Compile Include="Models\ApplicationModels\Assignment.cs" />
@@ -585,6 +589,7 @@
     <Compile Include="Models\ApplicationModels\Regimen Models\Regimen.cs" />
     <Compile Include="Models\ApplicationModels\Regimen Models\Workout.cs" />
     <Compile Include="Models\ApplicationModels\Regimen Models\WorkoutDTO.cs" />
+    <Compile Include="Models\ApplicationModels\Regimen Models\WorkoutGoal.cs" />
     <Compile Include="Models\ApplicationModels\Resource.cs" />
     <Compile Include="Models\ApplicationModels\Room.cs" />
     <Compile Include="Models\ApplicationModels\Student.cs" />
@@ -848,6 +853,8 @@
     <Content Include="Views\Workouts\CreateWorkout.cshtml" />
     <Content Include="Views\Workouts\AttendanceRecorded.cshtml" />
     <Content Include="Views\Workouts\ViewWorkout.cshtml" />
+    <Content Include="Views\Workouts\NewGoal.cshtml" />
+    <Content Include="Views\Workouts\ViewAllGoals.cshtml" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include="App_Data\" />
@@ -987,6 +994,9 @@
     </EmbeddedResource>
     <EmbeddedResource Include="Migrations\202409011806206_Times Trained.resx">
       <DependentUpon>202409011806206_Times Trained.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Migrations\202409022142558_Added Workout Goal Table.resx">
+      <DependentUpon>202409022142558_Added Workout Goal Table.cs</DependentUpon>
     </EmbeddedResource>
   </ItemGroup>
   <PropertyGroup>
