@@ -6,22 +6,20 @@ using System.Web;
 
 namespace LearniVerseNew.Models.ApplicationModels.Regimen_Models
 {
-    public class Regimen
+    public class WorkoutGoal
     {
         [Key]
-        public Guid RegimenID { get; set; }
-
-        [Required]
-        public string Name { get; set; }
-
-        [Required]
-        public int AttendanceGoal { get; set; }
-
+        public Guid GoalID { get; set; }
+        public string GoalName { get; set; }
+        public string GoalDescription { get; set; }
+        public int GoalCount { get; set; }
         public DateTime DateCreated { get; set; }
-        public string StudentID { get; set; }
+        public bool IsCompleted { get; set; }
 
-        //Navigation
+        public string StudentID { get; set; }
+        public Guid WorkoutID { get; set; }
+
         public virtual Student Student { get; set; }
-        public virtual ICollection<Workout> Workouts { get; set; }
+        public virtual Workout Workout { get; set; }
     }
 }

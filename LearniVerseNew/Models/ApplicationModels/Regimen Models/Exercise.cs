@@ -16,6 +16,9 @@ namespace LearniVerseNew.Models.ApplicationModels.Regimen_Models
         public string Difficulty { get; set; }
         public string Instructions { get; set; }
 
+        public int Sets { get; set; }
+        public int Reps { get; set; }
+
         public Guid WorkoutID { get; set; }
         public virtual Workout Workout { get; set; }
     }

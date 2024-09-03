@@ -56,5 +56,7 @@ namespace LearniVerseNew.Models.ApplicationModels
         public virtual ICollection<FoodRecord> FoodRecords { get; set; }
 
         public virtual ICollection<Regimen> Regimens { get; set; }
+
+        public virtual ICollection<WorkoutGoal> WorkoutGoals { get; set; }
     }
 }

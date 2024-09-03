@@ -73,6 +73,9 @@ namespace LearniVerseNew.Controllers
                                        .Where(fr => fr.StudentID == Id && fr.DateRecorded == today)
                                        .FirstOrDefaultAsync();
 
+            var bodycomp = db.BodyComposistions.OrderByDescending(fr => fr.DateRecorded).Where(r => r.StudentID == Id).FirstOrDefault();
+           
+
             if (todaysRecord == null)
             {
                 var newRecord = new FoodRecord
@@ -100,6 +103,34 @@ namespace LearniVerseNew.Controllers
             model.FoodRecords = foodRecords.ToList();
             model.TodaysRecord = todaysRecord;
 
+            if(bodycomp == null)
+            {
+                model.BMR = 0;
+                return View(model);
+            }
+
+            switch (bodycomp.Status)
+            {
+                case "Normal":
+                    model.BMR = Math.Round(bodycomp.BMR * 1.375);
+                    break;
+
+                case "UnderWeight":
+                    model.BMR = Math.Round(bodycomp.BMR * 1.55);
+                    break;
+
+                case "OverWeight":
+                    model.BMR = Math.Round(bodycomp.BMR * 1.2);
+                    break;
+                case "Obese":
+                    model.BMR = Math.Round(bodycomp.BMR * 1.2);
+                    break;
+                default:
+                    model.BMR = Math.Round(bodycomp.BMR);
+                    break;
+            }
+
+            
             return View(model);
         }
 

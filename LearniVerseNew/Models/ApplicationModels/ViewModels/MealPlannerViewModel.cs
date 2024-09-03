@@ -11,6 +11,8 @@ namespace LearniVerseNew.Models.ApplicationModels.ViewModels
         public Student Student { get; set; }
         public FoodRecord TodaysRecord { get; set; }
         public List<FoodRecord> FoodRecords { get; set; }
-        
+
+        public double BMR { get; set; }
+
     }
 }
