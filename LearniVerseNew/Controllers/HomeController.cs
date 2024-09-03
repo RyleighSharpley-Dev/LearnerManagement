@@ -48,12 +48,17 @@ namespace LearniVerseNew.Controllers
                                      .Include(r => r.Regimens)
                                      .FirstOrDefaultAsync(s => s.StudentID == id);
 
-            var membership =  student.Memberships.OrderByDescending(s => s.MembershipStart).FirstOrDefault();
-            var todaysFood = student.FoodRecords
+            var membership =  student?.Memberships.OrderByDescending(s => s.MembershipStart).FirstOrDefault();
+
+            if(membership == null || membership.IsActive == false)
+            {
+                return RedirectToAction("Gainz", "Home");
+            }
+            var todaysFood = student?.FoodRecords
                                     .Where(fr => fr.DateRecorded == DateTime.Today)
                                     .OrderByDescending(fr => fr.DateRecorded)
                                     .FirstOrDefault();
-            var latestBody =  student.BodyComposistions.OrderByDescending(s => s.DateRecorded).FirstOrDefault();
+            var latestBody =  student?.BodyComposistions.OrderByDescending(s => s.DateRecorded).FirstOrDefault();
             var regimen = student?.Regimens.OrderByDescending(s => s.DateCreated).FirstOrDefault();
             var todaysWorkout = regimen?.Workouts.Where(w => w.DayOfWeek == DateTime.Today.DayOfWeek).FirstOrDefault();
             var exercises = new List<Exercise>();
