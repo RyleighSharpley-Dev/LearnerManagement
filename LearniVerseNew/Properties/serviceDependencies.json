@@ -11,6 +11,10 @@
     "storage1": {
       "type": "storage",
       "connectionId": "BlobLocal"
+    },
+    "mssql2": {
+      "type": "mssql",
+      "connectionId": "ConnectionStrings:LearniverseDeploymentString"
     }
   }
 }

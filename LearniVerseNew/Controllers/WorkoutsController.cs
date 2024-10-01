@@ -241,10 +241,10 @@ namespace LearniVerseNew.Controllers
         public ActionResult GenerateAttendanceQRCode(string studentId, Guid workoutId)
         {
             // Create the URL for the TrackAttendance action
-            //string qrData = Url.Action("TrackAttendance", "Workouts", new { studentId = studentId, workoutId = workoutId }, protocol: Request.Url.Scheme);
+            string qrData = Url.Action("TrackAttendance", "Workouts", new { studentId = studentId, workoutId = workoutId }, protocol: Request.Url.Scheme);
 
             //For Testing Purposes Only
-            string qrData = $"https://e10b-41-144-64-121.ngrok-free.app/Workouts/TrackAttendance?studentId={studentId}&workoutId={workoutId}"; //change this
+            //string qrData = $"https://learniverse.azurewebsites.net/Workouts/TrackAttendance?studentId={studentId}&workoutId={workoutId}"; //change this
 
             using (QRCodeGenerator qrGenerator = new QRCodeGenerator())
             {

@@ -109,6 +109,8 @@ namespace LearniVerseNew.Controllers
 
             // If we got this far, something failed; redisplay form
             ViewBag.Student = await db.Students.FindAsync(User.Identity.GetUserId());
+
+            
             return View(model);
         }
 

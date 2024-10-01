@@ -43,7 +43,7 @@
             // Replace periods with commas in input fields
             $("input").on("input", function () {
                 var value = $(this).val();
-                value = value.replace('.', ',');
+                value = value.replace(',', '.');
                 $(this).val(value);
             });
         });

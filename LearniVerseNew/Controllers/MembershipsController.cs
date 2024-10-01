@@ -55,7 +55,7 @@ namespace LearniVerseNew.Controllers
         [ValidateAntiForgeryToken]
         public ActionResult Subscribe(string email, string planName)
         {
-            string callbackUrl = "https://e10b-41-144-64-121.ngrok-free.app/Memberships/SubscriptionCallBack"; //chamge in Prod
+            string callbackUrl = "https://learniverse.azurewebsites.net/Memberships/SubscriptionCallBack"; //chamge in Prod
 
             var student = db.Students.FirstOrDefault(s => s.StudentEmail == email);
             if (student == null)
