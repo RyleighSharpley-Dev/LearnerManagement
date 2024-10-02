@@ -7,6 +7,7 @@ using System.Web;
 using LearniVerseNew.Models.ApplicationModels.Gym_Models;
 using LearniVerseNew.Models.ApplicationModels.Meal_Planner_Models;
 using LearniVerseNew.Models.ApplicationModels.Regimen_Models;
+using LearniVerseNew.Models.ApplicationModels.Store_Models;
 
 namespace LearniVerseNew.Models.ApplicationModels
 {
@@ -58,5 +59,7 @@ namespace LearniVerseNew.Models.ApplicationModels
         public virtual ICollection<Regimen> Regimens { get; set; }
 
         public virtual ICollection<WorkoutGoal> WorkoutGoals { get; set; }
+
+        public virtual ICollection<Order> Orders { get; set; }
     }
 }

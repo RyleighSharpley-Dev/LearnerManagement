@@ -592,6 +592,9 @@
     <Compile Include="Models\ApplicationModels\Regimen Models\WorkoutGoal.cs" />
     <Compile Include="Models\ApplicationModels\Resource.cs" />
     <Compile Include="Models\ApplicationModels\Room.cs" />
+    <Compile Include="Models\ApplicationModels\Store Models\Order.cs" />
+    <Compile Include="Models\ApplicationModels\Store Models\OrderItem.cs" />
+    <Compile Include="Models\ApplicationModels\Store Models\Product.cs" />
     <Compile Include="Models\ApplicationModels\Student.cs" />
     <Compile Include="Models\ApplicationModels\StudentFinalMark.cs" />
     <Compile Include="Models\ApplicationModels\Submission.cs" />
