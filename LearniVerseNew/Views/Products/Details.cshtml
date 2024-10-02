@@ -1,0 +1,30 @@
+﻿@model LearniVerseNew.Models.ApplicationModels.Store_Models.Product
+
+@{
+    ViewBag.Title = "Product Details";
+}
+
+<h2>Product Details</h2>
+
+<div>
+    <h4>@Model.ProductName</h4>
+    <hr />
+    <p><strong>Price:</strong> @Model.Price.ToString("C")</p>
+    <p><strong>Description:</strong> @Model.Description</p>
+    <p><strong>Quantity in Stock:</strong> @Model.QuantityInStock</p>
+
+    <!-- Display the product image -->
+    @if (!string.IsNullOrEmpty(ViewBag.PhotoData))
+    {
+        <img src="data:image/png;base64,@ViewBag.PhotoData" class="img-thumbnail" alt="Product Image" style="max-height: 300px;" />
+    }
+    else
+    {
+        <img src="@ViewBag.DefaultPhotoPath" class="img-thumbnail" alt="Default Photo" style="max-height: 300px;" />
+    }
+</div>
+
+<div>
+    @Html.ActionLink("Edit", "Edit", new { id = Model.ProductID }, new { @class = "btn btn-primary" })
+    @Html.ActionLink("Back to List", "Index", null, new { @class = "btn btn-secondary" })
+</div>

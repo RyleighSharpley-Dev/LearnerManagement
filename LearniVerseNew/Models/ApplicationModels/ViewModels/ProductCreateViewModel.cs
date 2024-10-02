@@ -1,17 +1,14 @@
-﻿using System;
+﻿using LearniVerseNew.Models.ApplicationModels.Store_Models;
+using System;
 using System.Collections.Generic;
-using System.ComponentModel.DataAnnotations;
 using System.Linq;
 using System.Web;
+using System.Web.Mvc;
 
-namespace LearniVerseNew.Models.ApplicationModels.Store_Models
+namespace LearniVerseNew.Models.ApplicationModels.ViewModels
 {
-    public class Product
+    public class ProductCreateViewModel
     {
-        [Key]
-        public Guid ProductID { get; set; }
-
-        [Required]
         public string ProductName { get; set; }
 
         public decimal Price { get; set; }
@@ -22,10 +19,8 @@ namespace LearniVerseNew.Models.ApplicationModels.Store_Models
 
         public string ImageName { get; set; }
 
+        public HttpPostedFileBase ImageFile { get; set; }
         public Guid CategoryID { get; set; }
-
-        // Navigation property for the Category
-        public virtual Category Category { get; set; }
 
     }
 }

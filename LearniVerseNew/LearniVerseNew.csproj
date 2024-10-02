@@ -53,17 +53,17 @@
     <Reference Include="Azure.Identity, Version=1.12.0.0, Culture=neutral, PublicKeyToken=92742159e12e44c8, processorArchitecture=MSIL">
       <HintPath>..\packages\Azure.Identity.1.12.0\lib\netstandard2.0\Azure.Identity.dll</HintPath>
     </Reference>
-    <Reference Include="Azure.Storage.Blobs, Version=12.19.1.0, Culture=neutral, PublicKeyToken=92742159e12e44c8, processorArchitecture=MSIL">
-      <HintPath>..\packages\Azure.Storage.Blobs.12.19.1\lib\netstandard2.0\Azure.Storage.Blobs.dll</HintPath>
+    <Reference Include="Azure.Storage.Blobs, Version=12.20.0.0, Culture=neutral, PublicKeyToken=92742159e12e44c8, processorArchitecture=MSIL">
+      <HintPath>..\packages\Azure.Storage.Blobs.12.20.0\lib\netstandard2.0\Azure.Storage.Blobs.dll</HintPath>
     </Reference>
-    <Reference Include="Azure.Storage.Common, Version=12.18.1.0, Culture=neutral, PublicKeyToken=92742159e12e44c8, processorArchitecture=MSIL">
-      <HintPath>..\packages\Azure.Storage.Common.12.18.1\lib\netstandard2.0\Azure.Storage.Common.dll</HintPath>
+    <Reference Include="Azure.Storage.Common, Version=12.19.0.0, Culture=neutral, PublicKeyToken=92742159e12e44c8, processorArchitecture=MSIL">
+      <HintPath>..\packages\Azure.Storage.Common.12.19.0\lib\netstandard2.0\Azure.Storage.Common.dll</HintPath>
     </Reference>
-    <Reference Include="Azure.Storage.Files.Shares, Version=12.0.1.0, Culture=neutral, PublicKeyToken=92742159e12e44c8, processorArchitecture=MSIL">
-      <HintPath>..\packages\Azure.Storage.Files.Shares.12.0.1\lib\netstandard2.0\Azure.Storage.Files.Shares.dll</HintPath>
+    <Reference Include="Azure.Storage.Files.Shares, Version=12.18.0.0, Culture=neutral, PublicKeyToken=92742159e12e44c8, processorArchitecture=MSIL">
+      <HintPath>..\packages\Azure.Storage.Files.Shares.12.18.0\lib\netstandard2.0\Azure.Storage.Files.Shares.dll</HintPath>
     </Reference>
-    <Reference Include="Azure.Storage.Queues, Version=12.11.1.0, Culture=neutral, PublicKeyToken=92742159e12e44c8, processorArchitecture=MSIL">
-      <HintPath>..\packages\Azure.Storage.Queues.12.11.1\lib\netstandard2.0\Azure.Storage.Queues.dll</HintPath>
+    <Reference Include="Azure.Storage.Queues, Version=12.18.0.0, Culture=neutral, PublicKeyToken=92742159e12e44c8, processorArchitecture=MSIL">
+      <HintPath>..\packages\Azure.Storage.Queues.12.18.0\lib\netstandard2.0\Azure.Storage.Queues.dll</HintPath>
     </Reference>
     <Reference Include="BitMiracle.LibTiff.NET, Version=2.4.649.0, Culture=neutral, PublicKeyToken=53879b3e20e7a7d6, processorArchitecture=MSIL">
       <HintPath>..\packages\BitMiracle.LibTiff.NET.2.4.649\lib\net40\BitMiracle.LibTiff.NET.dll</HintPath>
@@ -108,8 +108,8 @@
       <HintPath>..\packages\Microsoft.Configuration.ConfigurationBuilders.UserSecrets.2.0.0\lib\Net471\Microsoft.Configuration.ConfigurationBuilders.UserSecrets.dll</HintPath>
     </Reference>
     <Reference Include="Microsoft.CSharp" />
-    <Reference Include="Microsoft.Extensions.Azure, Version=1.5.0.0, Culture=neutral, PublicKeyToken=92742159e12e44c8, processorArchitecture=MSIL">
-      <HintPath>..\packages\Microsoft.Extensions.Azure.1.5.0\lib\netstandard2.0\Microsoft.Extensions.Azure.dll</HintPath>
+    <Reference Include="Microsoft.Extensions.Azure, Version=1.7.3.0, Culture=neutral, PublicKeyToken=92742159e12e44c8, processorArchitecture=MSIL">
+      <HintPath>..\packages\Microsoft.Extensions.Azure.1.7.3\lib\netstandard2.0\Microsoft.Extensions.Azure.dll</HintPath>
     </Reference>
     <Reference Include="Microsoft.Extensions.Configuration, Version=6.0.0.0, Culture=neutral, PublicKeyToken=adb9793829ddae60, processorArchitecture=MSIL">
       <HintPath>..\packages\Microsoft.Extensions.Configuration.6.0.0\lib\net461\Microsoft.Extensions.Configuration.dll</HintPath>
@@ -387,6 +387,7 @@
     <Compile Include="Controllers\AssignmentsController.cs" />
     <Compile Include="Controllers\BodyComposistionsController.cs" />
     <Compile Include="Controllers\BookingsController.cs" />
+    <Compile Include="Controllers\CategoriesController.cs" />
     <Compile Include="Controllers\CoursesController.cs" />
     <Compile Include="Controllers\EnrollmentsController.cs" />
     <Compile Include="Controllers\FacultiesController.cs" />
@@ -396,6 +397,7 @@
     <Compile Include="Controllers\MembershipsController.cs" />
     <Compile Include="Controllers\PaymentsController.cs" />
     <Compile Include="Controllers\PlansController.cs" />
+    <Compile Include="Controllers\ProductsController.cs" />
     <Compile Include="Controllers\QualificationsController.cs" />
     <Compile Include="Controllers\QuizController.cs" />
     <Compile Include="Controllers\ResourcesController.cs" />
@@ -557,6 +559,18 @@
     <Compile Include="Migrations\202409022142558_Added Workout Goal Table.Designer.cs">
       <DependentUpon>202409022142558_Added Workout Goal Table.cs</DependentUpon>
     </Compile>
+    <Compile Include="Migrations\202410021114001_AddOnlineStoreTables.cs" />
+    <Compile Include="Migrations\202410021114001_AddOnlineStoreTables.Designer.cs">
+      <DependentUpon>202410021114001_AddOnlineStoreTables.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Migrations\202410021116218_AddImageNameToProductTable.cs" />
+    <Compile Include="Migrations\202410021116218_AddImageNameToProductTable.Designer.cs">
+      <DependentUpon>202410021116218_AddImageNameToProductTable.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Migrations\202410021240425_AddedCategoryTable.cs" />
+    <Compile Include="Migrations\202410021240425_AddedCategoryTable.Designer.cs">
+      <DependentUpon>202410021240425_AddedCategoryTable.cs</DependentUpon>
+    </Compile>
     <Compile Include="Migrations\Configuration.cs" />
     <Compile Include="Models\AccountViewModels.cs" />
     <Compile Include="Models\ApplicationModels\Assignment.cs" />
@@ -592,6 +606,7 @@
     <Compile Include="Models\ApplicationModels\Regimen Models\WorkoutGoal.cs" />
     <Compile Include="Models\ApplicationModels\Resource.cs" />
     <Compile Include="Models\ApplicationModels\Room.cs" />
+    <Compile Include="Models\ApplicationModels\Store Models\Category.cs" />
     <Compile Include="Models\ApplicationModels\Store Models\Order.cs" />
     <Compile Include="Models\ApplicationModels\Store Models\OrderItem.cs" />
     <Compile Include="Models\ApplicationModels\Store Models\Product.cs" />
@@ -612,6 +627,7 @@
     <Compile Include="Models\ApplicationModels\ViewModels\CreateSubmissionLinkViewModel.cs" />
     <Compile Include="Models\ApplicationModels\ViewModels\EnrolViewModel.cs" />
     <Compile Include="Models\ApplicationModels\ViewModels\MealPlannerViewModel.cs" />
+    <Compile Include="Models\ApplicationModels\ViewModels\ProductCreateViewModel.cs" />
     <Compile Include="Models\ApplicationModels\ViewModels\ProgressCenterViewModel.cs" />
     <Compile Include="Models\ApplicationModels\ViewModels\ProgressViewModel.cs" />
     <Compile Include="Models\ApplicationModels\ViewModels\QuizViewModel.cs" />
@@ -656,6 +672,7 @@
     <Content Include="favicon.ico" />
     <Content Include="Global.asax" />
     <Content Include="Content\Site.css" />
+    <Content Include="images\default.jpg" />
     <Content Include="images\Learniverse.png" />
     <Content Include="Scripts\bootstrap.bundle.js" />
     <Content Include="Scripts\bootstrap.bundle.min.js" />
@@ -858,6 +875,16 @@
     <Content Include="Views\Workouts\ViewWorkout.cshtml" />
     <Content Include="Views\Workouts\NewGoal.cshtml" />
     <Content Include="Views\Workouts\ViewAllGoals.cshtml" />
+    <Content Include="Views\Products\AddProduct.cshtml" />
+    <Content Include="Views\Products\Delete.cshtml" />
+    <Content Include="Views\Products\Details.cshtml" />
+    <Content Include="Views\Products\Edit.cshtml" />
+    <Content Include="Views\Products\Index.cshtml" />
+    <Content Include="Views\Categories\Create.cshtml" />
+    <Content Include="Views\Categories\Delete.cshtml" />
+    <Content Include="Views\Categories\Details.cshtml" />
+    <Content Include="Views\Categories\Edit.cshtml" />
+    <Content Include="Views\Categories\Index.cshtml" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include="App_Data\" />
@@ -1000,6 +1027,15 @@
     </EmbeddedResource>
     <EmbeddedResource Include="Migrations\202409022142558_Added Workout Goal Table.resx">
       <DependentUpon>202409022142558_Added Workout Goal Table.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Migrations\202410021114001_AddOnlineStoreTables.resx">
+      <DependentUpon>202410021114001_AddOnlineStoreTables.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Migrations\202410021116218_AddImageNameToProductTable.resx">
+      <DependentUpon>202410021116218_AddImageNameToProductTable.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Migrations\202410021240425_AddedCategoryTable.resx">
+      <DependentUpon>202410021240425_AddedCategoryTable.cs</DependentUpon>
     </EmbeddedResource>
   </ItemGroup>
   <PropertyGroup>
