@@ -22,6 +22,8 @@ namespace LearniVerseNew.Models.ApplicationModels.Store_Models
 
         public string ImageName { get; set; }
 
+        public string ImageUrl { get; set; }
+
         public Guid CategoryID { get; set; }
 
         // Navigation property for the Category

@@ -571,6 +571,10 @@
     <Compile Include="Migrations\202410021240425_AddedCategoryTable.Designer.cs">
       <DependentUpon>202410021240425_AddedCategoryTable.cs</DependentUpon>
     </Compile>
+    <Compile Include="Migrations\202410041329228_ImageURLaddedtoproducts.cs" />
+    <Compile Include="Migrations\202410041329228_ImageURLaddedtoproducts.Designer.cs">
+      <DependentUpon>202410041329228_ImageURLaddedtoproducts.cs</DependentUpon>
+    </Compile>
     <Compile Include="Migrations\Configuration.cs" />
     <Compile Include="Models\AccountViewModels.cs" />
     <Compile Include="Models\ApplicationModels\Assignment.cs" />
@@ -885,6 +889,7 @@
     <Content Include="Views\Categories\Details.cshtml" />
     <Content Include="Views\Categories\Edit.cshtml" />
     <Content Include="Views\Categories\Index.cshtml" />
+    <Content Include="Views\Products\StoreFront.cshtml" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include="App_Data\" />
@@ -1036,6 +1041,9 @@
     </EmbeddedResource>
     <EmbeddedResource Include="Migrations\202410021240425_AddedCategoryTable.resx">
       <DependentUpon>202410021240425_AddedCategoryTable.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Migrations\202410041329228_ImageURLaddedtoproducts.resx">
+      <DependentUpon>202410041329228_ImageURLaddedtoproducts.cs</DependentUpon>
     </EmbeddedResource>
   </ItemGroup>
   <PropertyGroup>

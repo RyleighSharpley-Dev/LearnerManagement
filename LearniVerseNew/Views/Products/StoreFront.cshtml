@@ -1,0 +1,104 @@
+﻿@model IEnumerable<LearniVerseNew.Models.ApplicationModels.Store_Models.Product>
+
+<div class="container">
+    <!-- Suggested Product Modal -->
+    <div class="modal fade bg-opacity-50" id="suggestedProductModal" tabindex="-1" aria-labelledby="suggestedProductModalLabel" aria-hidden="true">
+        <div class="modal-dialog modal-lg">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title" id="suggestedProductModalLabel">Check this out!</h5>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                </div>
+                <div class="modal-body d-flex">
+                    @if (ViewBag.SuggestedProduct != null)
+                    {
+                        var suggestedProduct = ViewBag.SuggestedProduct;
+
+                        <!-- Product Image -->
+                        <div class="col-md-4">
+                            <img src="@suggestedProduct.ImageUrl" alt="@suggestedProduct.ProductName" class="img-fluid rounded" style="max-width: 100%; height: auto;" />
+                        </div>
+
+                        <!-- Product details -->
+                        <div class="col-md-8 d-flex flex-column justify-content-center ms-2">
+                            <h2>@suggestedProduct.ProductName</h2>
+                            <p>@suggestedProduct.Description</p>
+                            <p><strong>Price:</strong> @suggestedProduct.Price.ToString("C")</p>
+
+                            <!-- Button to view product details -->
+                            <a href="@Url.Action("Details", "Store", new { id = suggestedProduct.ProductID })" class="btn btn-primary mt-3">
+                                View Product
+                            </a>
+                           
+                        </div>
+                    }
+                </div>
+            </div>
+        </div>
+    </div>
+            <!-- Search Bar -->
+            <div class="mb-3">
+                @using (Html.BeginForm("Storefront", "Products", FormMethod.Get))
+                {
+                    <input type="text" name="searchTerm" placeholder="Search products..." class="form-control" value="@Request.QueryString["searchTerm"]" />
+                }
+            </div>
+
+            <!-- Category Filter -->
+            <div class="mb-3">
+                @using (Html.BeginForm("Storefront", "Products", FormMethod.Get))
+                {
+                    <select name="categoryId" class="form-control" onchange="this.form.submit()">
+                        <option value="">All Categories</option>
+                        @foreach (var category in ViewBag.Categories)
+                        {
+                            <option value="@category.Value" @(category.Value == Request.QueryString["categoryId"] ? "selected" : "")>
+                                @category.Text
+                            </option>
+                        }
+                    </select>
+                }
+            </div>
+
+
+
+
+            <div class="row">
+                @foreach (var product in Model)
+                {
+                    <div class="col-md-4">
+                        <div class="card mb-4 shadow-sm">
+                            <img src="@product.ImageUrl" class="card-img-top" alt="@product.ProductName" style="height: 200px; object-fit: contain;" />
+                            <div class="card-body">
+                                <h5 class="card-title">@product.ProductName</h5>
+                                <p class="card-text">@product.Description</p>
+                                <p><strong>Price:</strong> @product.Price.ToString("C")</p>
+                                <div class="d-flex justify-content-between align-items-center">
+                                    <div class="btn-group">
+                                        <a href="@Url.Action("Details", "Store", new { id = product.ProductID })" class="btn btn-sm btn-outline-primary">View</a>
+                                        <a href="#" class="btn btn-sm btn-outline-secondary">Add to Cart</a>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                }
+            </div>
+        </div>
+
+        @section Scripts {
+            @Scripts.Render("~/bundles/jquery")
+            @Scripts.Render("~/bundles/bootstrap")
+
+            <script>
+                $(document).ready(function () {
+                    // Check if the suggested product modal has been shown in the session
+                    if (!sessionStorage.getItem('suggestedProductShown')) {
+                        // Show the modal
+                        $('#suggestedProductModal').modal('show');
+                        // Set the session storage item
+                        sessionStorage.setItem('suggestedProductShown', 'true');
+                    }
+                });
+            </script>
+        }

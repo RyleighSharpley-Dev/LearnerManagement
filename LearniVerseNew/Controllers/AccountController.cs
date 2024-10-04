@@ -454,6 +454,7 @@ namespace LearniVerseNew.Controllers
         public ActionResult LogOff()
         {
             AuthenticationManager.SignOut(DefaultAuthenticationTypes.ApplicationCookie);
+            Session.Remove("SuggestedProduct");
             return RedirectToAction("Index", "Home");
         }
 

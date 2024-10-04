@@ -21,7 +21,69 @@ namespace LearniVerseNew.Controllers
         private ApplicationDbContext db = new ApplicationDbContext();
         private BlobHelper blobHelper = new BlobHelper();
 
+        [Authorize(Roles = "User")]
+        public async Task<ActionResult> StoreFront(string searchTerm, Guid? categoryId)
+        {
+            // Fetch all products and include categories
+            var products = db.Products.Include(p => p.Category).AsQueryable();
+
+            // Filter by search term if provided
+            if (!string.IsNullOrEmpty(searchTerm))
+            {
+                products = products.Where(p => p.ProductName.Contains(searchTerm));
+            }
+
+            // Filter by category if provided
+            if (categoryId.HasValue && categoryId.Value != Guid.Empty)
+            {
+                products = products.Where(p => p.CategoryID == categoryId);
+            }
+
+            // Load categories for the filter dropdown
+            ViewBag.Categories = new SelectList(db.Categories, "CategoryID", "CategoryName");
+
+
+            // Suggested product
+            var productList = await products.OrderBy(p => p.ProductID).ToListAsync();
+
+            if (productList.Any())
+            {
+                // Check if the session already has a suggested product
+                if (Session["SuggestedProduct"] == null)
+                {
+                    if (productList.Any())
+                    {
+                        Random random = new Random();
+                        int randomIndex = random.Next(0, productList.Count);
+
+                        // Select a random product from the ordered list
+                        var suggestedProduct = productList.Skip(randomIndex).FirstOrDefault();
+
+                        // Store the suggested product in the session
+                        Session["SuggestedProduct"] = suggestedProduct;
+                    }
+                }
+                else
+                {
+                    // If a suggested product is already in the session, retrieve it
+                    var suggestedProduct = (Product)Session["SuggestedProduct"];
+                    ViewBag.SuggestedProduct = suggestedProduct;
+                }
+
+                // Pass the suggested product to the ViewBag for rendering in the view
+                if (Session["SuggestedProduct"] != null)
+                {
+                    ViewBag.SuggestedProduct = (Product)Session["SuggestedProduct"];
+                }
+            }
+
+            return View(products.ToList());
+        }
+
+
+
         // GET: Products
+        [Authorize(Roles = "Admin")]
         public ActionResult Index(string productName, Guid? categoryId)
         {
             // Fetch all products
@@ -47,6 +109,7 @@ namespace LearniVerseNew.Controllers
         }
 
         // GET: Products/Details/5
+        [Authorize(Roles = "Admin")]
         public async Task<ActionResult> Details(Guid? id)
         {
             if (id == null)
@@ -82,6 +145,7 @@ namespace LearniVerseNew.Controllers
         }
 
         // GET: Products/Create
+        [Authorize(Roles = "Admin")]
         public ActionResult AddProduct()
         {
             ViewBag.CategoryID = new SelectList(db.Categories, "CategoryID", "CategoryName");
@@ -93,6 +157,7 @@ namespace LearniVerseNew.Controllers
         // more details see https://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
+        [Authorize(Roles = "Admin")]
         public async Task<ActionResult> AddProduct(ProductCreateViewModel model, HttpPostedFileBase ImageFile)
         {
             if (ModelState.IsValid)
@@ -100,7 +165,7 @@ namespace LearniVerseNew.Controllers
                 if (ImageFile != null && ImageFile.ContentLength > 0)
                 {
                     // Save image to blob storage and get the URI
-                    (bool success, string name) = blobHelper.UploadProductBlob(ImageFile.FileName, ImageFile.InputStream);
+                    (bool success, string name, string url) = blobHelper.UploadProductBlob(ImageFile.FileName, ImageFile.InputStream);
 
                     if (success)
                     {
@@ -112,6 +177,7 @@ namespace LearniVerseNew.Controllers
                             Description = model.Description,
                             QuantityInStock = model.QuantityInStock,
                             ImageName = name,
+                            ImageUrl = url, // Save the blob URL
                             CategoryID = model.CategoryID // Assign selected category
                         };
 
@@ -137,6 +203,7 @@ namespace LearniVerseNew.Controllers
         }
 
         // GET: Products/Edit/5
+        [Authorize(Roles = "Admin")]
         public async Task<ActionResult> Edit(Guid? id)
         {
             if (id == null)
@@ -175,59 +242,65 @@ namespace LearniVerseNew.Controllers
         // more details see https://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
+        [Authorize(Roles = "Admin")]
         public async Task<ActionResult> Edit(Guid id, Product product, HttpPostedFileBase ImageFile)
         {
             if (ModelState.IsValid)
             {
-                // Find the existing product in the database
+                // Fetch the existing product from the database
                 var existingProduct = await db.Products.FindAsync(id);
-
-                string oldImageName = existingProduct.ImageName;
-
                 if (existingProduct == null)
                 {
                     return HttpNotFound();
                 }
 
-                // Update non-image fields
+                // Store the old image name before potential replacement
+                string oldImageName = existingProduct.ImageName;
+
+                // Update product details (non-image fields)
                 existingProduct.ProductName = product.ProductName;
                 existingProduct.Price = product.Price;
                 existingProduct.Description = product.Description;
                 existingProduct.QuantityInStock = product.QuantityInStock;
+                existingProduct.CategoryID = product.CategoryID;
 
-                // If an image file is uploaded, update the image
+                // Handle image file if uploaded
                 if (ImageFile != null && ImageFile.ContentLength > 0)
                 {
+                    // Delete the old image from blob storage
                    blobHelper.DeleteProductBlob(oldImageName);
-
-                    // Upload the new image to Azure Blob (assuming you have the UploadProductBlob method)
+                   
+                    // Upload the new image
                     using (var stream = ImageFile.InputStream)
                     {
-                        var uploadResult = blobHelper.UploadProductBlob(ImageFile.FileName, stream);
-
-                        if (!uploadResult.Success)
+                        (bool success, string newImageName, string newImageUrl) = blobHelper.UploadProductBlob(ImageFile.FileName, stream);
+                        if (!success)
                         {
-                            // Handle failure to upload image (e.g., log it or show an error message)
-                            ModelState.AddModelError("", uploadResult.name);
+                            ModelState.AddModelError("", "Error uploading new image.");
                             return View(product);
                         }
 
-                        // Update the product's ImageName property with the new image URL or name
-                        existingProduct.ImageName = ImageFile.FileName;
+                        // Update the product's image name and URL
+                        existingProduct.ImageName = newImageName;
+                        existingProduct.ImageUrl = newImageUrl;
                     }
                 }
 
-                // Mark product as modified and save changes
+                // Mark the product as modified and save changes
                 db.Entry(existingProduct).State = EntityState.Modified;
                 await db.SaveChangesAsync();
 
                 return RedirectToAction("Index");
             }
+
+            // Reload the model in case of validation errors
             return View(product);
         }
 
 
+
         // GET: Products/Delete/5
+        [Authorize(Roles = "Admin")]
         public async Task<ActionResult> Delete(Guid? id)
         {
             if (id == null)
@@ -245,6 +318,7 @@ namespace LearniVerseNew.Controllers
         // POST: Products/Delete/5
         [HttpPost, ActionName("Delete")]
         [ValidateAntiForgeryToken]
+        [Authorize(Roles = "Admin")]
         public async Task<ActionResult> DeleteConfirmed(Guid id)
         {
             Product product = await db.Products.FindAsync(id);

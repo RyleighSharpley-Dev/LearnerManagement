@@ -229,7 +229,7 @@ namespace LearniVerseNew.Models.Helpers
         }
 
 
-        public (bool Success, string name) UploadProductBlob(string originalFileName, Stream content)
+        public (bool Success, string name, string url) UploadProductBlob(string originalFileName, Stream content)
         {
             try
             {
@@ -246,18 +246,20 @@ namespace LearniVerseNew.Models.Helpers
                 // Check if the blob already exists
                 if (blobClient.Exists())
                 {
-                    return (false, $"Blob '{originalFileName}' already exists in container '{_productContainerName}'.");
+                    return (false, $"Blob '{originalFileName}' already exists in container '{_productContainerName}'.", null);
                 }
 
                 // Upload the blob
                 blobClient.Upload(content, true);
 
+                // Get the blob URL
+                var blobUrl = blobClient.Uri.AbsoluteUri;
 
-                return (true, originalFileName);
+                return (true, originalFileName, blobUrl);
             }
             catch (RequestFailedException ex)
             {
-                return (false, $"Error uploading file: {ex.Message}");
+                return (false, $"Error uploading file: {ex.Message}", null);
             }
         }
 
