@@ -4,27 +4,41 @@
     ViewBag.Title = "Product Details";
 }
 
-<h2>Product Details</h2>
+<div class="container mt-4">
+    <div class="card">
+        <div class="card-header">
+            <h2 class="card-title">Product Details</h2>
+        </div>
+        <div class="card-body">
+            <!-- Use Bootstrap grid to align image and details side by side -->
+            <div class="row">
+                <!-- Left side: Image preview -->
+                <div class="col-md-4">
+                    @if (!string.IsNullOrEmpty(ViewBag.PhotoData))
+                    {
+                        <img src="data:image/png;base64,@ViewBag.PhotoData" class="img" alt="Product Image" style="width: 100%; max-height: auto;" />
+                    }
+                    else
+                    {
+                        <img src="@ViewBag.DefaultPhotoPath" class="img" alt="Default Photo" style="width: 100%; max-height: auto;" />
+                    }
+                </div>
 
-<div>
-    <h4>@Model.ProductName</h4>
-    <hr />
-    <p><strong>Price:</strong> @Model.Price.ToString("C")</p>
-    <p><strong>Description:</strong> @Model.Description</p>
-    <p><strong>Quantity in Stock:</strong> @Model.QuantityInStock</p>
+                <!-- Right side: Product information -->
+                <div class="col-md-8">
+                    <h4>@Model.ProductName</h4>
+                    <hr />
+                    <p><strong>Price:</strong> @Model.Price.ToString("C")</p>
+                    <p><strong>Description:</strong> @Model.Description</p>
+                    <p><strong>Quantity in Stock:</strong> @Model.QuantityInStock</p>
+                </div>
+            </div>
 
-    <!-- Display the product image -->
-    @if (!string.IsNullOrEmpty(ViewBag.PhotoData))
-    {
-        <img src="data:image/png;base64,@ViewBag.PhotoData" class="img-thumbnail" alt="Product Image" style="max-height: 300px;" />
-    }
-    else
-    {
-        <img src="@ViewBag.DefaultPhotoPath" class="img-thumbnail" alt="Default Photo" style="max-height: 300px;" />
-    }
-</div>
-
-<div>
-    @Html.ActionLink("Edit", "Edit", new { id = Model.ProductID }, new { @class = "btn btn-primary" })
-    @Html.ActionLink("Back to List", "Index", null, new { @class = "btn btn-secondary" })
+            <!-- Buttons -->
+            <div class="mt-3">
+                @Html.ActionLink("Edit", "Edit", new { id = Model.ProductID }, new { @class = "btn btn-primary" })
+                @Html.ActionLink("Back to List", "Index", null, new { @class = "btn btn-secondary ml-2" })
+            </div>
+        </div>
+    </div>
 </div>

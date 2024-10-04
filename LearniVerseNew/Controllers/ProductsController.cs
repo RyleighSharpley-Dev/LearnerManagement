@@ -22,9 +22,28 @@ namespace LearniVerseNew.Controllers
         private BlobHelper blobHelper = new BlobHelper();
 
         // GET: Products
-        public async Task<ActionResult> Index()
+        public ActionResult Index(string productName, Guid? categoryId)
         {
-            return View(await db.Products.ToListAsync());
+            // Fetch all products
+            var products = db.Products.Include(p => p.Category).AsQueryable();
+
+            // Filter by product name if provided
+            if (!string.IsNullOrEmpty(productName))
+            {
+                products = products.Where(p => p.ProductName.Contains(productName));
+            }
+
+            // Filter by category if provided
+            if (categoryId.HasValue)
+            {
+                products = products.Where(p => p.CategoryID == categoryId);
+            }
+
+            // Pass the filtered products to the view
+            ViewBag.Categories = new SelectList(db.Categories, "CategoryID", "CategoryName", categoryId); // Pre-select the chosen category
+            ViewBag.ProductName = productName; // To retain the search value in the input field
+
+            return View(products.ToList());
         }
 
         // GET: Products/Details/5
