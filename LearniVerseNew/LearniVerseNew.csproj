@@ -610,6 +610,7 @@
     <Compile Include="Models\ApplicationModels\Regimen Models\WorkoutGoal.cs" />
     <Compile Include="Models\ApplicationModels\Resource.cs" />
     <Compile Include="Models\ApplicationModels\Room.cs" />
+    <Compile Include="Models\ApplicationModels\Store Models\CartItem.cs" />
     <Compile Include="Models\ApplicationModels\Store Models\Category.cs" />
     <Compile Include="Models\ApplicationModels\Store Models\Order.cs" />
     <Compile Include="Models\ApplicationModels\Store Models\OrderItem.cs" />
@@ -890,6 +891,8 @@
     <Content Include="Views\Categories\Edit.cshtml" />
     <Content Include="Views\Categories\Index.cshtml" />
     <Content Include="Views\Products\StoreFront.cshtml" />
+    <Content Include="Views\Products\Cart.cshtml" />
+    <Content Include="Views\Products\ViewProduct.cshtml" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include="App_Data\" />

@@ -1,6 +1,27 @@
 ﻿@model IEnumerable<LearniVerseNew.Models.ApplicationModels.Store_Models.Product>
 
+@{
+    
+    // Retrieve the cart from session or initialize an empty one
+    var cart = Session["Cart"] as List<LearniVerseNew.Models.ApplicationModels.Store_Models.CartItem> ?? new List<LearniVerseNew.Models.ApplicationModels.Store_Models.CartItem>();
+
+    // Calculate the total number of items in the cart
+    var cartItemCount = cart.Sum(item => item.Quantity);
+}
+
 <div class="container">
+
+    <!-- Shopping Cart Button -->
+    <div id="cartButton" class="position-fixed top-0 end-0 m-3">
+        <a href="@Url.Action("Cart", "Products")" class="btn btn-primary position-relative">
+            <i class="bi bi-cart"></i> Cart
+            <span id="cartCount" class="position-absolute top-0 start-100 translate-middle badge rounded-pill bg-secondary">
+                @ViewBag.CartCount
+            </span>
+            <span class="visually-hidden">items in cart</span>
+        </a>
+    </div>
+
     <!-- Suggested Product Modal -->
     <div class="modal fade bg-opacity-50" id="suggestedProductModal" tabindex="-1" aria-labelledby="suggestedProductModalLabel" aria-hidden="true">
         <div class="modal-dialog modal-lg">
@@ -26,79 +47,111 @@
                             <p><strong>Price:</strong> @suggestedProduct.Price.ToString("C")</p>
 
                             <!-- Button to view product details -->
-                            <a href="@Url.Action("Details", "Store", new { id = suggestedProduct.ProductID })" class="btn btn-primary mt-3">
+                            <a href="@Url.Action("ViewProduct", "Products", new { id = suggestedProduct.ProductID })" class="btn btn-primary mt-3">
                                 View Product
                             </a>
-                           
+
                         </div>
                     }
                 </div>
             </div>
         </div>
     </div>
-            <!-- Search Bar -->
-            <div class="mb-3">
-                @using (Html.BeginForm("Storefront", "Products", FormMethod.Get))
+    <!-- Search Bar -->
+    <div class="mb-3">
+        @using (Html.BeginForm("Storefront", "Products", FormMethod.Get))
+        {
+            <input type="text" name="searchTerm" placeholder="Search products..." class="form-control" value="@Request.QueryString["searchTerm"]" />
+        }
+    </div>
+
+    <!-- Category Filter -->
+    <div class="mb-3">
+        @using (Html.BeginForm("Storefront", "Products", FormMethod.Get))
+        {
+            <select name="categoryId" class="form-control" onchange="this.form.submit()">
+                <option value="">All Categories</option>
+                @foreach (var category in ViewBag.Categories)
                 {
-                    <input type="text" name="searchTerm" placeholder="Search products..." class="form-control" value="@Request.QueryString["searchTerm"]" />
+                    <option value="@category.Value" @(category.Value == Request.QueryString["categoryId"] ? "selected" : "")>
+                        @category.Text
+                    </option>
                 }
-            </div>
-
-            <!-- Category Filter -->
-            <div class="mb-3">
-                @using (Html.BeginForm("Storefront", "Products", FormMethod.Get))
-                {
-                    <select name="categoryId" class="form-control" onchange="this.form.submit()">
-                        <option value="">All Categories</option>
-                        @foreach (var category in ViewBag.Categories)
-                        {
-                            <option value="@category.Value" @(category.Value == Request.QueryString["categoryId"] ? "selected" : "")>
-                                @category.Text
-                            </option>
-                        }
-                    </select>
-                }
-            </div>
+            </select>
+        }
+    </div>
 
 
 
 
-            <div class="row">
-                @foreach (var product in Model)
-                {
-                    <div class="col-md-4">
-                        <div class="card mb-4 shadow-sm">
-                            <img src="@product.ImageUrl" class="card-img-top" alt="@product.ProductName" style="height: 200px; object-fit: contain;" />
-                            <div class="card-body">
-                                <h5 class="card-title">@product.ProductName</h5>
-                                <p class="card-text">@product.Description</p>
-                                <p><strong>Price:</strong> @product.Price.ToString("C")</p>
-                                <div class="d-flex justify-content-between align-items-center">
-                                    <div class="btn-group">
-                                        <a href="@Url.Action("Details", "Store", new { id = product.ProductID })" class="btn btn-sm btn-outline-primary">View</a>
-                                        <a href="#" class="btn btn-sm btn-outline-secondary">Add to Cart</a>
-                                    </div>
-                                </div>
+    <div class="row">
+        @foreach (var product in Model)
+        {
+            <div class="col-md-4">
+                <div class="card mb-4 shadow-sm">
+                    <img src="@product.ImageUrl" class="card-img-top" alt="@product.ProductName" style="height: 200px; object-fit: contain;" />
+                    <div class="card-body">
+                        <h5 class="card-title">@product.ProductName</h5>
+                        <p class="card-text">@product.Description</p>
+                        <p><strong>Price:</strong> @product.Price.ToString("C")</p>
+                        <div class="d-flex justify-content-between align-items-center">
+                            <div class="btn-group">
+                                <a href="@Url.Action("ViewProduct", "Products", new { id = product.ProductID })" class="btn btn-sm btn-outline-primary">View</a>
+
+                                <form class="add-to-cart-form" data-product-id="@product.ProductID">
+                                    <button type="submit" class="btn btn-sm btn-outline-danger">Add to Cart</button>
+                                </form>
                             </div>
                         </div>
                     </div>
-                }
+                </div>
             </div>
-        </div>
+        }
+    </div>
+</div>
 
-        @section Scripts {
-            @Scripts.Render("~/bundles/jquery")
-            @Scripts.Render("~/bundles/bootstrap")
+@section Scripts {
+    @Scripts.Render("~/bundles/jquery")
+    @Scripts.Render("~/bundles/bootstrap")
 
-            <script>
-                $(document).ready(function () {
-                    // Check if the suggested product modal has been shown in the session
-                    if (!sessionStorage.getItem('suggestedProductShown')) {
-                        // Show the modal
-                        $('#suggestedProductModal').modal('show');
-                        // Set the session storage item
-                        sessionStorage.setItem('suggestedProductShown', 'true');
+<script>
+        $(document).ready(function () {
+            // Check if the suggested product modal has been shown in the session
+            if (!sessionStorage.getItem('suggestedProductShown')) {
+                // Show the modal
+                $('#suggestedProductModal').modal('show');
+                // Set the session storage item
+                sessionStorage.setItem('suggestedProductShown', 'true');
+            }
+        });
+
+        // Intercept form submission for all forms with class 'add-to-cart-form'
+            $('.add-to-cart-form').on('submit', function (event) {
+                event.preventDefault(); // Prevent the default form submission
+
+                var productId = $(this).data('product-id'); // Get product ID from data attribute
+                var form = $(this); // Reference to the form
+
+                $.ajax({
+                    url: '@Url.Action("AddToCart", "Products")',
+                    method: 'POST',
+                    data: { productId: productId },
+                    success: function (response) {
+                        // Assuming the server responds with the new cart count
+                        $('#cartCount').text(response.cartCount); // Update the cart count
+
+                        // Optionally: show a message or visual feedback
+                        form.find('button').text('Added!').prop('disabled', true);
+                        setTimeout(function () {
+                            form.find('button').text('Add to Cart').prop('disabled', false);
+                        }, 2000); // Reset after 2 seconds
+                    },
+                    error: function () {
+                        alert('An error occurred while adding the item to the cart.');
                     }
                 });
-            </script>
-        }
+            });
+        
+
+</script>
+}

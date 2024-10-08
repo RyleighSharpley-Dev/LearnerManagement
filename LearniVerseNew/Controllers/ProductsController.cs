@@ -80,6 +80,88 @@ namespace LearniVerseNew.Controllers
             return View(products.ToList());
         }
 
+        public ActionResult ViewProduct(Guid Id)
+        {
+            var product = db.Products.Find(Id);
+            return View(product);
+        }
+
+        private List<CartItem> GetCart()
+        {
+            var cart = Session["Cart"] as List<CartItem>;
+            if (cart == null)
+            {
+                cart = new List<CartItem>();
+                Session["Cart"] = cart;
+            }
+            return cart;
+        }
+
+        public ActionResult Cart()
+        {
+            var cart = GetCart();
+            return View(cart); // Pass the cart to the view
+        }
+
+
+        [HttpPost]
+        public async Task<JsonResult> AddToCart(Guid productId, int quantity = 1)
+        {
+            // Retrieve the cart from session
+            var cart = GetCart();
+
+            // Find the product in the database (use await for async database operations)
+            var product = await db.Products.FindAsync(productId); // Assuming 'db' is your database context
+            if (product == null)
+            {
+                return Json(new { success = false, message = "Product not found." });
+            }
+
+            // Check if the product is already in the cart
+            var existingCartItem = cart.FirstOrDefault(p => p.ProductID == productId);
+            if (existingCartItem != null)
+            {
+                // If it exists, increase the quantity
+                existingCartItem.Quantity += quantity;
+            }
+            else
+            {
+                // Otherwise, add the new product to the cart
+                cart.Add(new CartItem
+                {
+                    ProductID = productId,
+                    ProductName = product.ProductName,
+                    Price = product.Price,
+                    Quantity = quantity
+                });
+            }
+
+            // Save the cart back into session
+            Session["Cart"] = cart;
+
+            // Return a JSON response with success status and updated cart count
+            return Json(new { success = true, cartCount = cart.Count });
+        }
+
+
+        [HttpPost]
+        public ActionResult RemoveFromCart(Guid id)
+        {
+            // Retrieve the cart from session
+            var cart = GetCart();
+
+            // Find the product in the cart
+            var itemToRemove = cart.FirstOrDefault(p => p.ProductID == id);
+            if (itemToRemove != null)
+            {
+                cart.Remove(itemToRemove);
+            }
+
+            // Save the updated cart to session
+            Session["Cart"] = cart;
+
+            return RedirectToAction("Cart");
+        }
 
 
         // GET: Products
