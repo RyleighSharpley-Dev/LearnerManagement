@@ -22,8 +22,17 @@ namespace LearniVerseNew.Models.ApplicationModels.Store_Models
 
         public decimal TotalPrice { get; set; }
 
+        [Required]
         public string ShippingAddress { get; set; }
 
+        [Required]
+        public string City { get; set; }
+
+        [Required]
+        public string State { get; set; }
+
+        [Required]
+        public string PostalCode { get; set; }
         public bool IsDelivered { get; set; }
 
         // Navigation property for order items

@@ -44,7 +44,7 @@ else
 
     <div class="text-right">
         <p><strong>Total Price:</strong> @Model.Sum(x => x.Price * x.Quantity).ToString("C")</p>
-        <a href="@Url.Action("Checkout", "Products")" class="btn btn-primary">Proceed to Checkout</a>
+        <a href="@Url.Action("ShippingAddress", "Products")" class="btn btn-primary">Proceed to Checkout</a>
         <a href="@Url.Action("StoreFront", "Products")" class="btn btn-outline-warning">Continue Shopping</a>
     </div>
 }

@@ -13,6 +13,7 @@ using LearniVerseNew.Models.ApplicationModels.ViewModels;
 using LearniVerseNew.Models.Helpers;
 using LearniVerseNew.Models.ApplicationModels;
 using System.IdentityModel;
+using Microsoft.AspNet.Identity;
 
 namespace LearniVerseNew.Controllers
 {
@@ -20,6 +21,7 @@ namespace LearniVerseNew.Controllers
     {
         private ApplicationDbContext db = new ApplicationDbContext();
         private BlobHelper blobHelper = new BlobHelper();
+        private PaystackHelper paystackHelper = new PaystackHelper();
 
         [Authorize(Roles = "User")]
         public async Task<ActionResult> StoreFront(string searchTerm, Guid? categoryId)
@@ -163,6 +165,142 @@ namespace LearniVerseNew.Controllers
             return RedirectToAction("Cart");
         }
 
+        public ActionResult ShippingAddress()
+        {
+            return View(new Order()); // Display the shipping form
+        }
+
+        // POST: Handle form submission
+        [HttpPost]
+        [ValidateAntiForgeryToken]
+        public ActionResult ConfirmShipping(Order order)
+        {
+            string Id = User.Identity.GetUserId();
+            
+
+            if (ModelState.IsValid)
+            {
+                return View("ShippingAddress", order); // Return to form if validation fails
+            }
+
+            order.OrderID = Guid.NewGuid();
+            order.DateOrdered = DateTime.Now;
+            order.StudentID = Id;
+            order.OrderItems = new List<OrderItem>();
+
+            // Store the order details in TempData or Session for later use
+            TempData["Order"] = order;
+
+            // Redirect to the payment step
+            return RedirectToAction("Checkout");
+        }
+
+        public ActionResult Checkout(string email)
+        {
+            email = User.Identity.GetUserName();
+
+            decimal cartTotal = 0m;
+
+            var cart = GetCart();
+
+            foreach(var item in cart)
+            {
+                cartTotal += item.Price * item.Quantity;
+            }
+
+            // Ensure the cart has a valid total amount
+            if (cartTotal <= 0)
+            {
+                return View("Error");
+            }
+
+            //var callbackUrl = Url.Action("PaymentCallback", "Checkout", null, Request.Url.Scheme);
+            var callbackUrl = "https://3f64-41-144-65-62.ngrok-free.app/Products/PaymentCallback";
+
+            var order = TempData["Order"] as Order;
+
+            order.TotalPrice = cartTotal;
+
+            foreach(var item in cart)
+            {
+               
+                var OrderItem = new OrderItem()
+                {
+                    OrderID = order.OrderID,
+                    OrderItemID = Guid.NewGuid(),
+                    ProductID = item.ProductID, // Use the ProductID from the database
+                    Order = order,
+                    Quantity = item.Quantity
+                };
+
+                order.OrderItems.Add(OrderItem);
+            }
+
+            // Initialize the transaction with Paystack
+            var response = paystackHelper.InitializeTransactionForCheckout(email, cartTotal, callbackUrl);
+
+            if (response.Status)
+            {
+                TempData["FinalOrder"] = order;
+                return Redirect(response.Data.AuthorizationUrl);
+            }
+
+            // Handle any error that occurs during initialization
+            return View("Error");
+        }
+
+
+        public ActionResult PaymentCallback(string reference)
+        {
+            // Verify the Paystack transaction
+            var response = paystackHelper.VerifyTransaction(reference);
+
+            if (response.Status && response.Data.Status == "success")
+            {
+                // Retrieve the order from TempData
+                var order = TempData["FinalOrder"] as Order;
+
+                if (order == null)
+                {
+                    return View("Error");
+                }
+
+                
+                // Save the order and order items to the database
+               
+                using (var db = new ApplicationDbContext())
+                {
+                    db.Orders.Add(order);
+                    db.SaveChanges(); // This will save the order and its related items
+
+                    // Optionally, clear the cart after the order is successfully saved
+                    ClearCart();
+                }
+
+                // Redirect to a success page
+                TempData["OrderID"] = order.OrderID;
+                return RedirectToAction("PaymentSuccess");
+            }
+
+            // If payment failed, return to an error page
+            return View("Error");
+        }
+
+
+        public ActionResult PaymentSuccess(Order order)
+        {
+            var orderId = TempData["OrderID"];
+            order = db.Orders.Find(orderId);
+            return View(order);
+        }
+
+        private void ClearCart()
+        {
+            if (Session["Cart"] != null)
+            {
+                Session.Remove("Cart"); // Removes the cart from the session
+            }
+        }
 
         // GET: Products
         [Authorize(Roles = "Admin")]

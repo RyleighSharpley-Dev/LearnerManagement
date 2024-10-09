@@ -575,6 +575,10 @@
     <Compile Include="Migrations\202410041329228_ImageURLaddedtoproducts.Designer.cs">
       <DependentUpon>202410041329228_ImageURLaddedtoproducts.cs</DependentUpon>
     </Compile>
+    <Compile Include="Migrations\202410081517084_Updated Shipping Address.cs" />
+    <Compile Include="Migrations\202410081517084_Updated Shipping Address.Designer.cs">
+      <DependentUpon>202410081517084_Updated Shipping Address.cs</DependentUpon>
+    </Compile>
     <Compile Include="Migrations\Configuration.cs" />
     <Compile Include="Models\AccountViewModels.cs" />
     <Compile Include="Models\ApplicationModels\Assignment.cs" />
@@ -615,6 +619,7 @@
     <Compile Include="Models\ApplicationModels\Store Models\Order.cs" />
     <Compile Include="Models\ApplicationModels\Store Models\OrderItem.cs" />
     <Compile Include="Models\ApplicationModels\Store Models\Product.cs" />
+    <Compile Include="Models\ApplicationModels\Store Models\Transaction.cs" />
     <Compile Include="Models\ApplicationModels\Student.cs" />
     <Compile Include="Models\ApplicationModels\StudentFinalMark.cs" />
     <Compile Include="Models\ApplicationModels\Submission.cs" />
@@ -893,6 +898,8 @@
     <Content Include="Views\Products\StoreFront.cshtml" />
     <Content Include="Views\Products\Cart.cshtml" />
     <Content Include="Views\Products\ViewProduct.cshtml" />
+    <Content Include="Views\Products\PaymentSuccess.cshtml" />
+    <Content Include="Views\Products\ShippingAddress.cshtml" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include="App_Data\" />
@@ -1047,6 +1054,9 @@
     </EmbeddedResource>
     <EmbeddedResource Include="Migrations\202410041329228_ImageURLaddedtoproducts.resx">
       <DependentUpon>202410041329228_ImageURLaddedtoproducts.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Migrations\202410081517084_Updated Shipping Address.resx">
+      <DependentUpon>202410081517084_Updated Shipping Address.cs</DependentUpon>
     </EmbeddedResource>
   </ItemGroup>
   <PropertyGroup>
