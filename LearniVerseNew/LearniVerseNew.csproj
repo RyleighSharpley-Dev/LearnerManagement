@@ -579,6 +579,10 @@
     <Compile Include="Migrations\202410081517084_Updated Shipping Address.Designer.cs">
       <DependentUpon>202410081517084_Updated Shipping Address.cs</DependentUpon>
     </Compile>
+    <Compile Include="Migrations\202410091801115_AddedTransactionTable.cs" />
+    <Compile Include="Migrations\202410091801115_AddedTransactionTable.Designer.cs">
+      <DependentUpon>202410091801115_AddedTransactionTable.cs</DependentUpon>
+    </Compile>
     <Compile Include="Migrations\Configuration.cs" />
     <Compile Include="Models\AccountViewModels.cs" />
     <Compile Include="Models\ApplicationModels\Assignment.cs" />
@@ -1057,6 +1061,9 @@
     </EmbeddedResource>
     <EmbeddedResource Include="Migrations\202410081517084_Updated Shipping Address.resx">
       <DependentUpon>202410081517084_Updated Shipping Address.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Migrations\202410091801115_AddedTransactionTable.resx">
+      <DependentUpon>202410091801115_AddedTransactionTable.cs</DependentUpon>
     </EmbeddedResource>
   </ItemGroup>
   <PropertyGroup>

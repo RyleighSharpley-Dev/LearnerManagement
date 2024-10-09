@@ -215,7 +215,7 @@ namespace LearniVerseNew.Controllers
             }
 
             //var callbackUrl = Url.Action("PaymentCallback", "Checkout", null, Request.Url.Scheme);
-            var callbackUrl = "https://3f64-41-144-65-62.ngrok-free.app/Products/PaymentCallback";
+            var callbackUrl = "https://08fb-41-144-65-62.ngrok-free.app/Products/PaymentCallback";
 
             var order = TempData["Order"] as Order;
 
@@ -265,11 +265,22 @@ namespace LearniVerseNew.Controllers
                     return View("Error");
                 }
 
+                var transaction = new Transaction()
+                {
+                    TransactionID = Guid.NewGuid(),
+                    TransactionDate = DateTime.Now,
+                    OrderID = order.OrderID,
+                    Amount = order.TotalPrice,
+                    PaystackReference = response.Data.Reference,
+                    Status = response.Data.Status,
+
+                };
                 
                 // Save the order and order items to the database
                
                 using (var db = new ApplicationDbContext())
                 {
+                    db.Transactions.Add(transaction);
                     db.Orders.Add(order);
                     db.SaveChanges(); // This will save the order and its related items
 
