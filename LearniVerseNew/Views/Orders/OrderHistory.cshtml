@@ -1,0 +1,47 @@
+﻿@model IEnumerable<LearniVerseNew.Models.ApplicationModels.Store_Models.Order>
+
+@{
+    ViewBag.Title = "Order History";
+}
+
+<h2>Order History</h2>
+
+<!-- Add sorting links -->
+<table class="table table-striped table-bordered">
+    <thead class="thead-dark">
+        <tr>
+            <th>Order ID</th>
+            <th>
+                @Html.ActionLink("Date Ordered", "OrderHistory", new { sortOrder = ViewBag.DateSortParm })
+                @if (ViewBag.DateSortParm == "")
+                {
+                    <i class="bi bi-arrow-down"></i> <!-- Bootstrap icon for ascending -->
+                }
+                else
+                {
+                    <i class="bi bi-arrow-up"></i> <!-- Bootstrap icon for descending -->
+                }
+            </th>
+            <th>Total Price</th>
+            <th>Status</th>
+            <th>Action</th>
+        </tr>
+    </thead>
+    <tbody>
+        @foreach (var order in Model)
+        {
+            <tr>
+                <td>@order.OrderID</td>
+                <td>@order.DateOrdered</td>
+                <td>@order.TotalPrice.ToString("C")</td>
+                <td>@(order.IsDelivered ? "Delivered" : "Pending")</td>
+                <td>
+                    <!-- Button with Icon for Order Details -->
+                    <a href="@Url.Action("OrderDetails", new { id = order.OrderID })" class="btn btn-outline-dark">
+                        <i class="bi bi-info-circle"></i> View Details
+                    </a>
+                </td>
+            </tr>
+        }
+    </tbody>
+</table>

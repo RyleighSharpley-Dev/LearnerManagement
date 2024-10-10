@@ -16,12 +16,58 @@ namespace LearniVerseNew.Controllers
     {
         private ApplicationDbContext db = new ApplicationDbContext();
 
-        // GET: Transactions
-        public async Task<ActionResult> Index()
+        public ActionResult Index(string sortOrder, string searchString)
         {
-            var transactions = db.Transactions.Include(t => t.Order);
-            return View(await transactions.ToListAsync());
+            // Set the sorting parameters for various columns
+            ViewBag.AmountSortParm = String.IsNullOrEmpty(sortOrder) ? "amount_desc" : "";
+            ViewBag.StatusSortParm = sortOrder == "status_asc" ? "status_desc" : "status_asc";
+            ViewBag.DateSortParm = sortOrder == "date_asc" ? "date_desc" : "date_asc";
+            ViewBag.TypeSortParm = sortOrder == "type_asc" ? "type_desc" : "type_asc"; // New sort for type
+
+            // Fetch the transactions
+            var transactions = from t in db.Transactions.Include(t => t.Order)
+                               select t;
+
+            // Search functionality
+            if (!String.IsNullOrEmpty(searchString))
+            {
+                transactions = transactions.Where(t => t.Order.StudentID.Contains(searchString) ||
+                                                       t.PaystackReference.Contains(searchString));
+            }
+
+            // Sorting logic
+            switch (sortOrder)
+            {
+                case "amount_desc":
+                    transactions = transactions.OrderByDescending(t => t.Amount);
+                    break;
+                case "status_asc":
+                    transactions = transactions.OrderBy(t => t.Status);
+                    break;
+                case "status_desc":
+                    transactions = transactions.OrderByDescending(t => t.Status);
+                    break;
+                case "date_asc":
+                    transactions = transactions.OrderBy(t => t.TransactionDate);
+                    break;
+                case "date_desc":
+                    transactions = transactions.OrderByDescending(t => t.TransactionDate);
+                    break;
+                case "type_asc":
+                    transactions = transactions.OrderBy(t => t.TransactionType); // Sort by type ascending
+                    break;
+                case "type_desc":
+                    transactions = transactions.OrderByDescending(t => t.TransactionType); // Sort by type descending
+                    break;
+                default:
+                    transactions = transactions.OrderBy(t => t.Amount);
+                    break;
+            }
+
+            return View(transactions.ToList());
         }
+
+
 
         // GET: Transactions/Details/5
         public async Task<ActionResult> Details(Guid? id)

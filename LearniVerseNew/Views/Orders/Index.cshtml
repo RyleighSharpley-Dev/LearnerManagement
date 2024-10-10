@@ -1,0 +1,94 @@
+﻿@model IEnumerable<LearniVerseNew.Models.ApplicationModels.Store_Models.Order>
+
+@{
+    ViewBag.Title = "Orders";
+}
+
+<h2 class="my-4">Orders</h2>
+
+<!-- Search Form -->
+<div class="mb-3">
+    @using (Html.BeginForm("Index", "Orders", FormMethod.Get))
+    {
+        <div class="input-group">
+            @Html.TextBox("searchString", ViewBag.CurrentFilter as string, new { @class = "form-control", placeholder = "Search by name, address, or city..." })
+            <button class="btn btn-outline-dark" type="submit">
+                <i class="bi bi-search"></i> Search
+            </button>
+        </div>
+    }
+</div>
+
+<!-- Orders Table -->
+<div class="table-responsive">
+    <table class="table table-striped table-hover">
+        <thead class="table-dark">
+            <tr>
+                <th>
+                    @Html.ActionLink("Student Name", "Index", new { sortOrder = ViewBag.NameSortParm, searchString = Request.QueryString["searchString"] })
+                    <i class="bi bi-person-fill"></i>
+                </th>
+                <th>
+                    @Html.ActionLink("Date Ordered", "Index", new { sortOrder = ViewBag.DateSortParm, searchString = Request.QueryString["searchString"] })
+                    <i class="bi bi-calendar-date"></i>
+                </th>
+                <th>
+                    @Html.DisplayNameFor(model => model.TotalPrice)
+                </th>
+                <th>
+                    @Html.DisplayNameFor(model => model.ShippingAddress)
+                    <i class="bi bi-house-door"></i>
+                </th>
+                <th>
+                    @Html.DisplayNameFor(model => model.City)
+                </th>
+                <th>
+                    @Html.DisplayNameFor(model => model.State)
+                </th>
+                <th>
+                    @Html.DisplayNameFor(model => model.PostalCode)
+                </th>
+                <th>
+                    @Html.DisplayNameFor(model => model.IsDelivered)
+                </th>
+                <th></th>
+            </tr>
+        </thead>
+        <tbody>
+            @foreach (var item in Model)
+            {
+                <tr>
+                    <td>
+                        @Html.DisplayFor(modelItem => item.Student.StudentFirstName)
+                    </td>
+                    <td>
+                        @Html.DisplayFor(modelItem => item.DateOrdered)
+                    </td>
+                    <td>
+                        R @Html.DisplayFor(modelItem => item.TotalPrice)
+                    </td>
+                    <td>
+                        @Html.DisplayFor(modelItem => item.ShippingAddress)
+                    </td>
+                    <td>
+                        @Html.DisplayFor(modelItem => item.City)
+                    </td>
+                    <td>
+                        @Html.DisplayFor(modelItem => item.State)
+                    </td>
+                    <td>
+                        @Html.DisplayFor(modelItem => item.PostalCode)
+                    </td>
+                    <td>
+                        @Html.DisplayFor(modelItem => item.IsDelivered)
+                    </td>
+                    <td>
+                        <a href="@Url.Action("Details", "Orders", new { id = item.OrderID })" class="btn btn-outline-dark">
+                            <i class="bi bi-info-circle"></i> Details
+                        </a>
+                    </td>
+                </tr>
+            }
+        </tbody>
+    </table>
+</div>

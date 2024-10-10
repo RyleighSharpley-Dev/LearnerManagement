@@ -19,7 +19,8 @@ namespace LearniVerseNew.Models.ApplicationModels.Store_Models
 
         public string Status { get; set; } 
 
-        public DateTime TransactionDate { get; set; } 
+        public DateTime TransactionDate { get; set; }
+        public string TransactionType { get; set; }
 
         public string PaystackReference { get; set; } 
 

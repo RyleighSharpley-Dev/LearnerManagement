@@ -22,6 +22,8 @@ namespace LearniVerseNew.Controllers
         private ApplicationDbContext db = new ApplicationDbContext();
         private BlobHelper blobHelper = new BlobHelper();
         private PaystackHelper paystackHelper = new PaystackHelper();
+        private PdfHelper pdfHelper = new PdfHelper();
+        private EmailHelper emailHelper = new EmailHelper();
 
         [Authorize(Roles = "User")]
         public async Task<ActionResult> StoreFront(string searchTerm, Guid? categoryId)
@@ -215,7 +217,7 @@ namespace LearniVerseNew.Controllers
             }
 
             //var callbackUrl = Url.Action("PaymentCallback", "Checkout", null, Request.Url.Scheme);
-            var callbackUrl = "https://08fb-41-144-65-62.ngrok-free.app/Products/PaymentCallback";
+            var callbackUrl = "https://36ab-41-144-0-130.ngrok-free.app/Products/PaymentCallback";
 
             var order = TempData["Order"] as Order;
 
@@ -250,7 +252,7 @@ namespace LearniVerseNew.Controllers
         }
 
 
-        public ActionResult PaymentCallback(string reference)
+        public async Task<ActionResult> PaymentCallback(string reference)
         {
             // Verify the Paystack transaction
             var response = paystackHelper.VerifyTransaction(reference);
@@ -271,22 +273,27 @@ namespace LearniVerseNew.Controllers
                     TransactionDate = DateTime.Now,
                     OrderID = order.OrderID,
                     Amount = order.TotalPrice,
+                    TransactionType = "Purchase",
                     PaystackReference = response.Data.Reference,
                     Status = response.Data.Status,
-
                 };
-                
-                // Save the order and order items to the database
-               
+
+                // Save the order and order items to the database asynchronously
                 using (var db = new ApplicationDbContext())
                 {
                     db.Transactions.Add(transaction);
                     db.Orders.Add(order);
-                    db.SaveChanges(); // This will save the order and its related items
+                    await db.SaveChangesAsync(); // Save changes asynchronously
 
-                    // Optionally, clear the cart after the order is successfully saved
-                    ClearCart();
+                    ClearCart(); // Clear the cart after processing
                 }
+
+                var PdfOrder = db.Orders.Find(order.OrderID);
+                // Generate the PDF invoice asynchronously
+                byte[] pdfInvoice = pdfHelper.GeneratePdfInvoice(PdfOrder); // Assuming this is a synchronous method
+
+                // Send the invoice email asynchronously
+                await emailHelper.SendInvoiceAsync(PdfOrder.Student.StudentEmail, pdfInvoice, $"Invoice_{order.OrderID}.pdf");
 
                 // Redirect to a success page
                 TempData["OrderID"] = order.OrderID;
@@ -296,6 +303,7 @@ namespace LearniVerseNew.Controllers
             // If payment failed, return to an error page
             return View("Error");
         }
+
 
 
         public ActionResult PaymentSuccess(Order order)
