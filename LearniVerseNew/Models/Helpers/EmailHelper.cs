@@ -34,7 +34,7 @@ namespace LearniVerseNew.Models.Helpers
                 mailMessage.From = new MailAddress(_smtpUsername);
                 mailMessage.To.Add(toEmail);
                 mailMessage.Subject = "Your Order Invoice";
-                mailMessage.Body = "Please find attached the invoice for your order.";
+                mailMessage.Body = $"Your order has been received.\nPlease find attached the invoice for your order.";
                 mailMessage.IsBodyHtml = true; // Set to false if you're sending plain text
 
                 // Attach the PDF to the email
