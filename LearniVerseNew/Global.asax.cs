@@ -30,7 +30,7 @@ namespace LearniVerseNew
             var userManager = new UserManager<ApplicationUser>(new UserStore<ApplicationUser>(context));
 
             // Create roles if they don't exist
-            var roles = new[] { "Admin", "User", "Teacher" }; 
+            var roles = new[] { "Admin", "User", "Teacher","WareHouseAdmin" }; 
             foreach (var role in roles)
             {
                 if (!roleManager.RoleExists(role))
@@ -64,6 +64,30 @@ namespace LearniVerseNew
                 if (!result.Succeeded)
                 {
                     throw new Exception($"Failed to assign role to admin user: {result.Errors}");
+                }
+            }
+
+            // Create warehouse admin user if it doesn't exist
+            var WarehouseadminEmail = "Warehouse@admin.com"; // Change as needed
+            var WareHouseadminUser = userManager.FindByEmail(WarehouseadminEmail);
+            if (WareHouseadminUser == null)
+            {
+                WareHouseadminUser = new ApplicationUser
+                {
+                    UserName = WarehouseadminEmail, // Use WarehouseadminEmail
+                    Email = WarehouseadminEmail // Use WarehouseadminEmail
+                };
+                var result = userManager.Create(WareHouseadminUser, "Warehouse1234."); // Change the password as needed
+                if (!result.Succeeded)
+                {
+                    throw new Exception($"Failed to create admin user: {result.Errors.FirstOrDefault()}");
+                }
+
+                // Assign WarehouseAdmin role to the new warehouse admin user
+                result = userManager.AddToRole(WareHouseadminUser.Id, "WarehouseAdmin");
+                if (!result.Succeeded)
+                {
+                    throw new Exception($"Failed to assign role to warehouse admin user: {result.Errors.FirstOrDefault()}");
                 }
             }
         }

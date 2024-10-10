@@ -5,12 +5,14 @@
 }
 
 <h2>Order Details</h2>
+
 @if (TempData["Message"] != null)
 {
     <div class="alert alert-success">
         @TempData["Message"]
     </div>
 }
+
 <!-- Order Information -->
 <div class="mb-4">
     <h4>Order Summary</h4>
@@ -95,6 +97,31 @@
                 <td><strong>@Model.TotalPrice.ToString("C")</strong></td>
             </tr>
         </tfoot>
+    </table>
+</div>
+
+<!-- Tracking History Section -->
+<div class="mb-4">
+    <h4>Order Tracking History</h4>
+    <table class="table table-striped table-bordered">
+        <thead>
+            <tr>
+                <th>Stage</th>
+                <th>Timestamp</th>
+                <th>Updated By</th>
+            </tr>
+        </thead>
+        <tbody>
+
+            @foreach (var trackingevent in Model.TrackingHistory.OrderByDescending(th => th.Timestamp))
+            {
+                <tr>
+                    <td>@trackingevent.TrackingStage</td>
+                    <td>@trackingevent.Timestamp.ToString("MM/dd/yyyy hh:mm tt")</td>
+                    <td>@trackingevent.UpdatedBy</td>
+                </tr>
+            }
+        </tbody>
     </table>
 </div>
 

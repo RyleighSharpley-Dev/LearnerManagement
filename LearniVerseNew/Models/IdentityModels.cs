@@ -76,11 +76,18 @@ namespace LearniVerseNew.Models
         public DbSet<Product> Products { get; set; }
         public DbSet<Category> Categories { get; set; }
         public DbSet<Transaction> Transactions { get; set; }
+        public DbSet<OrderTrackingHistory> OrderTrackingHistories { get; set; }
 
 
 
         protected override void OnModelCreating(DbModelBuilder modelBuilder)
         {
+            modelBuilder.Entity<Order>()
+            .HasMany(o => o.TrackingHistory)
+            .WithRequired(th => th.Order)
+            .HasForeignKey(th => th.OrderID)
+            .WillCascadeOnDelete(true);
+
             modelBuilder.Entity<Course>()
          .HasKey(c => c.CourseID);
 

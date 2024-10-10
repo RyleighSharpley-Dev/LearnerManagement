@@ -34,9 +34,11 @@ namespace LearniVerseNew.Models.ApplicationModels.Store_Models
         [Required]
         public string PostalCode { get; set; }
         public bool IsDelivered { get; set; }
+        public string Status { get; set; }
 
         // Navigation property for order items
         public virtual ICollection<OrderItem> OrderItems { get; set; }
+        public virtual ICollection<OrderTrackingHistory> TrackingHistory { get; set; }
 
     }
 }

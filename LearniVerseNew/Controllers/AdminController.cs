@@ -3,6 +3,7 @@ using LearniVerseNew.Models.ApplicationModels.ViewModels;
 using Newtonsoft.Json;
 using System;
 using System.Collections.Generic;
+using System.Data.Entity;
 using System.Linq;
 using System.Web;
 using System.Web.Mvc;
@@ -58,6 +59,45 @@ namespace LearniVerseNew.Controllers
         {
             // Implement logic to get the count of teachers
             return db.Teachers.Count();
+        }
+
+        public ActionResult WarehouseDashboard()
+        {
+            var totalOrdersByDay = db.Orders
+                                    .GroupBy(o => DbFunctions.TruncateTime(o.DateOrdered))
+                                    .Select(g => new TotalOrdersByDay
+                                    {
+                                        Date = g.Key,
+                                        TotalOrders = g.Count()
+                                    })
+                                    .ToList();
+
+
+            // Fetch the latest 5 orders
+            var latestOrders = db.Orders
+                                 .OrderByDescending(o => o.DateOrdered)
+                                 .Take(5)
+                                 .ToList();
+
+            // Fetch unscanned orders
+            var unscannedOrders = db.Orders
+                                    .Where(o => o.Status == "Sent-To-Warehouse")
+                                    .ToList();
+
+            var atWarehouseOrders = db.Orders
+                              .Where(o => o.Status == "At-Warehouse")
+                              .ToList();
+
+            // Pass data to view
+            var model = new WarehouseDashboardViewModel
+            {
+                OrdersByDay = totalOrdersByDay,
+                LatestOrders = latestOrders,
+                UnscannedOrders = unscannedOrders,
+                AtWarehouseOrders = atWarehouseOrders
+            };
+
+            return View(model);
         }
     }
 }

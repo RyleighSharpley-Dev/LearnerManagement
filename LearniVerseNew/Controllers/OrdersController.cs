@@ -11,6 +11,9 @@ using LearniVerseNew.Models;
 using LearniVerseNew.Models.ApplicationModels.Store_Models;
 using Microsoft.AspNet.Identity;
 using LearniVerseNew.Models.Helpers;
+using QRCoder;
+using System.Drawing;
+using System.IO;
 
 namespace LearniVerseNew.Controllers
 {
@@ -49,6 +52,8 @@ namespace LearniVerseNew.Controllers
                 return View(orders.ToList());
             }
         }
+
+
 
 
         // GET: Orders

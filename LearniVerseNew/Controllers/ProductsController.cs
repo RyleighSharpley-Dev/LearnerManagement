@@ -189,6 +189,7 @@ namespace LearniVerseNew.Controllers
             order.DateOrdered = DateTime.Now;
             order.StudentID = Id;
             order.OrderItems = new List<OrderItem>();
+            order.TrackingHistory = new List<OrderTrackingHistory>();
 
             // Store the order details in TempData or Session for later use
             TempData["Order"] = order;
@@ -217,7 +218,7 @@ namespace LearniVerseNew.Controllers
             }
 
             //var callbackUrl = Url.Action("PaymentCallback", "Checkout", null, Request.Url.Scheme);
-            var callbackUrl = "https://36ab-41-144-0-130.ngrok-free.app/Products/PaymentCallback";
+            var callbackUrl = "https://0f9f-41-144-0-130.ngrok-free.app/Products/PaymentCallback";
 
             var order = TempData["Order"] as Order;
 
@@ -261,6 +262,7 @@ namespace LearniVerseNew.Controllers
             {
                 // Retrieve the order from TempData
                 var order = TempData["FinalOrder"] as Order;
+                order.Status = "Received";
 
                 if (order == null)
                 {
@@ -277,6 +279,17 @@ namespace LearniVerseNew.Controllers
                     PaystackReference = response.Data.Reference,
                     Status = response.Data.Status,
                 };
+
+                var tracking = new OrderTrackingHistory()
+                {
+                    TrackingID = Guid.NewGuid(),
+                    OrderID = order.OrderID,
+                    Timestamp = DateTime.Now,
+                    UpdatedBy = "Admin",
+                    TrackingStage = "Received"
+                };
+                
+                order.TrackingHistory.Add(tracking);
 
                 // Save the order and order items to the database asynchronously
                 using (var db = new ApplicationDbContext())
