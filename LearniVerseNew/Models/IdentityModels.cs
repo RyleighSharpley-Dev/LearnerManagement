@@ -5,6 +5,7 @@ using LearniVerseNew.Models.ApplicationModels;
 using LearniVerseNew.Models.ApplicationModels.Gym_Models;
 using LearniVerseNew.Models.ApplicationModels.Meal_Planner_Models;
 using LearniVerseNew.Models.ApplicationModels.Regimen_Models;
+using LearniVerseNew.Models.ApplicationModels.Store_Models;
 using Microsoft.AspNet.Identity;
 using Microsoft.AspNet.Identity.EntityFramework;
 
@@ -28,6 +29,7 @@ namespace LearniVerseNew.Models
         public ApplicationDbContext()
             : base("DefaultConnection", throwIfV1Schema: false)
         {
+            this.Configuration.LazyLoadingEnabled = true;
         }
 
         public static ApplicationDbContext Create()
@@ -69,7 +71,11 @@ namespace LearniVerseNew.Models
         public DbSet<Workout> Workouts { get; set; }
         public DbSet<Regimen> Regimens { get; set; }
         public DbSet<WorkoutGoal> WorkoutGoals { get; set; }
-
+        public DbSet<Order> Orders { get; set; }
+        public DbSet<OrderItem> OrderItems { get; set; }
+        public DbSet<Product> Products { get; set; }
+        public DbSet<Category> Categories { get; set; }
+        public DbSet<Transaction> Transactions { get; set; }
 
 
 

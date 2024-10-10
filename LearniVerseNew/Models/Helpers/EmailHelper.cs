@@ -8,6 +8,7 @@ using System.Net;
 using System.Web;
 using LearniVerseNew.Models.ApplicationModels;
 using System.Threading.Tasks;
+using static QRCoder.PayloadGenerator;
 
 namespace LearniVerseNew.Models.Helpers
 {
@@ -25,6 +26,34 @@ namespace LearniVerseNew.Models.Helpers
             _smtpUsername = ConfigurationManager.AppSettings["SmtpUsername"];
             _smtpPassword = ConfigurationManager.AppSettings["SmtpPassword"];
         }
+
+        public async Task SendInvoiceAsync(string toEmail, byte[] pdfBytes, string fileName)
+        {
+            using (MailMessage mailMessage = new MailMessage())
+            {
+                mailMessage.From = new MailAddress(_smtpUsername);
+                mailMessage.To.Add(toEmail);
+                mailMessage.Subject = "Your Order Invoice";
+                mailMessage.Body = $"Your order has been received.\nPlease find attached the invoice for your order.";
+                mailMessage.IsBodyHtml = true; // Set to false if you're sending plain text
+
+                // Attach the PDF to the email
+                Attachment attachment = new Attachment(new MemoryStream(pdfBytes), fileName, "application/pdf");
+                mailMessage.Attachments.Add(attachment);
+
+                // SMTP client setup
+                using (SmtpClient smtp = new SmtpClient(_smtpServer))
+                {
+                    smtp.Port = _smtpPort;
+                    smtp.Credentials = new NetworkCredential(_smtpUsername, _smtpPassword);
+                    smtp.EnableSsl = true;
+
+                    // Send the email asynchronously
+                    await smtp.SendMailAsync(mailMessage);
+                }
+            }
+        }
+
 
 
         public void SendEmailWithAttachment(string recipientEmail, string filePath, string attachmentName)

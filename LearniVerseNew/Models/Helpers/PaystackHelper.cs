@@ -1,4 +1,5 @@
-﻿using PayStack.Net;
+﻿using LearniVerseNew.Models.ApplicationModels.Store_Models;
+using PayStack.Net;
 using System;
 using System.Collections.Generic;
 using System.Configuration;
@@ -31,6 +32,25 @@ namespace LearniVerseNew.Models.Helpers
             return _api.Transactions.Initialize(request);
         }
 
+        // Initialize a transaction for cart checkout
+        public TransactionInitializeResponse InitializeTransactionForCheckout(string email, decimal cartTotal, string callbackUrl)
+        {
+            // Convert cart total to kobo (if using NGN or ZAR, multiply by 100)
+            int amountInKobo = (int)(cartTotal * 100);
+
+            // Initialize the Paystack transaction
+            var request = new TransactionInitializeRequest
+            {
+                Email = email,
+                AmountInKobo = amountInKobo,
+                Currency = "ZAR", // Change currency if needed
+                CallbackUrl = callbackUrl
+            };
+
+            // Call Paystack API to initialize the transaction
+            return _api.Transactions.Initialize(request);
+        }
+
         public TransactionVerifyResponse VerifyTransaction(string reference)
         {
             return _api.Transactions.Verify(reference);
@@ -51,6 +71,9 @@ namespace LearniVerseNew.Models.Helpers
             return _api.Transactions.Initialize(request);
         }
 
+       
+
+        
 
     }
 }

@@ -1,0 +1,94 @@
+﻿@model LearniVerseNew.Models.ApplicationModels.Store_Models.Product
+
+@{
+
+    // Retrieve the cart from session or initialize an empty one
+    var cart = Session["Cart"] as List<LearniVerseNew.Models.ApplicationModels.Store_Models.CartItem> ?? new List<LearniVerseNew.Models.ApplicationModels.Store_Models.CartItem>();
+
+    // Calculate the total number of items in the cart
+    var cartItemCount = cart.Sum(item => item.Quantity);
+}
+
+<div class="container mt-5">
+    <!-- Shopping Cart Button -->
+    <div id="cartButton" class="position-fixed top-0 end-0 m-3">
+        <a href="@Url.Action("Cart", "Products")" class="btn btn-primary position-relative">
+            <i class="bi bi-cart"></i> Cart
+            <span id="cartCount" class="position-absolute top-0 start-100 translate-middle badge rounded-pill bg-secondary">
+                @ViewBag.CartCount
+            </span>
+            <span class="visually-hidden">items in cart</span>
+        </a>
+    </div>
+    <div class="row">
+        <!-- Product Image -->
+        <div class="col-md-6">
+            <img src="@Model.ImageUrl" alt="@Model.ProductName" class="img-fluid rounded shadow-sm" style="max-width: 100%; height: auto;">
+        </div>
+
+        <!-- Product Details -->
+        <div class="col-md-6">
+            <h1 class="display-4">@Model.ProductName</h1>
+            <p class="lead">@Model.Description</p>
+            <p><strong>Price: </strong> @Model.Price.ToString("C")</p>
+
+            <!-- Quantity Input -->
+            <form id="addToCartForm" class="mt-4">
+                <input type="hidden" name="productId" value="@Model.ProductID" />
+
+                <div class="form-group">
+                    <label for="quantity">Quantity:</label>
+                    <input type="number" name="quantity" id="quantity" class="form-control" value="1" min="1" max="99" />
+                </div>
+
+                <!-- Add to Cart Button -->
+                <button type="submit" class="btn btn-primary mt-3">Add to Cart</button>
+            </form>
+
+            <!-- Back to Storefront Button -->
+            <a href="@Url.Action("Storefront", "Products")" class="btn btn-secondary mt-3">Back to Store</a>
+        </div>
+    </div>
+
+    <!-- Success Message -->
+    <div id="successMessage" class="alert alert-success mt-4" style="display: none;">
+        Product added to cart!
+    </div>
+</div>
+
+@section Scripts {
+    @Scripts.Render("~/bundles/jquery")
+    @Scripts.Render("~/bundles/bootstrap")
+
+    <script>
+        $(document).ready(function () {
+            // Handle Add to Cart Form submission
+            $('#addToCartForm').on('submit', function (event) {
+                event.preventDefault(); // Prevent default form submission
+
+                var productId = $('input[name="productId"]').val();
+                var quantity = $('#quantity').val();
+
+                $.ajax({
+                    url: '@Url.Action("AddToCart", "Products")',
+                    method: 'POST',
+                    data: { productId: productId, quantity: quantity },
+                    success: function (response) {
+                        if (response.success) {
+                            // Show success message
+                            $('#successMessage').show().delay(3000).fadeOut();
+
+                            // Update the cart count
+                            $('#cartCount').text(response.cartCount);
+                        } else {
+                            alert(response.message);
+                        }
+                    },
+                    error: function () {
+                        alert('An error occurred while adding the product to the cart.');
+                    }
+                });
+            });
+        });
+    </script>
+}

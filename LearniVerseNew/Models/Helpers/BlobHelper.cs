@@ -19,6 +19,7 @@ namespace LearniVerseNew.Models.Helpers
         private readonly string _containerName = "classroom-file-container";
         private readonly string _nscContainerName = "nsc-documents";
         private readonly string _submissioncontainerName = "submissions";
+        private readonly string _productContainerName = "products";
         public BlobHelper()
         {
             string connectionString = ConfigurationManager.ConnectionStrings["BlobLocal"].ConnectionString; //change this in prod
@@ -199,6 +200,78 @@ namespace LearniVerseNew.Models.Helpers
                 // Handle exceptions
                 Console.WriteLine($"Error deleting blob: {ex.Message}");
                 return false;
+            }
+        }
+
+        public bool DeleteProductBlob(string fileName)
+        {
+            try
+            {
+                var containerClient = _blobServiceClient.GetBlobContainerClient(_productContainerName);
+                var blobClient = containerClient.GetBlobClient(fileName);
+
+                if (blobClient.Exists())
+                {
+                    blobClient.Delete();
+                    return true;
+                }
+                else
+                {
+                    return false;
+                }
+            }
+            catch (RequestFailedException ex)
+            {
+                // Handle exceptions
+                Console.WriteLine($"Error deleting blob: {ex.Message}");
+                return false;
+            }
+        }
+
+
+        public (bool Success, string name, string url) UploadProductBlob(string originalFileName, Stream content)
+        {
+            try
+            {
+                var containerClient = _blobServiceClient.GetBlobContainerClient(_productContainerName);
+
+                if (!containerClient.Exists())
+                {
+                    containerClient.Create();
+                }
+
+                // Get the blob client
+                var blobClient = containerClient.GetBlobClient(originalFileName);
+
+                // Check if the blob already exists
+                if (blobClient.Exists())
+                {
+                    return (false, $"Blob '{originalFileName}' already exists in container '{_productContainerName}'.", null);
+                }
+
+                // Upload the blob
+                blobClient.Upload(content, true);
+
+                // Get the blob URL
+                var blobUrl = blobClient.Uri.AbsoluteUri;
+
+                return (true, originalFileName, blobUrl);
+            }
+            catch (RequestFailedException ex)
+            {
+                return (false, $"Error uploading file: {ex.Message}", null);
+            }
+        }
+
+        public async Task<byte[]> RetriveProductPhotoAsync(string photoName)
+        {
+            var containerClient = _blobServiceClient.GetBlobContainerClient(_productContainerName);
+            var blobClient = containerClient.GetBlobClient(photoName);
+
+            using (var memoryStream = new MemoryStream())
+            {
+                await blobClient.DownloadToAsync(memoryStream);
+                return memoryStream.ToArray();
             }
         }
 
