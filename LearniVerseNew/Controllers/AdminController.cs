@@ -37,12 +37,57 @@ namespace LearniVerseNew.Controllers
                 StudentCount = GetStudentCount(),
                 CourseCount = GetCourseCount(),
                 TeacherCount = GetTeacherCount(),
-                JsonPayments = jsonPayments 
+                JsonPayments = jsonPayments,
+                UnreadNotificationsCount = GetUnreadNotificationsCount()
             };
 
             return View(viewModel);
         }
 
+        public ActionResult Notifications(string filter = "Unread")
+        {
+            var notifications = db.AdminNotifications.AsQueryable();
+
+            // Filter notifications based on the filter type
+            switch (filter)
+            {
+                case "Unread":
+                    notifications = notifications.Where(n => !n.IsRead);
+                    break;
+                case "Read":
+                    notifications = notifications.Where(n => n.IsRead);
+                    break;
+                case "All":
+                default:
+                    break; // Do not apply any filtering, show all notifications
+            }
+
+            // Store the notifications and current filter in ViewBag
+            ViewBag.Notifications = notifications.OrderByDescending(n => n.CreatedAt).ToList();
+            ViewBag.CurrentFilter = filter;
+
+            return View();
+        }
+
+
+
+        [HttpPost]
+        public ActionResult MarkAsRead(Guid notificationId)
+        {
+            var notification = db.AdminNotifications.Find(notificationId);
+            if (notification != null)
+            {
+                notification.IsRead = true;
+                db.Entry(notification).State = EntityState.Modified;
+                db.SaveChanges();
+            }
+            return RedirectToAction("Notifications");
+        }
+
+        private int GetUnreadNotificationsCount()
+        {
+            return db.AdminNotifications.Count(n => !n.IsRead);
+        }
         private int GetStudentCount()
         {
             // Implement logic to get the count of students

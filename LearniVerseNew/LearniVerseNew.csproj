@@ -690,8 +690,13 @@
     <Compile Include="Migrations\202410151208477_Added UserID to product review.Designer.cs">
       <DependentUpon>202410151208477_Added UserID to product review.cs</DependentUpon>
     </Compile>
+    <Compile Include="Migrations\202410151708322_AddedNotificationsfForLowstock.cs" />
+    <Compile Include="Migrations\202410151708322_AddedNotificationsfForLowstock.Designer.cs">
+      <DependentUpon>202410151708322_AddedNotificationsfForLowstock.cs</DependentUpon>
+    </Compile>
     <Compile Include="Migrations\Configuration.cs" />
     <Compile Include="Models\AccountViewModels.cs" />
+    <Compile Include="Models\ApplicationModels\AdminNotification.cs" />
     <Compile Include="Models\ApplicationModels\Assignment.cs" />
     <Compile Include="Models\ApplicationModels\Booking.cs" />
     <Compile Include="Models\ApplicationModels\Course.cs" />
@@ -1033,6 +1038,7 @@
     <Content Include="Views\Orders\OrderDetails.cshtml" />
     <Content Include="Views\Admin\WarehouseDashboard.cshtml" />
     <Content Include="Views\Tracking\OrderUpdated.cshtml" />
+    <Content Include="Views\Admin\Notifications.cshtml" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include="App_Data\" />
@@ -1212,6 +1218,9 @@
     </EmbeddedResource>
     <EmbeddedResource Include="Migrations\202410151208477_Added UserID to product review.resx">
       <DependentUpon>202410151208477_Added UserID to product review.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Migrations\202410151708322_AddedNotificationsfForLowstock.resx">
+      <DependentUpon>202410151708322_AddedNotificationsfForLowstock.cs</DependentUpon>
     </EmbeddedResource>
   </ItemGroup>
   <PropertyGroup>

@@ -57,8 +57,17 @@
                 </div>
 
                 <!-- Add to Cart Button -->
+                @if (Model.QuantityInStock > 0)
+                {
+
+
                 <button type="submit" class="btn btn-primary mt-3">Add to Cart</button>
-            </form>
+                }
+                else
+                {
+                    <span class="text-primary mt-1">Out of Stock!</span>
+                }
+                </form>
 
             <!-- Back to Storefront Button -->
             <a href="@Url.Action("Storefront", "Products")" class="btn btn-secondary mt-3">Back to Store</a>
