@@ -61,6 +61,7 @@ namespace LearniVerseNew.Controllers
             return db.Teachers.Count();
         }
 
+        [Authorize(Roles ="WareHouseAdmin")]
         public ActionResult WarehouseDashboard()
         {
             var totalOrdersByDay = db.Orders
@@ -88,13 +89,17 @@ namespace LearniVerseNew.Controllers
                               .Where(o => o.Status == "At-Warehouse")
                               .ToList();
 
+            var outForDeliveryOrders = db.Orders.Where(o => o.Status == "Out-For-Delivery").ToList();
+
+
             // Pass data to view
             var model = new WarehouseDashboardViewModel
             {
                 OrdersByDay = totalOrdersByDay,
                 LatestOrders = latestOrders,
                 UnscannedOrders = unscannedOrders,
-                AtWarehouseOrders = atWarehouseOrders
+                AtWarehouseOrders = atWarehouseOrders,
+                OutForDeliveryOrders = outForDeliveryOrders
             };
 
             return View(model);

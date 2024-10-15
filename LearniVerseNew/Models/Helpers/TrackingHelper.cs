@@ -38,7 +38,7 @@ namespace LearniVerseNew.Models.Helpers
         public async Task<string> GenerateQRCodeAsync(string trackingStage, string orderId)
         {
             // Construct the full tracking URL
-            string qrData = $"https://9288-41-144-0-130.ngrok-free.app/Tracking/UpdateOrderStatus?orderId={orderId}&stage={trackingStage}"; //change in prod
+            string qrData = $"https://8bfe-41-144-66-208.ngrok-free.app/Tracking/UpdateOrderStatus?orderId={orderId}&stage={trackingStage}"; //change in prod
             // Generate the QR code
             using (QRCodeGenerator qrGenerator = new QRCodeGenerator())
             {

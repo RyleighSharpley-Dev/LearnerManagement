@@ -87,6 +87,11 @@ namespace LearniVerseNew.Controllers
         public ActionResult ViewProduct(Guid Id)
         {
             var product = db.Products.Find(Id);
+
+            var currentUserId = User.Identity.GetUserId();  // Get the User ID
+
+            ViewBag.CurrentUserId = currentUserId;
+
             return View(product);
         }
 

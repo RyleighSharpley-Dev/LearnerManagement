@@ -75,6 +75,7 @@ namespace LearniVerseNew.Controllers
             return File(qrCodeBytes, "image/png");
         }
 
+       
         
         public async Task<ActionResult> UpdateOrderStatus(Guid orderId, string stage)
         {

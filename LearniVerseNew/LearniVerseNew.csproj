@@ -477,6 +477,7 @@
     <Compile Include="Controllers\OrdersController.cs" />
     <Compile Include="Controllers\PaymentsController.cs" />
     <Compile Include="Controllers\PlansController.cs" />
+    <Compile Include="Controllers\ProductReviewsController.cs" />
     <Compile Include="Controllers\ProductsController.cs" />
     <Compile Include="Controllers\QualificationsController.cs" />
     <Compile Include="Controllers\QuizController.cs" />
@@ -681,6 +682,14 @@
     <Compile Include="Migrations\202410101509534_Added trcking History to order.Designer.cs">
       <DependentUpon>202410101509534_Added trcking History to order.cs</DependentUpon>
     </Compile>
+    <Compile Include="Migrations\202410151129135_ProductReview added.cs" />
+    <Compile Include="Migrations\202410151129135_ProductReview added.Designer.cs">
+      <DependentUpon>202410151129135_ProductReview added.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Migrations\202410151208477_Added UserID to product review.cs" />
+    <Compile Include="Migrations\202410151208477_Added UserID to product review.Designer.cs">
+      <DependentUpon>202410151208477_Added UserID to product review.cs</DependentUpon>
+    </Compile>
     <Compile Include="Migrations\Configuration.cs" />
     <Compile Include="Models\AccountViewModels.cs" />
     <Compile Include="Models\ApplicationModels\Assignment.cs" />
@@ -722,6 +731,7 @@
     <Compile Include="Models\ApplicationModels\Store Models\OrderItem.cs" />
     <Compile Include="Models\ApplicationModels\Store Models\OrderTrackingHistory.cs" />
     <Compile Include="Models\ApplicationModels\Store Models\Product.cs" />
+    <Compile Include="Models\ApplicationModels\Store Models\ProductReview.cs" />
     <Compile Include="Models\ApplicationModels\Store Models\Transaction.cs" />
     <Compile Include="Models\ApplicationModels\Student.cs" />
     <Compile Include="Models\ApplicationModels\StudentFinalMark.cs" />
@@ -757,9 +767,11 @@
     <Compile Include="Models\Helpers\EmailHelper.cs" />
     <Compile Include="Models\Helpers\ExerciseHelper.cs" />
     <Compile Include="Models\Helpers\FatsecretHelper.cs" />
+    <Compile Include="Models\Helpers\InMemoryTokenStore.cs" />
     <Compile Include="Models\Helpers\PaystackHelper.cs" />
     <Compile Include="Models\Helpers\PdfHelper.cs" />
     <Compile Include="Models\Helpers\QRHelper.cs" />
+    <Compile Include="Models\Helpers\ShippoHelper.cs" />
     <Compile Include="Models\Helpers\TrackingHelper.cs" />
     <Compile Include="Models\IdentityModels.cs" />
     <Compile Include="Models\ManageViewModels.cs" />
@@ -1024,6 +1036,7 @@
   </ItemGroup>
   <ItemGroup>
     <Folder Include="App_Data\" />
+    <Folder Include="Views\ProductReviews\" />
   </ItemGroup>
   <ItemGroup>
     <Content Include="Content\bootstrap.rtl.min.css.map" />
@@ -1193,6 +1206,12 @@
     </EmbeddedResource>
     <EmbeddedResource Include="Migrations\202410101509534_Added trcking History to order.resx">
       <DependentUpon>202410101509534_Added trcking History to order.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Migrations\202410151129135_ProductReview added.resx">
+      <DependentUpon>202410151129135_ProductReview added.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Migrations\202410151208477_Added UserID to product review.resx">
+      <DependentUpon>202410151208477_Added UserID to product review.cs</DependentUpon>
     </EmbeddedResource>
   </ItemGroup>
   <PropertyGroup>

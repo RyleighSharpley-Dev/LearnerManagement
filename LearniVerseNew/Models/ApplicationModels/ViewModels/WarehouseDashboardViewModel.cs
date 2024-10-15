@@ -12,6 +12,7 @@ namespace LearniVerseNew.Models.ApplicationModels.ViewModels
         public List<Order> UnscannedOrders { get; set; }
         public List<TotalOrdersByDay> OrdersByDay { get; set; }
         public List<Order> AtWarehouseOrders { get; set; }
+        public List<Order> OutForDeliveryOrders { get; set; }
     }
 
     public class TotalOrdersByDay

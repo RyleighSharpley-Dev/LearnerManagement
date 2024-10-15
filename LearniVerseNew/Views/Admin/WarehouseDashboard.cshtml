@@ -144,10 +144,46 @@
                             </div>
                         </div>
                     }
-<td/>
+                <td />
             </tr>
 
-            
+
         }
     </tbody>
 </table>
+
+<h4>Out-for-Delivery Orders</h4>
+<table class="table table-success">
+    <thead>
+        <tr>
+            <th>Order ID</th>
+            <th>Student ID</th>
+            <th>Date Ordered</th>
+            <th>Status</th>
+            <th>Action</th>
+        </tr>
+    </thead>
+    <tbody>
+        @foreach (var order in Model.OutForDeliveryOrders)
+        {
+            <tr>
+                <td>@order.OrderID</td>
+                <td>@order.StudentID</td>
+                <td>@order.DateOrdered.ToString("MM/dd/yyyy")</td>
+                <td>@order.Status</td>
+                <td>
+                </td>
+            </tr>
+        }
+    </tbody>
+</table>
+
+
+@section scripts{
+    <script type="text/javascript">
+        // Trigger page reload when any modal is closed
+        $('.modal').on('hidden.bs.modal', function () {
+            location.reload(); // Reload the page when the modal closes
+        });</script>
+
+}

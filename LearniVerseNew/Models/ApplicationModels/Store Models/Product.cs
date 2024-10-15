@@ -29,5 +29,7 @@ namespace LearniVerseNew.Models.ApplicationModels.Store_Models
         // Navigation property for the Category
         public virtual Category Category { get; set; }
 
+        public virtual ICollection<ProductReview> Reviews { get; set; }
+
     }
 }

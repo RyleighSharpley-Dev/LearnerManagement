@@ -77,6 +77,7 @@ namespace LearniVerseNew.Models
         public DbSet<Category> Categories { get; set; }
         public DbSet<Transaction> Transactions { get; set; }
         public DbSet<OrderTrackingHistory> OrderTrackingHistories { get; set; }
+        public DbSet<ProductReview> ProductReviews { get; set; }
 
 
 
