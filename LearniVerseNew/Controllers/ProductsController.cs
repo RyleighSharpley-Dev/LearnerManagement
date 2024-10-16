@@ -239,7 +239,7 @@ namespace LearniVerseNew.Controllers
             }
 
             //var callbackUrl = Url.Action("PaymentCallback", "Checkout", null, Request.Url.Scheme);
-            var callbackUrl = "https://d750-197-229-3-121.ngrok-free.app/Products/PaymentCallback";
+            var callbackUrl = "https://98a5-41-144-69-172.ngrok-free.app/Products/PaymentCallback";
 
             var order = TempData["Order"] as Order;
 

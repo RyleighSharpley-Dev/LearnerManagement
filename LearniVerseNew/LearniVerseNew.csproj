@@ -490,6 +490,7 @@
     <Compile Include="Controllers\TimeSlotsController.cs" />
     <Compile Include="Controllers\TrackingController.cs" />
     <Compile Include="Controllers\TransactionsController.cs" />
+    <Compile Include="Controllers\WebhooksController.cs" />
     <Compile Include="Controllers\WorkoutsController.cs" />
     <Compile Include="Global.asax.cs">
       <DependentUpon>Global.asax</DependentUpon>
@@ -774,6 +775,7 @@
     <Compile Include="Models\Helpers\FatsecretHelper.cs" />
     <Compile Include="Models\Helpers\InMemoryTokenStore.cs" />
     <Compile Include="Models\Helpers\PaystackHelper.cs" />
+    <Compile Include="Models\Helpers\PaystackWebhookEvent.cs" />
     <Compile Include="Models\Helpers\PdfHelper.cs" />
     <Compile Include="Models\Helpers\QRHelper.cs" />
     <Compile Include="Models\Helpers\ShippoHelper.cs" />
@@ -1039,10 +1041,13 @@
     <Content Include="Views\Admin\WarehouseDashboard.cshtml" />
     <Content Include="Views\Tracking\OrderUpdated.cshtml" />
     <Content Include="Views\Admin\Notifications.cshtml" />
+    <Content Include="Views\Orders\CancelOrderConfirmation.cshtml" />
+    <Content Include="Views\Orders\OrderCancelled.cshtml" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include="App_Data\" />
     <Folder Include="Views\ProductReviews\" />
+    <Folder Include="Views\Webhooks\" />
   </ItemGroup>
   <ItemGroup>
     <Content Include="Content\bootstrap.rtl.min.css.map" />

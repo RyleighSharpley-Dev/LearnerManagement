@@ -67,7 +67,7 @@ namespace LearniVerseNew.Controllers
         public ActionResult GetEvents()
         {
             // Retrieve the student ID from the session
-            var id = Session["UserId"]?.ToString();
+            var id = User.Identity.GetUserId();
 
             if (!string.IsNullOrEmpty(id))
             {
@@ -138,7 +138,7 @@ namespace LearniVerseNew.Controllers
 
         public ActionResult ProgressCenter()
         {
-            var studentId = Session["UserId"].ToString(); // Assuming you're using ASP.NET Identity
+            var studentId = User.Identity.GetUserId(); // Assuming you're using ASP.NET Identity
             var student = db.Students
                 .Include(s => s.Enrollments.Select(e => e.Courses))
                 .FirstOrDefault(s => s.StudentID == studentId);
@@ -171,7 +171,7 @@ namespace LearniVerseNew.Controllers
                    .Select(c => c.CourseName)
                    .FirstOrDefault();
 
-            var studentId = Session["UserId"].ToString();
+            var studentId = User.Identity.GetUserId();
 
             var StudentFinalMark = db.StudentFinalMarks
                               .Where(s => s.StudentID == studentId && s.CourseID == selectedCourseId);
