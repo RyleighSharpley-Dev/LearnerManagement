@@ -20,11 +20,12 @@ namespace LearniVerseNew.Controllers
         private ApplicationDbContext db = new ApplicationDbContext();
 
         private readonly TrackingHelper trackingHelper;
-
+        private readonly EmailHelper emailHelper;
         public TrackingController()
         {
             
             trackingHelper = new TrackingHelper();
+            emailHelper = new EmailHelper();
         }
 
         public async Task<ActionResult> GenerateSendToWarehouseQRCode(Guid orderId)
@@ -124,7 +125,7 @@ namespace LearniVerseNew.Controllers
 
                 TempData["Message"] = $"Order has been updated to '{nextStage}' stage.";
 
-                // Send an email to notify the user (assuming emailHelper is configured)
+                await emailHelper.SendTrackingEmailAsync(order.Student.StudentEmail, order.OrderID.ToString(), nextStage);
 
                 return View("OrderUpdated", order);
             }
