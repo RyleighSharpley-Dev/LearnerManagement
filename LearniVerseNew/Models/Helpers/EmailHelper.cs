@@ -27,6 +27,37 @@ namespace LearniVerseNew.Models.Helpers
             _smtpPassword = ConfigurationManager.AppSettings["SmtpPassword"];
         }
 
+        public async Task SendDeliveryConfirmationEmailWithButtonAsync(string recipientEmail, string orderId, string confirmationUrl)
+        {
+            string subject = "Confirm Your Delivery";
+            string body = $@"
+            Dear Customer,<br/><br/>
+            We are happy to let you know that your order with ID <strong>{orderId}</strong> has been delivered.<br/><br/>
+            Please confirm receipt by clicking the link below:<br/><br/>
+            <a href='{confirmationUrl}' style='display: inline-block; padding: 10px 15px; background-color: #4CAF50; color: white; text-decoration: none; border-radius: 5px;'>Confirm Delivery</a><br/><br/>
+            Thank you for choosing LearniVerse!<br/><br/>
+            Best regards,<br/>
+            LearniVerse Team";
+
+            using (MailMessage msg = new MailMessage())
+            {
+                msg.From = new MailAddress(_smtpUsername);
+                msg.To.Add(recipientEmail);
+                msg.Subject = subject;
+                msg.Body = body;
+                msg.IsBodyHtml = true;
+
+                using (SmtpClient smtpClient = new SmtpClient(_smtpServer, _smtpPort))
+                {
+                    smtpClient.Credentials = new NetworkCredential(_smtpUsername, _smtpPassword);
+                    smtpClient.EnableSsl = true;
+                    await smtpClient.SendMailAsync(msg);
+                }
+            }
+        }
+
+
+
         public async Task SendTrackingEmailAsync(string recipientEmail, string orderId, string trackingStage)
         {
             string subject = $"Your Order is now {trackingStage}";

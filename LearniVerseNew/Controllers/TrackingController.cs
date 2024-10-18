@@ -12,6 +12,7 @@ using LearniVerseNew.Models.ApplicationModels.Store_Models;
 using QRCoder;
 using System.Drawing;
 using LearniVerseNew.Models.Helpers;
+using System.Configuration;
 
 namespace LearniVerseNew.Controllers
 {
@@ -120,12 +121,28 @@ namespace LearniVerseNew.Controllers
                 // Update the order status to the new stage
                 order.Status = nextStage;
 
+                if(nextStage == "Delivered")
+                {
+                    order.IsDelivered = true;
+                }
+
                 // Save changes asynchronously
                 await db.SaveChangesAsync();
 
                 TempData["Message"] = $"Order has been updated to '{nextStage}' stage.";
 
-                await emailHelper.SendTrackingEmailAsync(order.Student.StudentEmail, order.OrderID.ToString(), nextStage);
+                if(nextStage == "Out-For-Delivery")
+                {
+                    var baseUri = ConfigurationManager.AppSettings["AppBaseUrl"];
+
+                    var confirmationUrl = $"{baseUri}/Tracking/UpdateOrderStatus?orderId={orderId}&stage=Delivered";
+
+                    await emailHelper.SendDeliveryConfirmationEmailWithButtonAsync(order.Student.StudentEmail, order.OrderID.ToString(), confirmationUrl);
+                }
+                else
+                {
+                    await emailHelper.SendTrackingEmailAsync(order.Student.StudentEmail, order.OrderID.ToString(), nextStage);
+                }
 
                 return View("OrderUpdated", order);
             }

@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Configuration;
 using System.Drawing;
 using System.IO;
 using System.Threading.Tasks;
@@ -37,8 +38,9 @@ namespace LearniVerseNew.Models.Helpers
         // Async QR code generation
         public async Task<string> GenerateQRCodeAsync(string trackingStage, string orderId)
         {
+            var baseUrl = ConfigurationManager.AppSettings["AppBaseUrl"];
             // Construct the full tracking URL
-            string qrData = $"https://98a5-41-144-69-172.ngrok-free.app/Tracking/UpdateOrderStatus?orderId={orderId}&stage={trackingStage}"; //change in prod
+            string qrData = $"{baseUrl}/Tracking/UpdateOrderStatus?orderId={orderId}&stage={trackingStage}"; //change in prod
             // Generate the QR code
             using (QRCodeGenerator qrGenerator = new QRCodeGenerator())
             {

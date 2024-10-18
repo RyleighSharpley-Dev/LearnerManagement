@@ -15,6 +15,7 @@ using LearniVerseNew.Models.ApplicationModels;
 using System.IdentityModel;
 using Microsoft.AspNet.Identity;
 using System.Data.Entity.Validation;
+using System.Configuration;
 
 namespace LearniVerseNew.Controllers
 {
@@ -239,7 +240,10 @@ namespace LearniVerseNew.Controllers
             }
 
             //var callbackUrl = Url.Action("PaymentCallback", "Checkout", null, Request.Url.Scheme);
-            var callbackUrl = "https://98a5-41-144-69-172.ngrok-free.app/Products/PaymentCallback";
+
+            var baseUrl = ConfigurationManager.AppSettings["AppBaseUrl"];
+
+            var callbackUrl = $"{baseUrl}/Products/PaymentCallback";
 
             var order = TempData["Order"] as Order;
 
@@ -495,6 +499,7 @@ namespace LearniVerseNew.Controllers
                             Price = model.Price,
                             Description = model.Description,
                             QuantityInStock = model.QuantityInStock,
+                            LowStockThreshold = 2,
                             ImageName = name,
                             ImageUrl = url, // Save the blob URL
                             CategoryID = model.CategoryID // Assign selected category
