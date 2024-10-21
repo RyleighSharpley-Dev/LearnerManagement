@@ -53,10 +53,20 @@
         </dd>
 
         <dt class="col-sm-3">
-            @Html.DisplayNameFor(model => model.IsDelivered)
+            
+               Is Delivered
+
         </dt>
         <dd class="col-sm-9">
-            @Html.DisplayFor(model => model.IsDelivered)
+            @if (Model.Status == "Refunded")
+            {
+                <strong class="text-primary">CANCELED</strong>
+            }
+            else
+            {
+                @Html.DisplayFor(model => model.IsDelivered)
+            }
+
         </dd>
     </dl>
 </div>

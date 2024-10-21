@@ -55,7 +55,7 @@
 
     <!-- Store Management Features -->
     <div class="row">
-        <div class="col-md-4 mb-4">
+        <div class="col-md-3 mb-4">
             <div class="card shadow-sm">
                 <div class="card-body text-center">
                     <h3 class="card-title">Manage Products</h3>
@@ -65,7 +65,7 @@
             </div>
         </div>
 
-        <div class="col-md-4 mb-4">
+        <div class="col-md-3 mb-4">
             <div class="card shadow-sm">
                 <div class="card-body text-center">
                     <h3 class="card-title">View Orders</h3>
@@ -75,7 +75,7 @@
             </div>
         </div>
 
-        <div class="col-md-4 mb-4">
+        <div class="col-md-3 mb-4">
             <div class="card shadow-sm">
                 <div class="card-body text-center">
                     <h3 class="card-title">View Transactions</h3>
@@ -84,11 +84,29 @@
                 </div>
             </div>
         </div>
+
+        <div class="col-md-3 mb-4">
+            <div class="card shadow-sm">
+                <div class="card-body text-center">
+                    <h3 class="card-title">Manage Trainers</h3>
+                    <p class="card-text">View and manage all trainers.</p>
+                    @Html.ActionLink("Manage Trainers", "Index", "Trainers", null, new { @class = "btn btn-danger" })
+                </div>
+            </div>
+        </div>
+
+        <!-- Training Activities Management Card -->
+        <div class="col-md-3 mb-4">
+            <div class="card shadow-sm">
+                <div class="card-body text-center">
+                    <h3 class="card-title">Manage Training Activities</h3>
+                    <p class="card-text">View and manage training activities.</p>
+                    @Html.ActionLink("Manage Activities", "Index", "TrainingActivities", null, new { @class = "btn btn-info" })
+                </div>
+            </div>
+        </div>
     </div>
 </div>
-
-<!-- Notifications Section in Navbar -->
-
 
 @section Scripts {
     @Scripts.Render("~/bundles/jquery")
