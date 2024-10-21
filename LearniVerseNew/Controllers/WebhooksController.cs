@@ -23,7 +23,7 @@ namespace LearniVerseNew.Controllers
         public async Task<ActionResult> PaystackWebhook()
         {
             var json = await new StreamReader(HttpContext.Request.InputStream).ReadToEndAsync();
-            var webhookEvent = JsonConvert.DeserializeObject<PaystackWebhookEvent>(json); // Assuming you've created PaystackWebhookEvent model
+            var webhookEvent = JsonConvert.DeserializeObject<PaystackWebhookEvent>(json); 
 
             if(webhookEvent.Event != "refund.processed")
             {
@@ -32,6 +32,7 @@ namespace LearniVerseNew.Controllers
             // Process the event
             if (webhookEvent.Event == "refund.processed")
             {
+                
                 var transaction = await db.Transactions.Include(to => to.Order).FirstOrDefaultAsync(t => t.PaystackReference == webhookEvent.Data.TransactionReference && t.TransactionType == "Refund");
 
                 var order = transaction.Order;
@@ -42,7 +43,7 @@ namespace LearniVerseNew.Controllers
 
                     var tracking = new OrderTrackingHistory()
                     {
-                        TrackingID = new Guid(),
+                        TrackingID = Guid.NewGuid(),
                         TrackingStage = "Cancelled and Refunded",
                         Timestamp = DateTime.Now,
                         UpdatedBy = "Admin",
@@ -58,9 +59,9 @@ namespace LearniVerseNew.Controllers
 
                     await db.SaveChangesAsync();
                 }
+
             }
 
-            // Log the event (optional)
             return new HttpStatusCodeResult(HttpStatusCode.OK);
         }
     }
