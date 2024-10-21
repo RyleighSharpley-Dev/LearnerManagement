@@ -105,6 +105,12 @@
       <HintPath>..\packages\IronSoftware.Common.2024.1.7\lib\netstandard2.0\IronSoftware.Shared.dll</HintPath>
       <Private>True</Private>
     </Reference>
+    <Reference Include="Microsoft.AspNet.SignalR.Core, Version=2.4.3.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL">
+      <HintPath>..\packages\Microsoft.AspNet.SignalR.Core.2.4.3\lib\net45\Microsoft.AspNet.SignalR.Core.dll</HintPath>
+    </Reference>
+    <Reference Include="Microsoft.AspNet.SignalR.SystemWeb, Version=2.4.3.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL">
+      <HintPath>..\packages\Microsoft.AspNet.SignalR.SystemWeb.2.4.3\lib\net45\Microsoft.AspNet.SignalR.SystemWeb.dll</HintPath>
+    </Reference>
     <Reference Include="Microsoft.Azure.KeyVault.Core, Version=1.0.0.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL">
       <HintPath>..\packages\Microsoft.Azure.KeyVault.Core.1.0.0\lib\net40\Microsoft.Azure.KeyVault.Core.dll</HintPath>
       <Private>True</Private>
@@ -471,6 +477,7 @@
     <Compile Include="Controllers\OrdersController.cs" />
     <Compile Include="Controllers\PaymentsController.cs" />
     <Compile Include="Controllers\PlansController.cs" />
+    <Compile Include="Controllers\ProductReviewsController.cs" />
     <Compile Include="Controllers\ProductsController.cs" />
     <Compile Include="Controllers\QualificationsController.cs" />
     <Compile Include="Controllers\QuizController.cs" />
@@ -481,7 +488,9 @@
     <Compile Include="Controllers\TaskItemsController.cs" />
     <Compile Include="Controllers\TeachersController.cs" />
     <Compile Include="Controllers\TimeSlotsController.cs" />
+    <Compile Include="Controllers\TrackingController.cs" />
     <Compile Include="Controllers\TransactionsController.cs" />
+    <Compile Include="Controllers\WebhooksController.cs" />
     <Compile Include="Controllers\WorkoutsController.cs" />
     <Compile Include="Global.asax.cs">
       <DependentUpon>Global.asax</DependentUpon>
@@ -662,8 +671,33 @@
     <Compile Include="Migrations\202410101332339_TransactionTypeadded.Designer.cs">
       <DependentUpon>202410101332339_TransactionTypeadded.cs</DependentUpon>
     </Compile>
+    <Compile Include="Migrations\202410101419084_OrderStatusadded.cs" />
+    <Compile Include="Migrations\202410101419084_OrderStatusadded.Designer.cs">
+      <DependentUpon>202410101419084_OrderStatusadded.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Migrations\202410101501419_AddedTrackingHistory.cs" />
+    <Compile Include="Migrations\202410101501419_AddedTrackingHistory.Designer.cs">
+      <DependentUpon>202410101501419_AddedTrackingHistory.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Migrations\202410101509534_Added trcking History to order.cs" />
+    <Compile Include="Migrations\202410101509534_Added trcking History to order.Designer.cs">
+      <DependentUpon>202410101509534_Added trcking History to order.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Migrations\202410151129135_ProductReview added.cs" />
+    <Compile Include="Migrations\202410151129135_ProductReview added.Designer.cs">
+      <DependentUpon>202410151129135_ProductReview added.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Migrations\202410151208477_Added UserID to product review.cs" />
+    <Compile Include="Migrations\202410151208477_Added UserID to product review.Designer.cs">
+      <DependentUpon>202410151208477_Added UserID to product review.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Migrations\202410151708322_AddedNotificationsfForLowstock.cs" />
+    <Compile Include="Migrations\202410151708322_AddedNotificationsfForLowstock.Designer.cs">
+      <DependentUpon>202410151708322_AddedNotificationsfForLowstock.cs</DependentUpon>
+    </Compile>
     <Compile Include="Migrations\Configuration.cs" />
     <Compile Include="Models\AccountViewModels.cs" />
+    <Compile Include="Models\ApplicationModels\AdminNotification.cs" />
     <Compile Include="Models\ApplicationModels\Assignment.cs" />
     <Compile Include="Models\ApplicationModels\Booking.cs" />
     <Compile Include="Models\ApplicationModels\Course.cs" />
@@ -701,7 +735,9 @@
     <Compile Include="Models\ApplicationModels\Store Models\Category.cs" />
     <Compile Include="Models\ApplicationModels\Store Models\Order.cs" />
     <Compile Include="Models\ApplicationModels\Store Models\OrderItem.cs" />
+    <Compile Include="Models\ApplicationModels\Store Models\OrderTrackingHistory.cs" />
     <Compile Include="Models\ApplicationModels\Store Models\Product.cs" />
+    <Compile Include="Models\ApplicationModels\Store Models\ProductReview.cs" />
     <Compile Include="Models\ApplicationModels\Store Models\Transaction.cs" />
     <Compile Include="Models\ApplicationModels\Student.cs" />
     <Compile Include="Models\ApplicationModels\StudentFinalMark.cs" />
@@ -731,14 +767,19 @@
     <Compile Include="Models\ApplicationModels\ViewModels\StudySessionViewModel.cs" />
     <Compile Include="Models\ApplicationModels\ViewModels\SubmitAssignmentViewMode.cs" />
     <Compile Include="Models\ApplicationModels\ViewModels\UploadViewModel.cs" />
+    <Compile Include="Models\ApplicationModels\ViewModels\WarehouseDashboardViewModel.cs" />
     <Compile Include="Models\ApplicationModels\ViewModels\WeightingViewModel.cs" />
     <Compile Include="Models\Helpers\BlobHelper.cs" />
     <Compile Include="Models\Helpers\EmailHelper.cs" />
     <Compile Include="Models\Helpers\ExerciseHelper.cs" />
     <Compile Include="Models\Helpers\FatsecretHelper.cs" />
+    <Compile Include="Models\Helpers\InMemoryTokenStore.cs" />
     <Compile Include="Models\Helpers\PaystackHelper.cs" />
+    <Compile Include="Models\Helpers\PaystackWebhookEvent.cs" />
     <Compile Include="Models\Helpers\PdfHelper.cs" />
     <Compile Include="Models\Helpers\QRHelper.cs" />
+    <Compile Include="Models\Helpers\ShippoHelper.cs" />
+    <Compile Include="Models\Helpers\TrackingHelper.cs" />
     <Compile Include="Models\IdentityModels.cs" />
     <Compile Include="Models\ManageViewModels.cs" />
     <Compile Include="Models\ApplicationModels\StudySession.cs" />
@@ -780,6 +821,8 @@
     <Content Include="Scripts\jquery-3.7.1.slim.js" />
     <Content Include="Scripts\jquery-3.7.1.slim.min.js" />
     <None Include="Scripts\jquery.validate-vsdoc.js" />
+    <Content Include="Scripts\jquery.signalR-2.4.3.js" />
+    <Content Include="Scripts\jquery.signalR-2.4.3.min.js" />
     <Content Include="Scripts\jquery.validate.js" />
     <Content Include="Scripts\jquery.validate.min.js" />
     <Content Include="Scripts\jquery.validate.unobtrusive.js" />
@@ -995,9 +1038,16 @@
     <Content Include="Views\Orders\Index.cshtml" />
     <Content Include="Views\Orders\OrderHistory.cshtml" />
     <Content Include="Views\Orders\OrderDetails.cshtml" />
+    <Content Include="Views\Admin\WarehouseDashboard.cshtml" />
+    <Content Include="Views\Tracking\OrderUpdated.cshtml" />
+    <Content Include="Views\Admin\Notifications.cshtml" />
+    <Content Include="Views\Orders\CancelOrderConfirmation.cshtml" />
+    <Content Include="Views\Orders\OrderCancelled.cshtml" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include="App_Data\" />
+    <Folder Include="Views\ProductReviews\" />
+    <Folder Include="Views\Webhooks\" />
   </ItemGroup>
   <ItemGroup>
     <Content Include="Content\bootstrap.rtl.min.css.map" />
@@ -1158,6 +1208,24 @@
     </EmbeddedResource>
     <EmbeddedResource Include="Migrations\202410101332339_TransactionTypeadded.resx">
       <DependentUpon>202410101332339_TransactionTypeadded.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Migrations\202410101419084_OrderStatusadded.resx">
+      <DependentUpon>202410101419084_OrderStatusadded.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Migrations\202410101501419_AddedTrackingHistory.resx">
+      <DependentUpon>202410101501419_AddedTrackingHistory.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Migrations\202410101509534_Added trcking History to order.resx">
+      <DependentUpon>202410101509534_Added trcking History to order.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Migrations\202410151129135_ProductReview added.resx">
+      <DependentUpon>202410151129135_ProductReview added.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Migrations\202410151208477_Added UserID to product review.resx">
+      <DependentUpon>202410151208477_Added UserID to product review.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Migrations\202410151708322_AddedNotificationsfForLowstock.resx">
+      <DependentUpon>202410151708322_AddedNotificationsfForLowstock.cs</DependentUpon>
     </EmbeddedResource>
   </ItemGroup>
   <PropertyGroup>

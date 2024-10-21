@@ -20,6 +20,8 @@ namespace LearniVerseNew.Models.ApplicationModels.Store_Models
 
         public int QuantityInStock { get; set; }
 
+        public int LowStockThreshold { get; set; }
+
         public string ImageName { get; set; }
 
         public string ImageUrl { get; set; }
@@ -28,6 +30,8 @@ namespace LearniVerseNew.Models.ApplicationModels.Store_Models
 
         // Navigation property for the Category
         public virtual Category Category { get; set; }
+
+        public virtual ICollection<ProductReview> Reviews { get; set; }
 
     }
 }

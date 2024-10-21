@@ -10,9 +10,8 @@
             <h2 class="card-title">Product Details</h2>
         </div>
         <div class="card-body">
-            <!-- Use Bootstrap grid to align image and details side by side -->
+            <!-- Product Information -->
             <div class="row">
-                <!-- Left side: Image preview -->
                 <div class="col-md-4">
                     @if (!string.IsNullOrEmpty(ViewBag.PhotoData))
                     {
@@ -23,8 +22,6 @@
                         <img src="@ViewBag.DefaultPhotoPath" class="img" alt="Default Photo" style="width: 100%; max-height: auto;" />
                     }
                 </div>
-
-                <!-- Right side: Product information -->
                 <div class="col-md-8">
                     <h4>@Model.ProductName</h4>
                     <hr />
@@ -39,6 +36,57 @@
                 @Html.ActionLink("Edit", "Edit", new { id = Model.ProductID }, new { @class = "btn btn-primary" })
                 @Html.ActionLink("Back to List", "Index", null, new { @class = "btn btn-secondary ml-2" })
             </div>
+        </div>
+    </div>
+
+    <!-- Product Reviews Section -->
+    <div class="card mt-4">
+        <div class="card-header">
+            <h3>Product Reviews</h3>
+        </div>
+        <div class="card-body">
+            @if (Model.Reviews != null && Model.Reviews.Any())
+            {
+                <div class="table-responsive">
+                    <table class="table table-striped table-bordered">
+                        <thead>
+                            <tr>
+                                <th>Reviewer</th>
+                                <th>Rating</th>
+                                <th>Review</th>
+                                <th>Date</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            @foreach (var review in Model.Reviews.OrderByDescending(r => r.ReviewDate))
+                            {
+                                <tr>
+                                    <td>@review.ReviewerName</td>
+                                    <td>
+                                        @for (int i = 1; i <= 5; i++)
+                                        {
+                                            if (i <= review.Rating)
+                                            {
+                                                <i class="fa fa-star text-warning"></i> <!-- Filled star -->
+                                            }
+                                            else
+                                            {
+                                                <i class="fa fa-star text-secondary"></i> <!-- Empty star -->
+                                            }
+                                        }
+                                    </td>
+                                    <td>@review.ReviewText</td>
+                                    <td>@review.ReviewDate.ToString("MM/dd/yyyy")</td>
+                                </tr>
+                            }
+                        </tbody>
+                    </table>
+                </div>
+            }
+            else
+            {
+                <p>No reviews available for this product.</p>
+            }
         </div>
     </div>
 </div>

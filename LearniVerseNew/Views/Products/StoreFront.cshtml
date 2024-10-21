@@ -1,7 +1,7 @@
 ﻿@model IEnumerable<LearniVerseNew.Models.ApplicationModels.Store_Models.Product>
 
 @{
-    
+
     // Retrieve the cart from session or initialize an empty one
     var cart = Session["Cart"] as List<LearniVerseNew.Models.ApplicationModels.Store_Models.CartItem> ?? new List<LearniVerseNew.Models.ApplicationModels.Store_Models.CartItem>();
 
@@ -10,7 +10,10 @@
 }
 
 <div class="container">
-
+    <div class="alert alert-danger alert-dismissible fade show" role="alert" id="stockAlert" style="display:none;">
+        <strong>Error!</strong> You can't add more than the available stock.
+        <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+    </div>
     <!-- Shopping Cart Button -->
     <div id="cartButton" class="position-fixed top-0 end-0 m-3">
         <a href="@Url.Action("Cart", "Products")" class="btn btn-primary position-relative">
@@ -87,6 +90,9 @@
     <div class="row">
         @foreach (var product in Model)
         {
+
+            var averageRating = product.Reviews.Any() ? product.Reviews.Average(r => r.Rating) : 0;
+
             <div class="col-md-4">
                 <div class="card mb-4 shadow-sm">
                     <img src="@product.ImageUrl" class="card-img-top" alt="@product.ProductName" style="height: 200px; object-fit: contain;" />
@@ -94,13 +100,39 @@
                         <h5 class="card-title">@product.ProductName</h5>
                         <p class="card-text">@product.Description</p>
                         <p><strong>Price:</strong> @product.Price.ToString("C")</p>
+                        <p><strong>In Stock:</strong> <span class="product-stock">@product.QuantityInStock</span></p> <!-- Stock info -->
+                        <p>
+                        <p>
+                            <strong>Rating: </strong>
+                            @if (product.Reviews.Any())
+                            {
+                                for (var i = 1; i <= 5; i++)
+                                {
+                                    <i class="fa fa-star @(i <= averageRating ? "text-warning" : "text-muted")"></i>
+                                }
+                                <span> @averageRating.ToString("0.0")/5</span>
+                            }
+                            else
+                            {
+                                <span>No reviews yet</span>
+                            }
+                        </p>
+
+
                         <div class="d-flex justify-content-between align-items-center">
                             <div class="btn-group">
                                 <a href="@Url.Action("ViewProduct", "Products", new { id = product.ProductID })" class="btn btn-sm btn-outline-primary">View</a>
 
-                                <form class="add-to-cart-form" data-product-id="@product.ProductID">
-                                    <button type="submit" class="btn btn-sm btn-outline-danger">Add to Cart</button>
-                                </form>
+                                @if (product.QuantityInStock > 0)
+                                {
+                                    <form class="add-to-cart-form" data-product-id="@product.ProductID">
+                                        <button type="submit" class="btn btn-sm btn-outline-danger">Add to Cart</button>
+                                    </form>
+                                }
+                                else
+                                {
+                                    <span class="text-primary">Out of Stock!</span>
+                                }
                             </div>
                         </div>
                     </div>
@@ -114,44 +146,66 @@
     @Scripts.Render("~/bundles/jquery")
     @Scripts.Render("~/bundles/bootstrap")
 
-<script>
-        $(document).ready(function () {
-            // Check if the suggested product modal has been shown in the session
-            if (!sessionStorage.getItem('suggestedProductShown')) {
-                // Show the modal
-                $('#suggestedProductModal').modal('show');
-                // Set the session storage item
-                sessionStorage.setItem('suggestedProductShown', 'true');
+    <script>
+    $(document).ready(function () {
+        // Check if the suggested product modal has been shown in the session
+        if (!sessionStorage.getItem('suggestedProductShown')) {
+            // Show the modal if it hasn't been shown before
+            $('#suggestedProductModal').modal('show');
+            // Set session storage to avoid showing it again
+            sessionStorage.setItem('suggestedProductShown', 'true');
+        }
+
+        // Handle Add to Cart Form submission
+        $('.add-to-cart-form').on('submit', function (event) {
+            event.preventDefault(); // Prevent default form submission
+
+            var productId = $(this).data('product-id'); // Get the product ID
+            var form = $(this); // Reference to the form
+            var availableStock = parseInt($(this).closest('.card').find('.product-stock').text()); // Fetch stock from the view
+            var requestedQuantity = 1; // Default value for now (could be adjusted based on user input)
+
+            // Check if the requested quantity exceeds available stock
+            if (requestedQuantity > availableStock) {
+                $('#stockAlert').show();  // Show Bootstrap alert for insufficient stock
+                return;  // Prevent adding to cart
             }
-        });
 
-        // Intercept form submission for all forms with class 'add-to-cart-form'
-            $('.add-to-cart-form').on('submit', function (event) {
-                event.preventDefault(); // Prevent the default form submission
+            // Proceed with adding to cart via AJAX
+            $.ajax({
+                url: '@Url.Action("AddToCart", "Products")', // Adjust to your actual route
+                method: 'POST',
+                data: { productId: productId, quantity: requestedQuantity },
+                success: function (response) {
+                    if (response.success) {
+                        // Update the cart count dynamically
+                        $('#cartCount').text(response.cartCount);
 
-                var productId = $(this).data('product-id'); // Get product ID from data attribute
-                var form = $(this); // Reference to the form
-
-                $.ajax({
-                    url: '@Url.Action("AddToCart", "Products")',
-                    method: 'POST',
-                    data: { productId: productId },
-                    success: function (response) {
-                        // Assuming the server responds with the new cart count
-                        $('#cartCount').text(response.cartCount); // Update the cart count
-
-                        // Optionally: show a message or visual feedback
+                        // Show visual feedback for successful add to cart
                         form.find('button').text('Added!').prop('disabled', true);
                         setTimeout(function () {
                             form.find('button').text('Add to Cart').prop('disabled', false);
-                        }, 2000); // Reset after 2 seconds
-                    },
-                    error: function () {
-                        alert('An error occurred while adding the item to the cart.');
-                    }
-                });
-            });
-        
+                        }, 2000); // Reset the button after 2 seconds
 
-</script>
+                        // Optionally, show a success alert (Bootstrap)
+                        $('#successMessage').text('Product added to cart!').addClass('alert-success').fadeIn();
+                        setTimeout(function () {
+                            $('#successMessage').fadeOut();
+                        }, 3000); // Auto-hide after 3 seconds
+                    } else {
+                        // Show an error message if adding fails
+                        $('#errorMessage').text(response.message).addClass('alert-danger').fadeIn();
+                        setTimeout(function () {
+                            $('#errorMessage').fadeOut();
+                        }, 3000);
+                    }
+                },
+                error: function () {
+                    alert('An error occurred while adding the item to the cart.'); // Default error handler
+                }
+            });
+        });
+    });
+    </script>
+
 }

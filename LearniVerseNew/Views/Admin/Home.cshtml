@@ -4,6 +4,17 @@
 }
 
 <div class="container mt-5">
+    <!-- Notification Button -->
+    <div id="notificationButton" class="position-fixed top-0 end-0 m-3">
+        <a href="@Url.Action("Notifications", "Admin")" class="btn btn-primary position-relative">
+            <i class="bi bi-bell"></i>
+            <span id="notificationCount" class="position-absolute top-0 start-100 translate-middle badge rounded-pill bg-light">
+                @Model.UnreadNotificationsCount
+            </span>
+            <span class="visually-hidden">unread notifications</span>
+        </a>
+    </div>
+
     <div class="row">
         <div class="col-md-12 mb-4">
             <div class="card shadow-sm">
@@ -42,14 +53,14 @@
         </div>
     </div>
 
-    <!-- Gym Features Navigation -->
+    <!-- Store Management Features -->
     <div class="row">
         <div class="col-md-4 mb-4">
             <div class="card shadow-sm">
                 <div class="card-body text-center">
-                    <h3 class="card-title">Gym Members</h3>
-                    <p class="card-text">Manage all gym members.</p>
-                    @Html.ActionLink("View Members", "Index", "Memberships", null, new { @class = "btn btn-primary" })
+                    <h3 class="card-title">Manage Products</h3>
+                    <p class="card-text">View and manage all store products.</p>
+                    @Html.ActionLink("Manage Products", "Index", "Products", null, new { @class = "btn btn-primary" })
                 </div>
             </div>
         </div>
@@ -57,9 +68,9 @@
         <div class="col-md-4 mb-4">
             <div class="card shadow-sm">
                 <div class="card-body text-center">
-                    <h3 class="card-title">Cancel Requests</h3>
-                    <p class="card-text">Handle membership cancel requests.</p>
-                    @Html.ActionLink("View Cancel Requests", "CancelRequests", "Memberships", null, new { @class = "btn btn-warning" })
+                    <h3 class="card-title">View Orders</h3>
+                    <p class="card-text">Check and manage customer orders.</p>
+                    @Html.ActionLink("View Orders", "Index", "Orders", null, new { @class = "btn btn-warning" })
                 </div>
             </div>
         </div>
@@ -67,117 +78,19 @@
         <div class="col-md-4 mb-4">
             <div class="card shadow-sm">
                 <div class="card-body text-center">
-                    <h3 class="card-title">Gym Payments</h3>
-                    <p class="card-text">Manage all gym payments.</p>
-                    @Html.ActionLink("View Payments", "AllGymPayments", "Payments", null, new { @class = "btn btn-danger" })
+                    <h3 class="card-title">View Transactions</h3>
+                    <p class="card-text">Manage all transactions and payments.</p>
+                    @Html.ActionLink("View Transactions", "Index", "Transactions", null, new { @class = "btn btn-danger" })
                 </div>
             </div>
-        </div>
-    </div>
-
-    <div class="row">
-        <div class="border-bottom shadow-sm mb-2">
-            <h1>Revenue Insights</h1>
-        </div>
-
-        <div class="col-md-8">
-            <canvas id="moneyReceivedChart" width="400" height="200"></canvas>
-        </div>
-
-        <div class="col-md-4">
-            <canvas id="percentageChart" width="400" height="200"></canvas>
-        </div>
-
-        <div class="col-md-2">
-            @Html.ActionLink("View Payments", "Index", "Payments", null, new { @class = "btn btn-danger" })
         </div>
     </div>
 </div>
 
+<!-- Notifications Section in Navbar -->
+
+
 @section Scripts {
-    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
-    <script>
-        var payments = @Html.Raw(Model.JsonPayments);
-
-        var monthlyTotals = {};
-
-        payments.forEach(function (payment) {
-            var date = new Date(payment.PaymentDate);
-            var monthYear = date.toLocaleString('default', { month: 'short', year: 'numeric' });
-            var amount = payment.AmountPaid;
-
-            if (!monthlyTotals[monthYear]) {
-                monthlyTotals[monthYear] = 0;
-            }
-
-            monthlyTotals[monthYear] += amount;
-        });
-
-        var labels = Object.keys(monthlyTotals);
-        var data = Object.values(monthlyTotals);
-
-        var ctx = document.getElementById('moneyReceivedChart').getContext('2d');
-        var moneyReceivedChart = new Chart(ctx, {
-            type: 'bar',
-            data: {
-                labels: labels,
-                datasets: [{
-                    label: 'Total Revenue',
-                    data: data,
-                    backgroundColor: 'rgba(75, 192, 192, 0.2)',
-                    borderColor: 'rgba(75, 192, 192, 1)',
-                    borderWidth: 1
-                }]
-            },
-            options: {
-                scales: {
-                    y: {
-                        beginAtZero: true,
-                        ticks: {
-                            stepSize: 1000
-                        }
-                    }
-                }
-            }
-        });
-
-        var totalRevenue = data.reduce((acc, val) => acc + val, 0);
-        var percentages = data.map(amount => (amount / totalRevenue) * 100);
-
-        var pieCtx = document.getElementById('percentageChart').getContext('2d');
-        var percentageChart = new Chart(pieCtx, {
-            type: 'pie',
-            data: {
-                labels: labels,
-                datasets: [{
-                    label: 'Percentage of Total Revenue',
-                    data: percentages,
-                    backgroundColor: [
-                        'rgba(255, 99, 132, 0.2)',
-                        'rgba(54, 162, 235, 0.2)',
-                        'rgba(255, 205, 86, 0.2)',
-                        'rgba(75, 192, 192, 0.2)',
-                        'rgba(153, 102, 255, 0.2)',
-                        'rgba(255, 159, 64, 0.2)'
-                    ],
-                    borderColor: [
-                        'rgba(255, 99, 132, 1)',
-                        'rgba(54, 162, 235, 1)',
-                        'rgba(255, 205, 86, 1)',
-                        'rgba(75, 192, 192, 1)',
-                        'rgba(153, 102, 255, 1)',
-                        'rgba(255, 159, 64, 1)'
-                    ],
-                    borderWidth: 1
-                }]
-            },
-            options: {
-                scales: {
-                    y: {
-                        beginAtZero: true
-                    }
-                }
-            }
-        });
-    </script>
+    @Scripts.Render("~/bundles/jquery")
+    @Scripts.Render("~/bundles/bootstrap")
 }

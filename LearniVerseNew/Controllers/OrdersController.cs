@@ -11,6 +11,9 @@ using LearniVerseNew.Models;
 using LearniVerseNew.Models.ApplicationModels.Store_Models;
 using Microsoft.AspNet.Identity;
 using LearniVerseNew.Models.Helpers;
+using QRCoder;
+using System.Drawing;
+using System.IO;
 
 namespace LearniVerseNew.Controllers
 {
@@ -19,6 +22,7 @@ namespace LearniVerseNew.Controllers
         private ApplicationDbContext db = new ApplicationDbContext();
         private PdfHelper pdfHelper = new PdfHelper();
         private EmailHelper emailHelper = new EmailHelper();
+        private PaystackHelper paystackHelper = new PaystackHelper();
 
         public ActionResult OrderHistory(string sortOrder)
         {
@@ -49,6 +53,8 @@ namespace LearniVerseNew.Controllers
                 return View(orders.ToList());
             }
         }
+
+
 
 
         // GET: Orders
@@ -123,6 +129,89 @@ namespace LearniVerseNew.Controllers
                 TempData["Message"] = "Invoice sent to your email address.";
                 return RedirectToAction("OrderDetails", new { id = order.OrderID });
             
+        }
+
+        public async Task<ActionResult> CancelOrderConfirmation(Guid id)
+        {
+            var order = await db.Orders.FindAsync(id);
+            if (order == null)
+                return HttpNotFound();
+
+            // Only allow cancellation if the order is not delivered
+            if (order.IsDelivered)
+                return new HttpStatusCodeResult(HttpStatusCode.BadRequest, "Cannot cancel a delivered order.");
+
+            return View(order);
+        }
+
+
+        [HttpPost]
+        public async Task<ActionResult> ConfirmCancelOrder(Guid orderId)
+        {
+            // Retrieve the order
+            var order = await db.Orders.Include(o => o.OrderItems).FirstOrDefaultAsync(o => o.OrderID == orderId);
+            if (order == null)
+                return HttpNotFound();
+
+            // Check if the order has already been delivered
+            if (order.IsDelivered)
+                return new HttpStatusCodeResult(HttpStatusCode.BadRequest, "Order has already been delivered.");
+
+            // Update stock for each item in the order
+            foreach (var item in order.OrderItems)
+            {
+                var product = await db.Products.FindAsync(item.ProductID);
+                if (product != null)
+                {
+                    product.QuantityInStock += item.Quantity;  // Return stock
+                    db.Entry(product).State = EntityState.Modified;  // Mark product as modified
+                }
+            }
+
+            // Update order status to "Canceled"
+            order.Status = "Canceled";
+
+            var transaction = db.Transactions.FirstOrDefault(t => t.OrderID == order.OrderID);
+
+            // Process refund (e.g., through Stripe or PayPal)
+            await paystackHelper.RefundTransactionAsync(transaction.PaystackReference, transaction.Amount);
+
+            var refundTransaction = new Transaction
+            {
+                TransactionID = Guid.NewGuid(),
+                OrderID = order.OrderID,
+                Amount = -transaction.Amount, // Negative value for refund
+                TransactionDate = DateTime.Now,
+                Status = "Pending Refund" ,
+                PaystackReference = transaction.PaystackReference,
+                TransactionType = "Refund"
+                // Set as pending while waiting for confirmation
+            };
+
+            db.Transactions.Add(refundTransaction);
+
+            // Save changes
+            await db.SaveChangesAsync();
+
+            // Notify the user by email
+            //await emailHelper.SendCancellationEmailAsync(order.CustomerEmail, order.OrderID);
+
+            return RedirectToAction("OrderCancelled", new { orderId = orderId });
+
+        }
+
+        public ActionResult OrderCancelled(Guid orderId)
+        {
+            // You could fetch order details to display on the cancellation confirmation page
+            var order = db.Orders.FirstOrDefault(o => o.OrderID == orderId);
+
+            if (order == null)
+            {
+                return HttpNotFound("Order not found.");
+            }
+
+            ViewBag.OrderID = orderId;
+            return View();
         }
 
         // GET: Orders/Details/5

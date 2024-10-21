@@ -14,6 +14,8 @@ using LearniVerseNew.Models.Helpers;
 using LearniVerseNew.Models.ApplicationModels;
 using System.IdentityModel;
 using Microsoft.AspNet.Identity;
+using System.Data.Entity.Validation;
+using System.Configuration;
 
 namespace LearniVerseNew.Controllers
 {
@@ -87,6 +89,11 @@ namespace LearniVerseNew.Controllers
         public ActionResult ViewProduct(Guid Id)
         {
             var product = db.Products.Find(Id);
+
+            var currentUserId = User.Identity.GetUserId();  // Get the User ID
+
+            ViewBag.CurrentUserId = currentUserId;
+
             return View(product);
         }
 
@@ -121,15 +128,30 @@ namespace LearniVerseNew.Controllers
                 return Json(new { success = false, message = "Product not found." });
             }
 
+            if (quantity > product.QuantityInStock)
+            {
+                return Json(new { success = false, message = $"Only {product.QuantityInStock} items left in stock for {product.ProductName}." });
+            }
+
             // Check if the product is already in the cart
             var existingCartItem = cart.FirstOrDefault(p => p.ProductID == productId);
             if (existingCartItem != null)
             {
-                // If it exists, increase the quantity
-                existingCartItem.Quantity += quantity;
+                // Calculate the total quantity after adding
+                var totalQuantity = existingCartItem.Quantity + quantity;
+
+                // Prevent over-adding
+                if (totalQuantity > product.QuantityInStock)
+                {
+                    return Json(new { success = false, message = $"Only {product.QuantityInStock} items left in stock for {product.ProductName}." });
+                }
+
+                // If the quantity is valid, increase the existing cart item's quantity
+                existingCartItem.Quantity = totalQuantity;
             }
             else
             {
+               
                 // Otherwise, add the new product to the cart
                 cart.Add(new CartItem
                 {
@@ -189,6 +211,7 @@ namespace LearniVerseNew.Controllers
             order.DateOrdered = DateTime.Now;
             order.StudentID = Id;
             order.OrderItems = new List<OrderItem>();
+            order.TrackingHistory = new List<OrderTrackingHistory>();
 
             // Store the order details in TempData or Session for later use
             TempData["Order"] = order;
@@ -217,7 +240,10 @@ namespace LearniVerseNew.Controllers
             }
 
             //var callbackUrl = Url.Action("PaymentCallback", "Checkout", null, Request.Url.Scheme);
-            var callbackUrl = "https://36ab-41-144-0-130.ngrok-free.app/Products/PaymentCallback";
+
+            var baseUrl = ConfigurationManager.AppSettings["AppBaseUrl"];
+
+            var callbackUrl = $"{baseUrl}/Products/PaymentCallback";
 
             var order = TempData["Order"] as Order;
 
@@ -261,6 +287,14 @@ namespace LearniVerseNew.Controllers
             {
                 // Retrieve the order from TempData
                 var order = TempData["FinalOrder"] as Order;
+                order.Status = "Received";
+
+                foreach(var item in order.OrderItems)
+                {
+                   var product = db.Products.Find(item.ProductID);
+
+                    product.QuantityInStock -= item.Quantity;
+                }
 
                 if (order == null)
                 {
@@ -278,12 +312,62 @@ namespace LearniVerseNew.Controllers
                     Status = response.Data.Status,
                 };
 
+                var tracking = new OrderTrackingHistory()
+                {
+                    TrackingID = Guid.NewGuid(),
+                    OrderID = order.OrderID,
+                    Timestamp = DateTime.Now,
+                    UpdatedBy = "Admin",
+                    TrackingStage = "Received"
+                };
+                
+                order.TrackingHistory.Add(tracking);
+
                 // Save the order and order items to the database asynchronously
                 using (var db = new ApplicationDbContext())
                 {
+                    foreach (var item in order.OrderItems)
+                    {
+                        var product = db.Products.Find(item.ProductID);
+
+                        product.QuantityInStock -= item.Quantity;
+
+                        if (product.QuantityInStock <= product.LowStockThreshold)
+                        {
+                            // Create a new notification
+                            var notification = new AdminNotification
+                            {
+                                NotificationID = Guid.NewGuid(),
+                                Message = $"Low stock alert for {product.ProductName}. Only {product.QuantityInStock} left in stock.",
+                                CreatedAt = DateTime.Now,
+                                IsRead = false,
+                                ProductID = product.ProductID
+                            };
+
+                            db.AdminNotifications.Add(notification);
+                        }
+
+
+                    }
+
                     db.Transactions.Add(transaction);
                     db.Orders.Add(order);
-                    await db.SaveChangesAsync(); // Save changes asynchronously
+                    try
+                    {
+                        await db.SaveChangesAsync();
+                    }
+                    catch (DbEntityValidationException ex)
+                    {
+                        foreach (var entityValidationErrors in ex.EntityValidationErrors)
+                        {
+                            foreach (var validationError in entityValidationErrors.ValidationErrors)
+                            {
+                                System.Diagnostics.Debug.WriteLine("Property: " + validationError.PropertyName + " Error: " + validationError.ErrorMessage);
+                            }
+                        }
+                        throw; // Rethrow the exception after logging it for debugging
+                    }
+                    // Save changes asynchronously
 
                     ClearCart(); // Clear the cart after processing
                 }
@@ -415,6 +499,7 @@ namespace LearniVerseNew.Controllers
                             Price = model.Price,
                             Description = model.Description,
                             QuantityInStock = model.QuantityInStock,
+                            LowStockThreshold = 2,
                             ImageName = name,
                             ImageUrl = url, // Save the blob URL
                             CategoryID = model.CategoryID // Assign selected category
@@ -501,7 +586,7 @@ namespace LearniVerseNew.Controllers
                 existingProduct.Price = product.Price;
                 existingProduct.Description = product.Description;
                 existingProduct.QuantityInStock = product.QuantityInStock;
-                existingProduct.CategoryID = product.CategoryID;
+               // existingProduct.CategoryID = product.CategoryID;
 
                 // Handle image file if uploaded
                 if (ImageFile != null && ImageFile.ContentLength > 0)

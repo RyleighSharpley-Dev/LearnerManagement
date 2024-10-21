@@ -32,14 +32,22 @@
         {
             <tr>
                 <td>@order.OrderID</td>
-                <td>@order.DateOrdered</td>
+                <td>@order.DateOrdered.ToString("MM/dd/yyyy")</td>
                 <td>@order.TotalPrice.ToString("C")</td>
-                <td>@(order.IsDelivered ? "Delivered" : "Pending")</td>
+                <td>@order.Status</td>
                 <td>
-                    <!-- Button with Icon for Order Details -->
+                    <!-- View Details Button -->
                     <a href="@Url.Action("OrderDetails", new { id = order.OrderID })" class="btn btn-outline-dark">
                         <i class="bi bi-info-circle"></i> View Details
                     </a>
+
+                    <!-- Cancel Order Button (only if not delivered) -->
+                    @if (!order.IsDelivered && order.Status != "Refunded")
+                    {
+                        <a href="@Url.Action("CancelOrderConfirmation", new { id = order.OrderID })" class="btn btn-outline-danger">
+                            <i class="bi bi-x-circle"></i> Cancel Order
+                        </a>
+                    }
                 </td>
             </tr>
         }
