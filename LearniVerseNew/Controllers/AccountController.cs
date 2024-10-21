@@ -114,6 +114,14 @@ namespace LearniVerseNew.Controllers
                         {
                             return RedirectToAction("Home", "Students");
                         }
+                        else if (roles.Contains("WareHouseAdmin"))
+                        {
+                            return RedirectToAction("WareHouseDashboard", "Admin");
+                        }
+                        else if (roles.Contains("PersonalTrainer"))
+                        {
+                            return RedirectToAction("Dashboard", "Trainers");
+                        }
                         // Add more roles as needed
 
                         // If the user doesn't have a specific role, redirect to the default URL

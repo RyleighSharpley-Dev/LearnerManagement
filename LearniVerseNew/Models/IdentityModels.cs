@@ -6,6 +6,7 @@ using LearniVerseNew.Models.ApplicationModels.Gym_Models;
 using LearniVerseNew.Models.ApplicationModels.Meal_Planner_Models;
 using LearniVerseNew.Models.ApplicationModels.Regimen_Models;
 using LearniVerseNew.Models.ApplicationModels.Store_Models;
+using LearniVerseNew.Models.ApplicationModels.Trainer_Models;
 using Microsoft.AspNet.Identity;
 using Microsoft.AspNet.Identity.EntityFramework;
 
@@ -27,7 +28,7 @@ namespace LearniVerseNew.Models
     public class ApplicationDbContext : IdentityDbContext<ApplicationUser>
     {
         public ApplicationDbContext()
-            : base("DefaultConnection", throwIfV1Schema: false)
+            : base("LearniverseDeploymentString", throwIfV1Schema: false)
         {
             this.Configuration.LazyLoadingEnabled = true;
         }
@@ -79,6 +80,8 @@ namespace LearniVerseNew.Models
         public DbSet<OrderTrackingHistory> OrderTrackingHistories { get; set; }
         public DbSet<ProductReview> ProductReviews { get; set; }
         public DbSet<AdminNotification> AdminNotifications { get; set; }
+        public DbSet<Trainer> Trainers { get; set; }
+        public DbSet<TrainingActivity> TrainingActivities { get; set; }
 
 
         protected override void OnModelCreating(DbModelBuilder modelBuilder)
@@ -139,5 +142,7 @@ namespace LearniVerseNew.Models
 
             base.OnModelCreating(modelBuilder);
         }
+
+        public System.Data.Entity.DbSet<LearniVerseNew.Models.ApplicationModels.Trainer_Models.TrainingSession> TrainingSessions { get; set; }
     }
 }

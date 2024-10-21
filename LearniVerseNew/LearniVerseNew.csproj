@@ -489,6 +489,9 @@
     <Compile Include="Controllers\TeachersController.cs" />
     <Compile Include="Controllers\TimeSlotsController.cs" />
     <Compile Include="Controllers\TrackingController.cs" />
+    <Compile Include="Controllers\TrainersController.cs" />
+    <Compile Include="Controllers\TrainingActivitiesController.cs" />
+    <Compile Include="Controllers\TrainingSessionsController.cs" />
     <Compile Include="Controllers\TransactionsController.cs" />
     <Compile Include="Controllers\WebhooksController.cs" />
     <Compile Include="Controllers\WorkoutsController.cs" />
@@ -695,6 +698,22 @@
     <Compile Include="Migrations\202410151708322_AddedNotificationsfForLowstock.Designer.cs">
       <DependentUpon>202410151708322_AddedNotificationsfForLowstock.cs</DependentUpon>
     </Compile>
+    <Compile Include="Migrations\202410211134355_Added Personal Trainer Role.cs" />
+    <Compile Include="Migrations\202410211134355_Added Personal Trainer Role.Designer.cs">
+      <DependentUpon>202410211134355_Added Personal Trainer Role.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Migrations\202410211229391_Added trainer table to db.cs" />
+    <Compile Include="Migrations\202410211229391_Added trainer table to db.Designer.cs">
+      <DependentUpon>202410211229391_Added trainer table to db.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Migrations\202410211504494_Added Training Sessions.cs" />
+    <Compile Include="Migrations\202410211504494_Added Training Sessions.Designer.cs">
+      <DependentUpon>202410211504494_Added Training Sessions.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Migrations\202410211532478_Added Training ACtivities.cs" />
+    <Compile Include="Migrations\202410211532478_Added Training ACtivities.Designer.cs">
+      <DependentUpon>202410211532478_Added Training ACtivities.cs</DependentUpon>
+    </Compile>
     <Compile Include="Migrations\Configuration.cs" />
     <Compile Include="Models\AccountViewModels.cs" />
     <Compile Include="Models\ApplicationModels\AdminNotification.cs" />
@@ -744,6 +763,9 @@
     <Compile Include="Models\ApplicationModels\Submission.cs" />
     <Compile Include="Models\ApplicationModels\TaskItem.cs" />
     <Compile Include="Models\ApplicationModels\Teacher.cs" />
+    <Compile Include="Models\ApplicationModels\Trainer Models\Trainer.cs" />
+    <Compile Include="Models\ApplicationModels\Trainer Models\TrainingActivity.cs" />
+    <Compile Include="Models\ApplicationModels\Trainer Models\TrainingSession.cs" />
     <Compile Include="Models\ApplicationModels\ViewModels\AdminViewModel.cs" />
     <Compile Include="Models\ApplicationModels\ViewModels\AssignmentSubmissionsViewModel.cs" />
     <Compile Include="Models\ApplicationModels\ViewModels\AssignmentsViewModel.cs" />
@@ -761,11 +783,13 @@
     <Compile Include="Models\ApplicationModels\ViewModels\ProgressViewModel.cs" />
     <Compile Include="Models\ApplicationModels\ViewModels\QuizViewModel.cs" />
     <Compile Include="Models\ApplicationModels\ViewModels\RegisterTeacherViewModel.cs" />
+    <Compile Include="Models\ApplicationModels\ViewModels\RegisterTrainerViewModel.cs" />
     <Compile Include="Models\ApplicationModels\ViewModels\ReviewApplicationViewModel.cs" />
     <Compile Include="Models\ApplicationModels\ViewModels\StudentDashboardViewModel.cs" />
     <Compile Include="Models\ApplicationModels\ViewModels\StudentMarksViewModel.cs" />
     <Compile Include="Models\ApplicationModels\ViewModels\StudySessionViewModel.cs" />
     <Compile Include="Models\ApplicationModels\ViewModels\SubmitAssignmentViewMode.cs" />
+    <Compile Include="Models\ApplicationModels\ViewModels\TrainerDashboardViewModel.cs" />
     <Compile Include="Models\ApplicationModels\ViewModels\UploadViewModel.cs" />
     <Compile Include="Models\ApplicationModels\ViewModels\WarehouseDashboardViewModel.cs" />
     <Compile Include="Models\ApplicationModels\ViewModels\WeightingViewModel.cs" />
@@ -1043,6 +1067,27 @@
     <Content Include="Views\Admin\Notifications.cshtml" />
     <Content Include="Views\Orders\CancelOrderConfirmation.cshtml" />
     <Content Include="Views\Orders\OrderCancelled.cshtml" />
+    <Content Include="Views\Trainers\Create.cshtml" />
+    <Content Include="Views\Trainers\Edit.cshtml" />
+    <Content Include="Views\Trainers\Delete.cshtml" />
+    <Content Include="Views\Trainers\Index.cshtml" />
+    <Content Include="Views\Trainers\Details.cshtml" />
+    <Content Include="Views\TrainingSessions\Create.cshtml" />
+    <Content Include="Views\TrainingSessions\Delete.cshtml" />
+    <Content Include="Views\TrainingSessions\Details.cshtml" />
+    <Content Include="Views\TrainingSessions\Edit.cshtml" />
+    <Content Include="Views\TrainingSessions\Index.cshtml" />
+    <Content Include="Views\TrainingActivities\Create.cshtml" />
+    <Content Include="Views\TrainingActivities\Delete.cshtml" />
+    <Content Include="Views\TrainingActivities\Details.cshtml" />
+    <Content Include="Views\TrainingActivities\Edit.cshtml" />
+    <Content Include="Views\TrainingActivities\Index.cshtml" />
+    <Content Include="Views\TrainingSessions\AvailableSessions.cshtml" />
+    <Content Include="Views\TrainingSessions\MySessions.cshtml" />
+    <Content Include="Views\TrainingSessions\MyAllSessions.cshtml" />
+    <Content Include="Views\Trainers\Dashboard.cshtml" />
+    <Content Include="Views\Trainers\ViewSessionParticipants.cshtml" />
+    <Content Include="Views\TrainingSessions\PastSessions.cshtml" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include="App_Data\" />
@@ -1226,6 +1271,18 @@
     </EmbeddedResource>
     <EmbeddedResource Include="Migrations\202410151708322_AddedNotificationsfForLowstock.resx">
       <DependentUpon>202410151708322_AddedNotificationsfForLowstock.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Migrations\202410211134355_Added Personal Trainer Role.resx">
+      <DependentUpon>202410211134355_Added Personal Trainer Role.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Migrations\202410211229391_Added trainer table to db.resx">
+      <DependentUpon>202410211229391_Added trainer table to db.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Migrations\202410211504494_Added Training Sessions.resx">
+      <DependentUpon>202410211504494_Added Training Sessions.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Migrations\202410211532478_Added Training ACtivities.resx">
+      <DependentUpon>202410211532478_Added Training ACtivities.cs</DependentUpon>
     </EmbeddedResource>
   </ItemGroup>
   <PropertyGroup>
